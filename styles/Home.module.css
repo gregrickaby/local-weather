@@ -20,6 +20,11 @@
   min-height: 100px;
 }
 
+.temp {
+  font-weight: 700;
+  font-size: 18px;
+}
+
 .button {
   background: rgba(0, 0, 0, 0.2);
   border: none;
