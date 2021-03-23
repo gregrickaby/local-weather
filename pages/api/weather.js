@@ -1,12 +1,8 @@
 /**
- * An API route to fetch the weather forecast.
+ * The weather forecast from DarkSky.
  *
- * Thefrontend app, will post a JSON formated
- * request to `/api/weather` and this handler
- * will return weather data.
- *
- * Used specificly to get around CORS issues
- * when using fetch() in the browser.
+ * @example
+ * /api/weather?lat=28.3802&long=-81.5612
  *
  * @author Greg Rickaby
  * @see https://darksky.net/dev
@@ -16,15 +12,20 @@
  * @param {object} req The incoming request object.
  * @param {object} res The outgoing response object.
  */
-export default async function handler(req, res) {
-  // Convert the request to an object.
-  const coordinates = JSON.parse(req.body);
+export default async function weather(req, res) {
+  // Destructure the request.
+  const { lat, long } = req.query;
 
   try {
-    // Attempt to fetch the weather.
+    // Attempt to fetch.
     const response = await fetch(
-      `https://api.darksky.net/forecast/${process.env.DARK_SKY_API_KEY}/${coordinates.lat},${coordinates.long}`
+      `https://api.darksky.net/forecast/${process.env.DARK_SKY_API_KEY}/${lat},${long}`
     );
+
+    // Bail if there's an issue.
+    if (!response.ok) {
+      res.status(400).json({ message: `${response.statusText}` });
+    }
 
     // Convert response to JSON.
     const data = await response.json();
@@ -32,7 +33,7 @@ export default async function handler(req, res) {
     // Send the response to the user.
     res.status(200).json(data);
   } catch (error) {
-    // Problem? Leave a message and bail.
-    res.status(404).json({ message: `${error}` });
+    // Issue? Leave a message and bail.
+    res.status(400).json({ message: `${error}` });
   }
 }
