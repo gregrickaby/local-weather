@@ -6,9 +6,10 @@ export default function Home() {
   const [address, setAddress] = useState();
   const [coordinates, setCoordinates] = useState({
     lat: 28.3802,
-    long: -81.5612,
+    lng: -81.5612,
   });
   const [loading, setLoading] = useState();
+  const [searchValue, setSearch] = useState("Orlando, FL");
   const [weather, setWeather] = useState();
 
   /**
@@ -17,7 +18,7 @@ export default function Home() {
   async function getWeather() {
     setLoading(true);
     const response = await fetch(
-      `/api/weather?lat=${coordinates?.lat}&long=${coordinates?.long}`
+      `/api/weather?lat=${coordinates?.lat}&lng=${coordinates?.lng}`
     );
     const weather = await response.json();
     setWeather(weather);
@@ -30,16 +31,29 @@ export default function Home() {
   async function getAddress() {
     setLoading(true);
     const response = await fetch(
-      `/api/reversegeocoding?lat=${coordinates?.lat}&long=${coordinates?.long}`
+      `/api/reversegeocoding?lat=${coordinates?.lat}&lng=${coordinates?.lng}`
     );
     const address = await response.json();
     setAddress(address);
+    setSearch(address);
     setLoading(false);
   }
 
   /**
-   * Using the Geolocation API, attempt to get the
-   * user's coordinates.
+   * Fetch the coordinates.
+   */
+  async function getCoordinates() {
+    setLoading(true);
+    const response = await fetch(
+      `/api/geocoding?address=${JSON.stringify(searchValue)}`
+    );
+    const coordinates = await response.json();
+    setCoordinates(coordinates);
+    setLoading(false);
+  }
+
+  /**
+   * Fetch user's coordinates.
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
    */
@@ -49,7 +63,7 @@ export default function Home() {
       (pos) =>
         setCoordinates({
           lat: pos?.coords?.latitude,
-          long: pos?.coords?.longitude,
+          lng: pos?.coords?.longitude,
         }),
       (err) => {
         console.warn(`There was a problem getting your location ${err}`);
@@ -63,8 +77,19 @@ export default function Home() {
   }
 
   /**
+   * Search handler.
+   *
+   * @param {object} event The event object.
+   */
+  function handleSearch(event) {
+    event.preventDefault();
+    setSearch(searchValue);
+    getCoordinates();
+  }
+
+  /**
    * When the page loads intially, or if the
-   * user clicks the "Local Forcast" button.
+   * user clicks the "Local Forecast" button.
    */
   useEffect(() => {
     getWeather();
@@ -80,6 +105,18 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1>Weather</h1>
+        <form onSubmit={handleSearch}>
+          <input
+            id="search"
+            minLength="4"
+            onChange={(e) => setSearch(e.target.value)}
+            pattern="^[^~`^<>]+$"
+            placeholder="Orlando, FL"
+            type="text"
+            value={searchValue}
+          />
+          <button>Search</button>
+        </form>
         <h2>{address}</h2>
         <div className={styles.weather}>
           {loading ? (
