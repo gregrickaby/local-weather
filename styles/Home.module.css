@@ -1,0 +1,22 @@
+.container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 0 0.5rem;
+}
+
+.main {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 0;
+}
+
+.weather {
+  min-height: 100px;
+}

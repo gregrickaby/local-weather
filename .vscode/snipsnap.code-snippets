@@ -1,0 +1,1 @@
+{"errors":[{"name":"SequelizeConnectionError","message":"could not open file \"global/pg_filenode.map\": Permission denied"}]}
