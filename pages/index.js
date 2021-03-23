@@ -106,6 +106,9 @@ export default function Home() {
       <main className={styles.main}>
         <h1>Weather</h1>
         <form onSubmit={handleSearch}>
+          <label className={styles.screenReader} htmlFor="search">
+            Enter your city
+          </label>
           <input
             id="search"
             minLength="4"
