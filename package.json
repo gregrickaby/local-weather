@@ -1,6 +1,16 @@
 {
-  "name": "weather",
+  "name": "nextjs-weather",
+  "description": "A simple weather app.",
   "version": "0.1.0",
+  "homepage": "https://github.com/gregrickaby/nextjs-weather/blob/main/README.md",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gregrickaby/nextjs-weather.git"
+  },
+  "author": "Greg Rickaby <gregrickaby@gmail.com>",
+  "bugs": {
+    "url": "https://github.com/gregrickaby/nextjs-weather/issues"
+  },
   "private": true,
   "scripts": {
     "dev": "rm -rf .next && next dev",
