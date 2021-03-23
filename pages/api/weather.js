@@ -9,6 +9,7 @@
  * when using fetch() in the browser.
  *
  * @author Greg Rickaby
+ * @see https://darksky.net/dev
  * @see https://nextjs.org/docs/api-routes/introduction
  * @see https://nodejs.org/api/http.html#http_class_http_incomingmessage
  * @see https://nodejs.org/api/http.html#http_class_http_serverresponse
