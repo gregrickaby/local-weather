@@ -4,6 +4,7 @@ import styles from "../styles/Home.module.css";
 
 export default function Home() {
   const [loading, setLoading] = useState();
+  const [city, setCity] = useState();
   const [weather, setWeather] = useState();
   const [coordinates, setCoordinates] = useState({
     lat: 28.3802,
@@ -19,8 +20,22 @@ export default function Home() {
       method: "POST",
       body: JSON.stringify(coordinates),
     });
-    const data = await response.json();
-    setWeather(data);
+    const weather = await response.json();
+    setWeather(weather);
+    setLoading(false);
+  }
+
+  /**
+   * Find the city!
+   */
+  async function getCity() {
+    setLoading(true);
+    const response = await fetch(`/api/geocoding`, {
+      method: "POST",
+      body: JSON.stringify(coordinates),
+    });
+    const city = await response.json();
+    setCity(city);
     setLoading(false);
   }
 
@@ -55,6 +70,7 @@ export default function Home() {
    */
   useEffect(() => {
     getWeather();
+    getCity();
   }, [coordinates]);
 
   return (
@@ -66,6 +82,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1>Weather</h1>
+        <h2>{city?.results[0]?.formatted_address}</h2>
         <div className={styles.weather}>
           {loading ? (
             <p>Loading current conditions...</p>
@@ -81,7 +98,9 @@ export default function Home() {
             </>
           )}
         </div>
-        <button onClick={getLocation}>Click for Local Forcast</button>
+        <button className={styles.button} onClick={getLocation}>
+          Click for Local Forecast
+        </button>
       </main>
     </div>
   );
