@@ -3,39 +3,37 @@ import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 
 export default function Home() {
-  const [loading, setLoading] = useState();
-  const [city, setCity] = useState();
-  const [weather, setWeather] = useState();
+  const [address, setAddress] = useState();
   const [coordinates, setCoordinates] = useState({
     lat: 28.3802,
     long: -81.5612,
   });
+  const [loading, setLoading] = useState();
+  const [weather, setWeather] = useState();
 
   /**
-   * Get the weather forecast!
+   * Fetch the forecast.
    */
   async function getWeather() {
     setLoading(true);
-    const response = await fetch(`/api/weather`, {
-      method: "POST",
-      body: JSON.stringify(coordinates),
-    });
+    const response = await fetch(
+      `/api/weather?lat=${coordinates?.lat}&long=${coordinates?.long}`
+    );
     const weather = await response.json();
     setWeather(weather);
     setLoading(false);
   }
 
   /**
-   * Find the city!
+   * Fetch the address.
    */
-  async function getCity() {
+  async function getAddress() {
     setLoading(true);
-    const response = await fetch(`/api/geocoding`, {
-      method: "POST",
-      body: JSON.stringify(coordinates),
-    });
-    const city = await response.json();
-    setCity(city);
+    const response = await fetch(
+      `/api/reversegeocoding?lat=${coordinates?.lat}&long=${coordinates?.long}`
+    );
+    const address = await response.json();
+    setAddress(address);
     setLoading(false);
   }
 
@@ -50,8 +48,8 @@ export default function Home() {
     navigator.geolocation.getCurrentPosition(
       (pos) =>
         setCoordinates({
-          lat: pos.coords.latitude,
-          long: pos.coords.longitude,
+          lat: pos?.coords?.latitude,
+          long: pos?.coords?.longitude,
         }),
       (err) => {
         console.warn(`There was a problem getting your location ${err}`);
@@ -70,7 +68,7 @@ export default function Home() {
    */
   useEffect(() => {
     getWeather();
-    getCity();
+    getAddress();
   }, [coordinates]);
 
   return (
@@ -82,12 +80,10 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1>Weather</h1>
-        <h2>{city?.results[0]?.formatted_address}</h2>
+        <h2>{address}</h2>
         <div className={styles.weather}>
           {loading ? (
             <p>Loading current conditions...</p>
-          ) : typeof weather == "undefined" ? (
-            <p>Unable to fetch results. Try reloading the page.</p>
           ) : (
             <>
               <p>
