@@ -2,7 +2,7 @@
  * The weather forecast from DarkSky.
  *
  * @example
- * /api/weather?lat=28.3802&long=-81.5612
+ * /api/weather?lat=28.3802&lng=-81.5612
  *
  * @author Greg Rickaby
  * @see https://darksky.net/dev
@@ -14,18 +14,13 @@
  */
 export default async function weather(req, res) {
   // Destructure the request.
-  const { lat, long } = req.query;
+  const { lat, lng } = req.query;
 
   try {
     // Attempt to fetch.
     const response = await fetch(
-      `https://api.darksky.net/forecast/${process.env.DARK_SKY_API_KEY}/${lat},${long}`
+      `https://api.darksky.net/forecast/${process.env.DARK_SKY_API_KEY}/${lat},${lng}`
     );
-
-    // Bail if there's an issue.
-    if (!response.ok) {
-      res.status(400).json({ message: `${response.statusText}` });
-    }
 
     // Convert response to JSON.
     const data = await response.json();
