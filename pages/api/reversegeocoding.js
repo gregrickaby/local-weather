@@ -1,5 +1,5 @@
 /**
- * Reverse geocoding latitude and longitude coordinates.
+ * Reverse geocode latitude and longitude into an address.
  *
  * @example
  * /api/reversegeocoding?lat=28.3802&lng=-81.5612

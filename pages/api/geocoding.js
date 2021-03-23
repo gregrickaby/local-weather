@@ -1,5 +1,5 @@
 /**
- * Geocoding the address into latitude and longitude coordinates.
+ * Geocode the address into latitude and longitude coordinates.
  *
  * @example
  * /api/geocoding?address="orlando,+fl"
