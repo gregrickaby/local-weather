@@ -111,6 +111,7 @@ export default function Home() {
           </label>
           <input
             id="search"
+            className={styles.search}
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
             pattern="^[^~`^<>]+$"
@@ -118,10 +119,10 @@ export default function Home() {
             type="text"
             value={searchValue}
           />
-          <button>Search</button>
+          <button className={styles.button}>Search</button>
         </form>
-        <h2>{address}</h2>
         <div className={styles.weather}>
+          <h2>{!!address && address}</h2>
           {loading ? (
             <p>Loading current conditions...</p>
           ) : (
