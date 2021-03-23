@@ -127,10 +127,11 @@ export default function Home() {
             <p>Loading current conditions...</p>
           ) : (
             <>
-              <p>
-                {weather?.currently?.summary} and{" "}
+              <p>{weather?.currently?.summary}</p>
+              <p className={styles.temp}>
                 {Math.round(weather?.currently?.temperature)}F
               </p>
+              <p>{weather?.minutely?.summary}</p>
               <p>{weather?.daily?.summary}</p>
             </>
           )}
