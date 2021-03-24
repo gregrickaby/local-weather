@@ -32,6 +32,6 @@ export default async function geocoding(req, res) {
     res.status(200).json(coordinates);
   } catch (error) {
     // Issue? Leave a message and bail.
-    res.status(404).json({ message: `${error}` });
+    res.status(500).json({ message: `${error}` });
   }
 }
