@@ -29,6 +29,6 @@ export default async function weather(req, res) {
     res.status(200).json(data);
   } catch (error) {
     // Issue? Leave a message and bail.
-    res.status(400).json({ message: `${error}` });
+    res.status(500).json({ message: `${error}` });
   }
 }
