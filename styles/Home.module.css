@@ -14,7 +14,6 @@
 }
 
 .weather {
-  background-color: whitesmoke;
   padding: 1rem;
   margin: 1rem;
   min-height: 100px;
@@ -26,18 +25,15 @@
 }
 
 .button {
-  background: rgba(0, 0, 0, 0.2);
   border: none;
   padding: 0.5rem;
 }
 
 .search {
-  border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 0.43rem;
 }
 
 .button:hover {
-  background: rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }
 

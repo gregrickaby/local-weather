@@ -14,3 +14,19 @@ a {
 * {
   box-sizing: border-box;
 }
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1a1a1a;
+    color: #fff;
+  }
+
+  button {
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+  }
+
+  button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
