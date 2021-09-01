@@ -1,6 +1,7 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
+import { useWeather } from "../lib/swr-hooks";
 
 export default function Home() {
   const [address, setAddress] = useState();
@@ -10,20 +11,7 @@ export default function Home() {
   });
   const [loading, setLoading] = useState();
   const [searchValue, setSearch] = useState("Orlando, FL");
-  const [weather, setWeather] = useState();
-
-  /**
-   * Fetch the forecast.
-   */
-  async function getWeather() {
-    setLoading(true);
-    const response = await fetch(
-      `/api/weather?lat=${coordinates?.lat}&lng=${coordinates?.lng}`
-    );
-    const weather = await response.json();
-    setWeather(weather);
-    setLoading(false);
-  }
+  const { weather, isLoading } = useWeather(coordinates);
 
   /**
    * Fetch the address.
@@ -92,7 +80,6 @@ export default function Home() {
    * user clicks the "Local Forecast" button.
    */
   useEffect(() => {
-    getWeather();
     getAddress();
   }, [coordinates]);
 
@@ -122,8 +109,11 @@ export default function Home() {
           <button className={styles.button}>Search</button>
         </form>
         <div className={styles.weather}>
+          <button className={styles.button} onClick={getLocation}>
+            Click for Local Forecast
+          </button>
           <h2>{!!address && address}</h2>
-          {loading ? (
+          {loading || isLoading ? (
             <p>Loading current conditions...</p>
           ) : (
             <>
@@ -136,9 +126,6 @@ export default function Home() {
             </>
           )}
         </div>
-        <button className={styles.button} onClick={getLocation}>
-          Click for Local Forecast
-        </button>
       </main>
     </div>
   );
