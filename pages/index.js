@@ -3,6 +3,12 @@ import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { useWeather } from "../lib/swr-hooks";
 
+/**
+ * The Homepage component.
+ *
+ * @author Greg Rickaby
+ * @returns {Element} The Homepage component.
+ */
 export default function Home() {
   const [address, setAddress] = useState();
   const [coordinates, setCoordinates] = useState({
@@ -84,16 +90,17 @@ export default function Home() {
   }, [coordinates]);
 
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Weather</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
       <main className={styles.main}>
         <h1>Weather</h1>
         <form onSubmit={handleSearch}>
-          <label className={styles.screenReader} htmlFor="search">
+          <label className="sr-only" htmlFor="search">
             Enter your city
           </label>
           <input
@@ -116,17 +123,24 @@ export default function Home() {
           {loading || isLoading ? (
             <p>Loading current conditions...</p>
           ) : (
-            <>
-              <p>{weather?.currently?.summary}</p>
-              <p className={styles.temp}>
-                {Math.round(weather?.currently?.temperature)}F
-              </p>
-              <p>{weather?.minutely?.summary}</p>
-              <p>{weather?.daily?.summary}</p>
-            </>
+            <div className={styles.forecast}>
+              {weather?.properties?.periods.map((period) => (
+                <>
+                  <h3>{period.name}</h3>
+                  <img
+                    alt={period.name}
+                    height="86"
+                    loading="lazy"
+                    src={period.icon}
+                    width="86"
+                  />
+                  <p>{period.shortForecast}</p>
+                </>
+              ))}
+            </div>
           )}
         </div>
       </main>
-    </div>
+    </>
   );
 }
