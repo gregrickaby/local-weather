@@ -18,13 +18,13 @@ export default async function weather(req, res) {
 
   try {
     // NWS requires two requests.
-    // The first request is to get the forecast endpoint.
+    // The first request is to get the forecast endpoint based on geocoding.
     const requestOne = await fetch(
       `https://api.weather.gov/points/${lat},${lng}`
     );
     const endpoint = await requestOne.json();
 
-    // The second request is to get the forecast.
+    // The second request is to get the actual forecast.
     const requestTwo = await fetch(endpoint.properties.forecast);
     const forecast = await requestTwo.json();
 

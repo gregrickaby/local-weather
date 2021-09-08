@@ -99,33 +99,33 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1>Weather</h1>
-        <form onSubmit={handleSearch}>
+        <form onSubmit={handleSearch} className={styles.search}>
           <label className="sr-only" htmlFor="search">
             Enter your city
           </label>
           <input
             id="search"
-            className={styles.search}
+            className={styles.input}
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
             pattern="^[^~`^<>]+$"
-            placeholder="Orlando, FL"
+            placeholder="Bay Lake, FL"
             type="text"
             value={searchValue}
           />
           <button className={styles.button}>Search</button>
+          <button className={styles.local} onClick={getLocation}>
+            Fetch Local Forecast
+          </button>
         </form>
         <div className={styles.weather}>
-          <button className={styles.button} onClick={getLocation}>
-            Click for Local Forecast
-          </button>
           <h2>{!!address && address}</h2>
           {loading || isLoading ? (
             <p>Loading current conditions...</p>
           ) : (
-            <div className={styles.forecast}>
-              {weather?.properties?.periods.map((period) => (
-                <>
+            <>
+              {weather?.properties?.periods.map((period, index) => (
+                <div key={index} className={styles.forecast}>
                   <h3>{period.name}</h3>
                   <img
                     alt={period.name}
@@ -135,9 +135,9 @@ export default function Home() {
                     width="86"
                   />
                   <p>{period.shortForecast}</p>
-                </>
+                </div>
               ))}
-            </div>
+            </>
           )}
         </div>
       </main>

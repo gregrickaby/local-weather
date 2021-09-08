@@ -8,7 +8,7 @@
   }
 
   body {
-    @apply max-w-7xl mx-auto dark:bg-gray-900 dark:text-gray-200 antialiased;
+    @apply max-w-7xl mx-auto p-12 dark:bg-gray-900 dark:text-gray-200 antialiased;
   }
 
   h1,
@@ -75,7 +75,11 @@
 
   form input,
   form textarea {
-    @apply p-4 dark:bg-gray-800;
+    @apply px-4 dark:bg-gray-800;
+  }
+
+  form button {
+    @apply px-4 bg-gray-800 dark:bg-gray-700;
   }
 
   blockquote {
