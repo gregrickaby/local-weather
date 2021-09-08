@@ -22,5 +22,10 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "swr": "^1.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.3.4",
+    "postcss": "^8.3.6",
+    "tailwindcss": "^2.2.11"
   }
 }
