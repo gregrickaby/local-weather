@@ -97,15 +97,13 @@ export default function Home() {
         <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
-      <main className={styles.main}>
+      <main>
         <h1>Weather</h1>
-        <form onSubmit={handleSearch} className={styles.search}>
-          <label className="sr-only" htmlFor="search">
-            Enter your city
-          </label>
+        <form onSubmit={handleSearch}>
+          <label htmlFor="search">Enter your city</label>
           <input
+            className={styles.searchInput}
             id="search"
-            className={styles.input}
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
             pattern="^[^~`^<>]+$"
@@ -114,18 +112,18 @@ export default function Home() {
             value={searchValue}
           />
           <button className={styles.button}>Search</button>
-          <button className={styles.local} onClick={getLocation}>
+          <button className={styles.button} onClick={getLocation}>
             Fetch Local Forecast
           </button>
         </form>
-        <div className={styles.weather}>
+        <div>
           <h2>{!!address && address}</h2>
           {loading || isLoading ? (
             <p>Loading current conditions...</p>
           ) : (
             <>
               {weather?.properties?.periods.map((period, index) => (
-                <div key={index} className={styles.forecast}>
+                <div key={index}>
                   <h3>{period.name}</h3>
                   <img
                     alt={period.name}

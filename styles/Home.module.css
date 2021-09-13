@@ -1,19 +1,7 @@
-.search {
-  @apply w-full flex my-12;
-}
-
-.input {
-  @apply w-96;
+.searchInput {
+  @apply p-2 ml-2;
 }
 
 .button {
-  @apply w-24;
-}
-
-.local {
-  @apply w-48 ml-4;
-}
-
-.forecast {
-  @apply grid grid-cols-3 gap-2;
+  @apply p-2;
 }
