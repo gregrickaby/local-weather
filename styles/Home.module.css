@@ -27,11 +27,15 @@
 }
 
 .forecast {
-  @apply px-2 py-1 mb-4 bg-gray-200;
+  @apply px-2 py-1 mb-8 bg-gray-200;
 }
 
 .currently {
   @apply mb-4;
+}
+
+.details {
+  @apply pb-3;
 }
 
 .footer {

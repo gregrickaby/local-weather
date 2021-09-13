@@ -166,7 +166,7 @@ export default function Home() {
                     {period?.shortForecast}
                   </div>
 
-                  <details>
+                  <details className={styles.details}>
                     <summary>Full Forecast</summary>
                     <p>{period?.detailedForecast}</p>
                   </details>
