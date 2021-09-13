@@ -1,6 +1,6 @@
 {
   "name": "nextjs-weather",
-  "description": "A simple weather app using Next.js API Routes, the Dark Sky API, and Google Maps API.",
+  "description": "A simple weather app using Next.js API Routes, the NWS API, and Google Maps API.",
   "version": "0.1.0",
   "homepage": "https://github.com/gregrickaby/nextjs-weather/blob/main/README.md",
   "repository": {
@@ -21,11 +21,12 @@
     "next": "11.1.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "swr": "^1.0.0"
+    "swr": "^1.0.1"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^11.1.2",
     "autoprefixer": "^10.3.4",
     "postcss": "^8.3.6",
-    "tailwindcss": "^2.2.11"
+    "tailwindcss": "^2.2.15"
   }
 }
