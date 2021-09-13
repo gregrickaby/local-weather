@@ -2,6 +2,8 @@ import Head from "next/head";
 import { useState, useEffect } from "react";
 import styles from "../styles/Home.module.css";
 import { useWeather } from "../lib/swr-hooks";
+import Link from "next/link";
+import dayjs from "dayjs";
 
 /**
  * The Homepage component.
@@ -51,7 +53,7 @@ export default function Home() {
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
    */
-  async function getLocation() {
+  function getLocation() {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) =>
@@ -68,6 +70,7 @@ export default function Home() {
         maximumAge: 0,
       }
     );
+    setLoading(false);
   }
 
   /**
@@ -77,6 +80,7 @@ export default function Home() {
    */
   function handleSearch(event) {
     event.preventDefault();
+    setLoading(true);
     setSearch(searchValue);
     getCoordinates();
   }
@@ -92,52 +96,91 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Weather</title>
+        <title>Weather - {!!address && address}</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
-      <main>
+      <header className={styles.header}>
         <h1>Weather</h1>
-        <form onSubmit={handleSearch}>
-          <label htmlFor="search">Enter your city</label>
+        <button className={styles.button} onClick={getLocation}>
+          Fetch Local Forecast
+        </button>
+      </header>
+
+      <form onSubmit={handleSearch}>
+        <label className="sr-only" htmlFor="search">
+          Enter your location
+        </label>
+        <div className={styles.searchForm}>
           <input
             className={styles.searchInput}
             id="search"
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
             pattern="^[^~`^<>]+$"
-            placeholder="Bay Lake, FL"
+            placeholder="Bay Lake, FL, USA"
             type="text"
             value={searchValue}
           />
-          <button className={styles.button}>Search</button>
-          <button className={styles.button} onClick={getLocation}>
-            Fetch Local Forecast
-          </button>
-        </form>
-        <div>
-          <h2>{!!address && address}</h2>
+          <button className={styles.searchButton}>Search</button>
+        </div>
+      </form>
+
+      <main>
+        <>
           {loading || isLoading ? (
             <p>Loading current conditions...</p>
           ) : (
             <>
+              <div className={styles.updated}>
+                Last update was{" "}
+                <time className={styles.time}>
+                  {dayjs(weather?.properties?.updated).format(
+                    "MMMM D, YYYY @ h:mm A"
+                  )}
+                </time>{" "}
+                from the{" "}
+                <a href="https://www.weather.gov/">National Weather Service</a>.
+              </div>
+
               {weather?.properties?.periods.map((period, index) => (
-                <div key={index}>
-                  <h3>{period.name}</h3>
-                  <img
-                    alt={period.name}
-                    height="86"
-                    loading="lazy"
-                    src={period.icon}
-                    width="86"
-                  />
-                  <p>{period.shortForecast}</p>
-                </div>
+                <article key={index} className={styles.forecast}>
+                  <header>
+                    <h3>{period.name}</h3>
+                    <img
+                      alt={period.name}
+                      height="86"
+                      loading="lazy"
+                      src={period.icon}
+                      width="86"
+                    />
+                  </header>
+
+                  <div className={styles.currently}>
+                    <p>
+                      {period?.isDaytime ? <>High</> : <>Low</>}{" "}
+                      {period?.temperature}° {period?.temperatureUnit} | Winds:{" "}
+                      {period?.windDirection} at {period?.windSpeed}
+                    </p>
+                    {period?.shortForecast}
+                  </div>
+
+                  <details>
+                    <summary>Full Forecast</summary>
+                    <p>{period?.detailedForecast}</p>
+                  </details>
+                </article>
               ))}
+
+              <footer className={styles.footer}>
+                <Link href="/">
+                  <a>Back to top</a>
+                </Link>
+              </footer>
             </>
           )}
-        </div>
+        </>
       </main>
     </>
   );
