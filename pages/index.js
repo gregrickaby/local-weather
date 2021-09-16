@@ -94,7 +94,8 @@ export default function Home() {
         <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
-      <header className="flex justify-between items-center">
+      <header className="flex items-center space-x-2">
+        <img src="logo.webp" alt="" height="32" width="32" loading="eager" />
         <h1>Weather</h1>
       </header>
 

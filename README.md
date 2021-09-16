@@ -1,6 +1,6 @@
 # Next.js Weather App <!-- omit in toc -->
 
-⛈ A simple weather app using the [NWS API](https://weather-gov.github.io/api/general-faqs), and [Google Maps API](https://developers.google.com/maps/documentation/geocoding/overview).
+⛈ A simple weather app using the both the [National Weather Service API](https://weather-gov.github.io/api/general-faqs) and [Google Maps API](https://developers.google.com/maps/documentation/geocoding/overview).
 
 👉 <https://weather-flame-alpha.vercel.app/>
 
@@ -53,13 +53,11 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 |  ├── _document.js
 |  ├── api
 |  |  ├── geocoding.js
-|  |  ├── reversegeocoding.js
 |  |  └── weather.js
 |  └── index.js
 ├── public
 ├── styles
-|  ├── globals.css
-|  └── Home.module.css
+|  └── globals.css
 ```
 
 **Pages** - This folder contains standard Next.js pages and API middleware routes.
