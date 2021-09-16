@@ -11,11 +11,11 @@
 }
 
 .searchInput {
-  @apply p-2 col-span-8;
+  @apply p-2 col-span-10;
 }
 
 .searchButton {
-  @apply col-span-4;
+  @apply col-span-2;
 }
 
 .updated {
@@ -26,8 +26,12 @@
   @apply font-bold;
 }
 
+.forecastContainer {
+  @apply grid md:grid-cols-2 gap-6;
+}
+
 .forecast {
-  @apply px-2 py-1 mb-8 bg-gray-200;
+  @apply p-4 bg-gray-300;
 }
 
 .currently {
@@ -40,4 +44,12 @@
 
 .footer {
   @apply my-4 text-center;
+}
+
+@media (max-width: 640px) {
+  .radar {
+    aspect-ratio: auto 600 / 550;
+    height: auto;
+    width: 100%;
+  }
 }

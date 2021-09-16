@@ -18,18 +18,33 @@ export default async function weather(req, res) {
 
   try {
     // NWS requires two requests.
-    // The first request is to get the forecast endpoint based on geocoding.
+    // The first request is to get the forecast point based on geocoding.
     const requestOne = await fetch(
       `https://api.weather.gov/points/${lat},${lng}`
     );
-    const endpoint = await requestOne.json();
+    const point = await requestOne.json();
 
     // The second request is to get the actual forecast.
-    const requestTwo = await fetch(endpoint.properties.forecast);
+    const requestTwo = await fetch(point.properties.forecast);
     const forecast = await requestTwo.json();
 
+    // Third request is to get the alerts.
+    const requestThree = await fetch(
+      `https://api.weather.gov/alerts/active?status=actual&message_type=alert&point=${lat},${lng}`
+    );
+    const alerts = await requestThree.json();
+
+    // Four request is to get the local weather office.
+    const requestFour = await fetch(point.properties.forecastOffice);
+    const station = await requestFour.json();
+
     // Send the response.
-    res.status(200).json(forecast);
+    res.status(200).json({
+      alerts,
+      forecast,
+      location: point?.properties,
+      station,
+    });
   } catch (error) {
     // Issue? Leave a message and bail.
     res.status(500).json({ message: `${error}` });

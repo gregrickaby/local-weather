@@ -12,41 +12,14 @@ import dayjs from "dayjs";
  * @returns {Element} The Homepage component.
  */
 export default function Home() {
-  const [address, setAddress] = useState();
   const [coordinates, setCoordinates] = useState({
     lat: 28.3802,
     lng: -81.5612,
   });
   const [loading, setLoading] = useState();
-  const [searchValue, setSearch] = useState("Orlando, FL");
+  const [searchValue, setSearch] = useState("Bay Lake, FL");
   const { weather, isLoading } = useWeather(coordinates);
-
-  /**
-   * Fetch the address.
-   */
-  async function getAddress() {
-    setLoading(true);
-    const response = await fetch(
-      `/api/reversegeocoding?lat=${coordinates?.lat}&lng=${coordinates?.lng}`
-    );
-    const address = await response.json();
-    setAddress(address);
-    setSearch(address);
-    setLoading(false);
-  }
-
-  /**
-   * Fetch the coordinates.
-   */
-  async function getCoordinates() {
-    setLoading(true);
-    const response = await fetch(
-      `/api/geocoding?address=${JSON.stringify(searchValue)}`
-    );
-    const coordinates = await response.json();
-    setCoordinates(coordinates);
-    setLoading(false);
-  }
+  const location = `${weather?.location?.relativeLocation?.properties?.city}, ${weather?.location?.relativeLocation?.properties?.state}`;
 
   /**
    * Fetch user's coordinates.
@@ -74,6 +47,19 @@ export default function Home() {
   }
 
   /**
+   * Fetch the coordinates.
+   */
+  async function getCoordinates(search) {
+    setLoading(true);
+    const response = await fetch(
+      `/api/geocoding?address=${JSON.stringify(search)}`
+    );
+    const coordinates = await response.json();
+    setCoordinates(coordinates);
+    setLoading(false);
+  }
+
+  /**
    * Search handler.
    *
    * @param {object} event The event object.
@@ -82,7 +68,7 @@ export default function Home() {
     event.preventDefault();
     setLoading(true);
     setSearch(searchValue);
-    getCoordinates();
+    getCoordinates(searchValue);
   }
 
   /**
@@ -90,22 +76,23 @@ export default function Home() {
    * user clicks the "Local Forecast" button.
    */
   useEffect(() => {
-    getAddress();
-  }, [coordinates]);
+    getLocation();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) setSearch(location);
+  }, [weather]);
 
   return (
     <>
       <Head>
-        <title>Weather - {!!address && address}</title>
+        <title>Weather</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
       <header className={styles.header}>
         <h1>Weather</h1>
-        <button className={styles.button} onClick={getLocation}>
-          Fetch Local Forecast
-        </button>
       </header>
 
       <form onSubmit={handleSearch}>
@@ -119,7 +106,7 @@ export default function Home() {
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
             pattern="^[^~`^<>]+$"
-            placeholder="Bay Lake, FL, USA"
+            placeholder="Bay Lake, FL"
             type="text"
             value={searchValue}
           />
@@ -130,49 +117,80 @@ export default function Home() {
       <main>
         <>
           {loading || isLoading ? (
-            <p>Loading current conditions...</p>
+            <p>Loading...</p>
           ) : (
             <>
-              <div className={styles.updated}>
-                Last update was{" "}
+              <p>
+                As of{" "}
                 <time className={styles.time}>
                   {dayjs(weather?.properties?.updated).format(
                     "MMMM D, YYYY @ h:mm A"
                   )}
                 </time>{" "}
-                from the{" "}
-                <a href="https://www.weather.gov/">National Weather Service</a>.
-              </div>
-
-              {weather?.properties?.periods.map((period, index) => (
-                <article key={index} className={styles.forecast}>
-                  <header>
-                    <h3>{period.name}</h3>
-                    <img
-                      alt={period.name}
-                      height="86"
-                      loading="lazy"
-                      src={period.icon}
-                      width="86"
-                    />
-                  </header>
-
-                  <div className={styles.currently}>
-                    <p>
-                      {period?.isDaytime ? <>High</> : <>Low</>}{" "}
-                      {period?.temperature}° {period?.temperatureUnit} | Winds:{" "}
-                      {period?.windDirection} at {period?.windSpeed}
+                from{" "}
+                <a href="https://www.weather.gov/">National Weather Service</a>{" "}
+                office in {weather?.station?.name}.
+              </p>
+              <h2>Alerts</h2>
+              {weather?.alerts?.features.length >= 1 ? (
+                weather?.alerts?.features?.map((alert, index) => (
+                  <div className="bg-gray-200 p-4" key={index}>
+                    <p className="text-red-500">
+                      {alert?.properties?.headline}
                     </p>
-                    {period?.shortForecast}
+                    <p>{alert?.properties?.description}</p>
+                    <p>{alert?.properties?.instruction}</p>
                   </div>
-
-                  <details className={styles.details}>
-                    <summary>Full Forecast</summary>
-                    <p>{period?.detailedForecast}</p>
-                  </details>
-                </article>
-              ))}
-
+                ))
+              ) : (
+                <p>No active weather alerts.</p>
+              )}
+              <h2>Forecast for {location}</h2>
+              <p>
+                <code>
+                  {coordinates?.lat},{coordinates?.lng}
+                </code>{" "}
+                @{" "}
+                <code>
+                  {Math.round(
+                    weather?.forecast?.properties?.elevation?.value * 3.2808
+                  )}{" "}
+                  feet
+                </code>
+              </p>
+              <div className={styles.forecastContainer}>
+                {weather.forecast?.properties?.periods.map((period, index) => (
+                  <div key={index} className={styles.forecast}>
+                    <div className={styles.forecastHeader}>
+                      <h2>{period.name}</h2>
+                      <img
+                        alt={period.name}
+                        height="86"
+                        loading="lazy"
+                        src={period.icon}
+                        width="86"
+                      />
+                    </div>
+                    <div className={styles.forecastBody}>
+                      <p>
+                        {period?.isDaytime ? <>High</> : <>Low</>}{" "}
+                        {period?.temperature}° {period?.temperatureUnit} |
+                        Winds: {period?.windDirection} at {period?.windSpeed}
+                      </p>
+                      <p>{period?.detailedForecast}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <h2>Radar</h2>
+              <img
+                alt="Radar image"
+                className={styles.radar}
+                height="550"
+                loading="lazy"
+                src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
+                width="600"
+              />
               <footer className={styles.footer}>
                 <Link href="/">
                   <a>Back to top</a>
