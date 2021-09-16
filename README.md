@@ -1,6 +1,6 @@
 # Next.js Weather App <!-- omit in toc -->
 
-⛈ A simple weather app using [Next.js API Routes](https://nextjs.org/docs/api-routes/introduction), the [Dark Sky API](https://darksky.net/dev), and [Google Maps API](https://developers.google.com/maps/documentation/geocoding/overview).
+⛈ A simple weather app using the [NWS API](https://weather-gov.github.io/api/general-faqs), and [Google Maps API](https://developers.google.com/maps/documentation/geocoding/overview).
 
 👉 <https://weather-flame-alpha.vercel.app/>
 
@@ -19,8 +19,7 @@
 
 ## Prerequisites
 
-1. [Dark Sky API Key](https://darksky.net/dev)
-2. [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key)
+1. [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key)
 
 ---
 
@@ -40,10 +39,6 @@ Add your keys to the following vars:
 
 ```bash
 GOOGLE_MAPS_API_KEY="YOUR-KEY"
-```
-
-```bash
-DARK_SKY_API_KEY="YOUR-KEY"
 ```
 
 ---
@@ -71,7 +66,7 @@ DARK_SKY_API_KEY="YOUR-KEY"
 
 **Public** - This folder contains all of the static assets.
 
-**Styles** - This folder contains global styles.
+**Styles** - This folder contains styles.
 
 ---
 

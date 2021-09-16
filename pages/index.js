@@ -1,51 +1,33 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
-import styles from "../styles/Home.module.css";
 import { useWeather } from "../lib/swr-hooks";
+import Link from "next/link";
+import dayjs from "dayjs";
 
+/**
+ * The Homepage component.
+ *
+ * @author Greg Rickaby
+ * @returns {Element} The Homepage component.
+ */
 export default function Home() {
-  const [address, setAddress] = useState();
   const [coordinates, setCoordinates] = useState({
     lat: 28.3802,
     lng: -81.5612,
   });
-  const [loading, setLoading] = useState();
-  const [searchValue, setSearch] = useState("Orlando, FL");
-  const { weather, isLoading } = useWeather(coordinates);
+  const [loading, setLoading] = useState(true);
+  const [searchValue, setSearch] = useState("Bay Lake, FL");
+  const { weather, isLoading } = useWeather(loading, coordinates);
 
-  /**
-   * Fetch the address.
-   */
-  async function getAddress() {
-    setLoading(true);
-    const response = await fetch(
-      `/api/reversegeocoding?lat=${coordinates?.lat}&lng=${coordinates?.lng}`
-    );
-    const address = await response.json();
-    setAddress(address);
-    setSearch(address);
-    setLoading(false);
-  }
-
-  /**
-   * Fetch the coordinates.
-   */
-  async function getCoordinates() {
-    setLoading(true);
-    const response = await fetch(
-      `/api/geocoding?address=${JSON.stringify(searchValue)}`
-    );
-    const coordinates = await response.json();
-    setCoordinates(coordinates);
-    setLoading(false);
-  }
+  // The location returned from NWS API all prettied up.
+  const nwsLocation = `${weather?.location?.relativeLocation?.properties?.city}, ${weather?.location?.relativeLocation?.properties?.state}`;
 
   /**
    * Fetch user's coordinates.
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
    */
-  async function getLocation() {
+  function getUsersPostion() {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) =>
@@ -62,6 +44,20 @@ export default function Home() {
         maximumAge: 0,
       }
     );
+    setLoading(false);
+  }
+
+  /**
+   * Convert city and state into lat/lng coordinates.
+   */
+  async function getCoordinates(search) {
+    setLoading(true);
+    const response = await fetch(
+      `/api/geocoding?address=${JSON.stringify(search)}`
+    );
+    const coordinates = await response.json();
+    setCoordinates(coordinates);
+    setLoading(false);
   }
 
   /**
@@ -71,62 +67,142 @@ export default function Home() {
    */
   function handleSearch(event) {
     event.preventDefault();
+    setLoading(true);
     setSearch(searchValue);
-    getCoordinates();
+    getCoordinates(searchValue);
   }
 
   /**
-   * When the page loads intially, or if the
-   * user clicks the "Local Forecast" button.
+   * Attempt to get the user's location
+   * on initial page load.
    */
   useEffect(() => {
-    getAddress();
-  }, [coordinates]);
+    getUsersPostion();
+  }, []);
+
+  // When the user searches, update the
+  // location with data from NWS.
+  useEffect(() => {
+    if (!isLoading) setSearch(nwsLocation);
+  }, [weather]);
 
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Weather</title>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
-      <main className={styles.main}>
+      <header className="flex justify-between items-center">
         <h1>Weather</h1>
-        <form onSubmit={handleSearch}>
-          <label className={styles.screenReader} htmlFor="search">
-            Enter your city
-          </label>
+      </header>
+
+      <form onSubmit={handleSearch}>
+        <label className="sr-only" htmlFor="search">
+          Enter your location
+        </label>
+        <div className="grid grid-cols-12 gap-2">
           <input
+            className="p-2 col-span-10"
             id="search"
-            className={styles.search}
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
             pattern="^[^~`^<>]+$"
-            placeholder="Orlando, FL"
+            placeholder="Bay Lake, FL"
             type="text"
             value={searchValue}
           />
-          <button className={styles.button}>Search</button>
-        </form>
-        <div className={styles.weather}>
-          <button className={styles.button} onClick={getLocation}>
-            Click for Local Forecast
-          </button>
-          <h2>{!!address && address}</h2>
+          <button className="col-span-2">Search</button>
+        </div>
+      </form>
+
+      <main>
+        <>
           {loading || isLoading ? (
-            <p>Loading current conditions...</p>
+            <p>Loading...</p>
           ) : (
             <>
-              <p>{weather?.currently?.summary}</p>
-              <p className={styles.temp}>
-                {Math.round(weather?.currently?.temperature)}F
+              <p className="my-4">
+                As of{" "}
+                <time className="font-bold">
+                  {dayjs(weather?.properties?.updated).format(
+                    "MMMM D, YYYY @ h:mm A"
+                  )}
+                </time>{" "}
+                from{" "}
+                <a href="https://www.weather.gov/">National Weather Service</a>{" "}
+                office in {weather?.station?.name}.
               </p>
-              <p>{weather?.minutely?.summary}</p>
-              <p>{weather?.daily?.summary}</p>
+              <h2>Alerts</h2>
+              {weather?.alerts?.features.length >= 1 ? (
+                weather?.alerts?.features?.map((alert, index) => (
+                  <div key={index}>
+                    <p className="text-red-500">
+                      {alert?.properties?.headline}
+                    </p>
+                    <p>{alert?.properties?.description}</p>
+                    <p>{alert?.properties?.instruction}</p>
+                  </div>
+                ))
+              ) : (
+                <p>No active weather alerts.</p>
+              )}
+              <h2>Forecast for {nwsLocation}</h2>
+              <p>
+                <code>
+                  {coordinates?.lat},{coordinates?.lng}
+                </code>{" "}
+                @{" "}
+                <code>
+                  {Math.round(
+                    weather?.forecast?.properties?.elevation?.value * 3.2808
+                  )}{" "}
+                  feet
+                </code>
+              </p>
+              <div className="grid md:grid-cols-2 gap-6">
+                {weather.forecast?.properties?.periods.map((period, index) => (
+                  <div key={index} className="p-4 bg-gray-300">
+                    <div>
+                      <h2>{period.name}</h2>
+                      <img
+                        alt={period.name}
+                        height="86"
+                        loading="lazy"
+                        src={period.icon}
+                        width="86"
+                      />
+                    </div>
+                    <div>
+                      <p>
+                        {period?.isDaytime ? <>High</> : <>Low</>}{" "}
+                        {period?.temperature}° {period?.temperatureUnit} |
+                        Winds: {period?.windDirection} at {period?.windSpeed}
+                      </p>
+                      <p>{period?.detailedForecast}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <h2>Radar</h2>
+              <img
+                alt={`Radar image loop of ${nwsLocation}`}
+                className="radar"
+                height="550"
+                loading="lazy"
+                src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
+                width="600"
+              />
+              <footer className="my-4 text-center">
+                <Link href="/">
+                  <a>Back to top</a>
+                </Link>
+              </footer>
             </>
           )}
-        </div>
+        </>
       </main>
-    </div>
+    </>
   );
 }
