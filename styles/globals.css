@@ -4,3 +4,11 @@
 body {
   @apply px-4 py-2;
 }
+
+@media (max-width: 640px) {
+  .radar {
+    aspect-ratio: auto 600 / 550;
+    height: auto;
+    width: 100%;
+  }
+}

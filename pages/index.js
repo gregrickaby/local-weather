@@ -1,6 +1,5 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
-import styles from "../styles/Home.module.css";
 import { useWeather } from "../lib/swr-hooks";
 import Link from "next/link";
 import dayjs from "dayjs";
@@ -16,17 +15,19 @@ export default function Home() {
     lat: 28.3802,
     lng: -81.5612,
   });
-  const [loading, setLoading] = useState();
+  const [loading, setLoading] = useState(true);
   const [searchValue, setSearch] = useState("Bay Lake, FL");
-  const { weather, isLoading } = useWeather(coordinates);
-  const location = `${weather?.location?.relativeLocation?.properties?.city}, ${weather?.location?.relativeLocation?.properties?.state}`;
+  const { weather, isLoading } = useWeather(loading, coordinates);
+
+  // The location returned from NWS API all prettied up.
+  const nwsLocation = `${weather?.location?.relativeLocation?.properties?.city}, ${weather?.location?.relativeLocation?.properties?.state}`;
 
   /**
    * Fetch user's coordinates.
    *
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
    */
-  function getLocation() {
+  function getUsersPostion() {
     setLoading(true);
     navigator.geolocation.getCurrentPosition(
       (pos) =>
@@ -47,7 +48,7 @@ export default function Home() {
   }
 
   /**
-   * Fetch the coordinates.
+   * Convert city and state into lat/lng coordinates.
    */
   async function getCoordinates(search) {
     setLoading(true);
@@ -72,15 +73,17 @@ export default function Home() {
   }
 
   /**
-   * When the page loads intially, or if the
-   * user clicks the "Local Forecast" button.
+   * Attempt to get the user's location
+   * on initial page load.
    */
   useEffect(() => {
-    getLocation();
+    getUsersPostion();
   }, []);
 
+  // When the user searches, update the
+  // location with data from NWS.
   useEffect(() => {
-    if (!isLoading) setSearch(location);
+    if (!isLoading) setSearch(nwsLocation);
   }, [weather]);
 
   return (
@@ -91,7 +94,7 @@ export default function Home() {
         <link rel="preconnect" href="https://api.weather.gov/" />
       </Head>
 
-      <header className={styles.header}>
+      <header className="flex justify-between items-center">
         <h1>Weather</h1>
       </header>
 
@@ -99,9 +102,9 @@ export default function Home() {
         <label className="sr-only" htmlFor="search">
           Enter your location
         </label>
-        <div className={styles.searchForm}>
+        <div className="grid grid-cols-12 gap-2">
           <input
-            className={styles.searchInput}
+            className="p-2 col-span-10"
             id="search"
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
@@ -110,7 +113,7 @@ export default function Home() {
             type="text"
             value={searchValue}
           />
-          <button className={styles.searchButton}>Search</button>
+          <button className="col-span-2">Search</button>
         </div>
       </form>
 
@@ -120,9 +123,9 @@ export default function Home() {
             <p>Loading...</p>
           ) : (
             <>
-              <p>
+              <p className="my-4">
                 As of{" "}
-                <time className={styles.time}>
+                <time className="font-bold">
                   {dayjs(weather?.properties?.updated).format(
                     "MMMM D, YYYY @ h:mm A"
                   )}
@@ -134,7 +137,7 @@ export default function Home() {
               <h2>Alerts</h2>
               {weather?.alerts?.features.length >= 1 ? (
                 weather?.alerts?.features?.map((alert, index) => (
-                  <div className="bg-gray-200 p-4" key={index}>
+                  <div key={index}>
                     <p className="text-red-500">
                       {alert?.properties?.headline}
                     </p>
@@ -145,7 +148,7 @@ export default function Home() {
               ) : (
                 <p>No active weather alerts.</p>
               )}
-              <h2>Forecast for {location}</h2>
+              <h2>Forecast for {nwsLocation}</h2>
               <p>
                 <code>
                   {coordinates?.lat},{coordinates?.lng}
@@ -158,10 +161,10 @@ export default function Home() {
                   feet
                 </code>
               </p>
-              <div className={styles.forecastContainer}>
+              <div className="grid md:grid-cols-2 gap-6">
                 {weather.forecast?.properties?.periods.map((period, index) => (
-                  <div key={index} className={styles.forecast}>
-                    <div className={styles.forecastHeader}>
+                  <div key={index} className="p-4 bg-gray-300">
+                    <div>
                       <h2>{period.name}</h2>
                       <img
                         alt={period.name}
@@ -171,7 +174,7 @@ export default function Home() {
                         width="86"
                       />
                     </div>
-                    <div className={styles.forecastBody}>
+                    <div>
                       <p>
                         {period?.isDaytime ? <>High</> : <>Low</>}{" "}
                         {period?.temperature}° {period?.temperatureUnit} |
@@ -184,14 +187,14 @@ export default function Home() {
               </div>
               <h2>Radar</h2>
               <img
-                alt="Radar image"
-                className={styles.radar}
+                alt={`Radar image loop of ${nwsLocation}`}
+                className="radar"
                 height="550"
                 loading="lazy"
                 src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
                 width="600"
               />
-              <footer className={styles.footer}>
+              <footer className="my-4 text-center">
                 <Link href="/">
                   <a>Back to top</a>
                 </Link>
