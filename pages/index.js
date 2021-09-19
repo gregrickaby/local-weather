@@ -105,7 +105,7 @@ export default function Home() {
         </label>
         <div className="grid grid-cols-12 gap-2">
           <input
-            className="p-2 col-span-10"
+            className="p-2 col-span-9"
             id="search"
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
@@ -114,7 +114,7 @@ export default function Home() {
             type="text"
             value={searchValue}
           />
-          <button className="col-span-2">Search</button>
+          <button className="col-span-3 button">Search</button>
         </div>
       </form>
 
@@ -195,9 +195,9 @@ export default function Home() {
                 src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
                 width="600"
               />
-              <footer className="my-4 text-center">
+              <footer className="my-16 text-center">
                 <Link href="/">
-                  <a>Back to top</a>
+                  <a className="button">Back to Top</a>
                 </Link>
               </footer>
             </>

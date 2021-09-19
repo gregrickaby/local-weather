@@ -5,6 +5,14 @@ body {
   @apply px-4 py-2;
 }
 
+input {
+  @apply border border-gray-500 rounded-md;
+}
+
+.button {
+  @apply p-4 bg-gray-300 border border-gray-500 rounded-md text-gray-900 no-underline hover:bg-gray-500 hover:text-gray-100 cursor-pointer;
+}
+
 @media (max-width: 640px) {
   .radar {
     aspect-ratio: auto 600 / 550;
