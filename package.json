@@ -2,7 +2,7 @@
   "name": "nextjs-weather",
   "description": "A simple weather app using Next.js API Routes, the NWS API, and Google Maps API.",
   "version": "0.1.0",
-  "homepage": "https://github.com/gregrickaby/nextjs-weather/blob/main/README.md",
+  "homepage": "https://local-wx.vercel.app/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gregrickaby/nextjs-weather.git"
