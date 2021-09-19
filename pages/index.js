@@ -105,7 +105,7 @@ export default function Home() {
         </label>
         <div className="grid grid-cols-12 gap-2">
           <input
-            className="p-2 col-span-9"
+            className=" px-3 py-2 col-span-8 text-xl border border-gray-500 rounded-md"
             id="search"
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
@@ -114,14 +114,14 @@ export default function Home() {
             type="text"
             value={searchValue}
           />
-          <button className="col-span-3 button">Search</button>
+          <button className="col-span-4 button">Search</button>
         </div>
       </form>
 
       <main>
         <>
           {loading || isLoading ? (
-            <p>Loading...</p>
+            <p>Loading forecast...</p>
           ) : (
             <>
               <p className="my-4">
