@@ -2,7 +2,7 @@
 
 ⛈ A simple weather app using the both the [National Weather Service API](https://weather-gov.github.io/api/general-faqs) and [Google Maps API](https://developers.google.com/maps/documentation/geocoding/overview).
 
-👉 <https://local-wx.vercel.app/>
+👉 <https://localwx.vercel.app/>
 
 ---
 
