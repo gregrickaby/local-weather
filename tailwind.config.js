@@ -4,10 +4,6 @@ module.exports = {
   darkMode: "media",
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["Heebo", "sans-serif"],
-        serif: ["Lora", "serif"],
-      },
       colors: {
         gray: {
           200: "#d3d3d3",

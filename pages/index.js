@@ -132,7 +132,12 @@ export default function Home() {
                   )}
                 </time>{" "}
                 from{" "}
-                <a href="https://www.weather.gov/">National Weather Service</a>{" "}
+                <a
+                  href="https://www.weather.gov/"
+                  className="dark:text-gray-300"
+                >
+                  National Weather Service
+                </a>{" "}
                 office in {weather?.station?.name}.
               </p>
               <h2>Alerts</h2>
@@ -164,7 +169,7 @@ export default function Home() {
               </p>
               <div className="grid md:grid-cols-2 gap-6">
                 {weather.forecast?.properties?.periods.map((period, index) => (
-                  <div key={index} className="p-4 bg-gray-300">
+                  <div key={index} className="p-4 bg-gray-300 dark:bg-gray-800">
                     <div>
                       <h2>{period.name}</h2>
                       <img
