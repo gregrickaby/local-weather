@@ -25,8 +25,8 @@
     "swr": "^1.0.1"
   },
   "devDependencies": {
-    "autoprefixer": "^10.3.4",
-    "postcss": "^8.3.6",
+    "autoprefixer": "^10.3.5",
+    "postcss": "^8.3.7",
     "tailwindcss": "^2.2.15"
   }
 }
