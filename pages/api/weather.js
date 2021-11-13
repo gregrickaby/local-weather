@@ -1,5 +1,5 @@
 /**
- * The weather forecast from DarkSky.
+ * Weather data from The National Weather Service.
  *
  * @example
  * /api/weather?lat=28.3802&lng=-81.5612
