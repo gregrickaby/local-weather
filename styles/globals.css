@@ -2,11 +2,11 @@
 @tailwind utilities;
 
 body {
-  @apply font-sans dark:bg-gray-900 dark:text-gray-200 px-4 py-2 text-xl;
+  @apply font-sans dark:bg-zinc-900 dark:text-zinc-200 px-4 py-2 text-xl;
 }
 
 .button {
-  @apply p-4 text-xl bg-gray-300 border border-gray-500 rounded-md text-gray-900 no-underline hover:bg-gray-500 hover:text-gray-100 cursor-pointer;
+  @apply p-4 text-xl bg-zinc-300 border border-zinc-500 rounded-md text-zinc-900 no-underline hover:bg-zinc-500 hover:text-zinc-100 cursor-pointer;
 }
 
 @media (max-width: 640px) {

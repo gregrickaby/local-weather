@@ -105,7 +105,7 @@ export default function Home() {
         </label>
         <div className="grid grid-cols-12 gap-2">
           <input
-            className=" px-3 py-2 col-span-8 text-xl border border-gray-500 rounded-md"
+            className=" px-3 py-2 col-span-8 text-xl border border-zinc-500 rounded-md"
             id="search"
             minLength="4"
             onChange={(e) => setSearch(e.target.value)}
@@ -134,7 +134,7 @@ export default function Home() {
                 from{" "}
                 <a
                   href="https://www.weather.gov/"
-                  className="dark:text-gray-300"
+                  className="dark:text-zinc-300"
                 >
                   National Weather Service
                 </a>{" "}
@@ -169,7 +169,7 @@ export default function Home() {
               </p>
               <div className="grid md:grid-cols-2 gap-6">
                 {weather.forecast?.properties?.periods.map((period, index) => (
-                  <div key={index} className="p-4 bg-gray-300 dark:bg-gray-800">
+                  <div key={index} className="p-4 bg-zinc-300 dark:bg-zinc-800">
                     <div>
                       <h2>{period.name}</h2>
                       <img
