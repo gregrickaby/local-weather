@@ -10,7 +10,7 @@
 
 - [Prerequisites](#prerequisites)
 - [Install](#install)
-  - [Set ENV Variables](#set-env-variables)
+  - [Set ENV Variable](#set-env-variable)
 - [Working with Next.js](#working-with-nextjs)
   - [Folder Structure](#folder-structure)
   - [NPM Scripts](#npm-scripts)
@@ -19,9 +19,16 @@
 
 ## Prerequisites
 
-1. [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key)
+First, you'll need to generate a [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key).
 
-> Note: In [Google Cloud Platform](https://console.cloud.google.com/apis/credentials) --> Credentials, you must set application restrictions to "None" and then "Restrict key" to "Geocoding".
+Once you've generated a key, visit the [Credentials page](https://console.cloud.google.com/apis/credentials) and follow the instructions below:
+
+1. Set application restrictions to "None"
+2. Select "Restrict key"
+3. Choose "Geocoding" from the dropdown
+4. Save
+
+![screenshot of google api settings](https://dl.dropbox.com/s/56yhq22gvdip9gf/Screen%20Shot%202022-01-10%20at%2012.50.11.png?dl=0)
 
 ---
 
@@ -33,13 +40,11 @@ Use [create-next-app](https://www.npmjs.com/package/create-next-app) to get up a
 npx create-next-app nextjs-weather --example https://github.com/gregrickaby/nextjs-weather
 ```
 
-### Set ENV Variables
+### Set ENV Variable
 
-Create an `.env` file (or rename `.env.sample` to `.env`) in the root of the project.
+Rename `.env.sample` to `.env` in the root of the project. Add the Google Maps API key you generated earlier to the following ENV Var:
 
-Add your keys to the following vars:
-
-```bash
+```text
 GOOGLE_MAPS_API_KEY="YOUR-KEY"
 ```
 
