@@ -1,8 +1,10 @@
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { useWeather } from "../lib/swr-hooks";
+import Image from "next/image";
 import Link from "next/link";
 import dayjs from "dayjs";
+import logo from "../public/logo.webp";
 
 /**
  * The Homepage component.
@@ -84,7 +86,7 @@ export default function Home() {
   // location with data from NWS.
   useEffect(() => {
     if (!isLoading) setSearch(nwsLocation);
-  }, [weather]);
+  }, [isLoading, nwsLocation]);
 
   return (
     <>
@@ -95,7 +97,7 @@ export default function Home() {
       </Head>
 
       <header className="flex items-center space-x-2">
-        <img src="logo.webp" alt="" height="32" width="32" loading="eager" />
+        <Image src={logo} alt="" priority />
         <h1>Weather</h1>
       </header>
 
@@ -172,7 +174,7 @@ export default function Home() {
                   <div key={index} className="p-4 bg-zinc-300 dark:bg-zinc-800">
                     <div>
                       <h2>{period.name}</h2>
-                      <img
+                      <Image
                         alt={period.name}
                         height="86"
                         loading="lazy"
@@ -194,13 +196,13 @@ export default function Home() {
                 ))}
               </div>
               <h2>Radar</h2>
-              <img
+              <Image
                 alt={`Radar image loop of ${nwsLocation}`}
                 className="radar"
-                height="550"
+                height={550}
                 loading="lazy"
                 src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
-                width="600"
+                width={600}
               />
               <footer className="my-16 text-center">
                 <Link href="/">
