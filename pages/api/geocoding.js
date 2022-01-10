@@ -17,21 +17,28 @@ export default async function geocoding(req, res) {
   const { address } = req.query;
 
   try {
-    // Attempt to fetch.
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GOOGLE_MAPS_API_KEY}`
     );
-
-    // Convert response to JSON.
     const data = await response.json();
 
-    // Pluck out the coordinates.
-    const coordinates = JSON.stringify(data?.results[0]?.geometry?.location);
+    // If the response is "OK", continue.
+    if (data.status === "OK") {
+      // Pluck out the coordinates.
+      const coordinates = JSON.stringify(data?.results[0]?.geometry?.location);
 
-    // Send the response to the user.
-    res.status(200).json(coordinates);
+      // Return the coordinates.
+      res.status(200).json(coordinates);
+
+      // Otherwise, return an error.
+    } else {
+      res.status(500).json({
+        status: `${data?.status}`,
+        message: `${data?.error_message}`,
+      });
+    }
   } catch (error) {
-    // Issue? Leave a message and bail.
+    // Other issue? Leave a message and bail.
     res.status(500).json({ message: `${error}` });
   }
 }
