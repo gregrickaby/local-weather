@@ -4,7 +4,11 @@
  * @example
  * /api/geocoding?address="orlando,+fl"
  *
+ * Note: In Google Cloud Platform --> Credentials, you must set
+ * application restrictions to "None" and then "Restrict key" to "Geocoding".
+ *
  * @author Greg Rickaby
+ * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/geocoding/overview
  * @see https://nextjs.org/docs/api-routes/introduction
  * @see https://nodejs.org/api/http.html#http_class_http_incomingmessage
