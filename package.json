@@ -1,8 +1,8 @@
 {
   "name": "nextjs-weather",
   "description": "A simple weather app using Next.js API Routes, the NWS API, and Google Maps API.",
-  "version": "0.1.0",
-  "homepage": "https://local-wx.vercel.app/",
+  "version": "1.0",
+  "homepage": "https://localwx.vercel.app/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gregrickaby/nextjs-weather.git"
@@ -13,10 +13,14 @@
   },
   "private": true,
   "scripts": {
-    "dev": "rimraf .next && next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "rimraf .next && next dev",
+    "format": "npx prettier '**/*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}' --config=.prettierrc.js --write || true",
+    "lint": "npm run format && npm run lint:js && npm run lint:css && npm run lint:md",
+    "lint:css": "npx stylelint '**/*.css' --config=.stylelintrc.js --fix || true",
+    "lint:js": "npx eslint '**/*.{js,ts,jsx,tsx}' --fix || true && next lint",
+    "lint:md": "npx markdownlint '**/*.{md,mdx}' --fix",
+    "start": "next start"
   },
   "dependencies": {
     "dayjs": "^1.10.7",
@@ -26,11 +30,19 @@
     "swr": "^1.1.2"
   },
   "devDependencies": {
+    "@arkweid/lefthook": "^0.7.7",
     "autoprefixer": "^10.4.2",
-    "eslint": "8.6.0",
-    "eslint-config-next": "12.0.7",
+    "eslint": "^8.6.0",
+    "eslint-config-next": "^12.0.7",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "markdownlint": "^0.25.0",
+    "markdownlint-cli": "^0.30.0",
     "postcss": "^8.4.5",
+    "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
+    "stylelint": "^14.2.0",
+    "stylelint-config-standard": "^24.0.0",
     "tailwindcss": "^3.0.12"
   }
 }
