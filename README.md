@@ -56,18 +56,29 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 
 ```text
 ├── pages
-|  ├── _app.js
-|  ├── _document.js
 |  ├── api
 |  |  ├── geocoding.js
 |  |  └── weather.js
+|  ├── _app.js
+|  ├── _document.js
 |  └── index.js
 ├── public
+|  ├── favicon.ico
+|  ├── logo.webp
 ├── styles
 |  └── globals.css
+├── .env.sample
+├── .eslintrc.json
+├── .gitignore
+├── .env.sample
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── next.config.js
+├── tailwind.config.js
 ```
 
-**Pages** - This folder contains standard Next.js pages and API middleware routes.
+**Pages** - This folder contains standard Next.js pages and `/api` middleware routes.
 
 **Public** - This folder contains all of the static assets.
 
@@ -81,6 +92,12 @@ Start local dev server:
 
 ```bash
 npm run dev
+```
+
+Lint code:
+
+```bash
+npm run lint
 ```
 
 Test a build prior to deployment:
