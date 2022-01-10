@@ -21,6 +21,8 @@
 
 1. [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key)
 
+> Note: In [Google Cloud Platform](https://console.cloud.google.com/apis/credentials) --> Credentials, you must set application restrictions to "None" and then "Restrict key" to "Geocoding".
+
 ---
 
 ## Install
