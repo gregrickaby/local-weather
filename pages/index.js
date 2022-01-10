@@ -167,7 +167,7 @@ export default function Home() {
                   feet
                 </code>
               </p>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-4 gap-4">
                 {weather.forecast?.properties?.periods.map((period, index) => (
                   <div key={index} className="p-4 bg-zinc-300 dark:bg-zinc-800">
                     <div>
@@ -183,8 +183,10 @@ export default function Home() {
                     <div>
                       <p>
                         {period?.isDaytime ? <>High</> : <>Low</>}{" "}
-                        {period?.temperature}° {period?.temperatureUnit} |
-                        Winds: {period?.windDirection} at {period?.windSpeed}
+                        {period?.temperature}° {period?.temperatureUnit}
+                      </p>
+                      <p>
+                        Wind {period?.windDirection} at {period?.windSpeed}
                       </p>
                       <p>{period?.detailedForecast}</p>
                     </div>
