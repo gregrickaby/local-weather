@@ -1,6 +1,6 @@
 module.exports = {
   swcMinify: true,
   images: {
-    domains: ["api.weather.gov", "radar.weather.gov"],
-  },
-};
+    domains: ['api.weather.gov', 'radar.weather.gov']
+  }
+}

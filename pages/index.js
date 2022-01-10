@@ -1,10 +1,10 @@
-import Head from "next/head";
-import { useState, useEffect } from "react";
-import { useWeather } from "../lib/swr-hooks";
-import Image from "next/image";
-import Link from "next/link";
-import dayjs from "dayjs";
-import logo from "../public/logo.webp";
+import Head from 'next/head'
+import {useState, useEffect} from 'react'
+import {useWeather} from '../lib/swr-hooks'
+import Image from 'next/image'
+import Link from 'next/link'
+import dayjs from 'dayjs'
+import logo from '../public/logo.webp'
 
 /**
  * The Homepage component.
@@ -15,14 +15,14 @@ import logo from "../public/logo.webp";
 export default function Home() {
   const [coordinates, setCoordinates] = useState({
     lat: 28.3802,
-    lng: -81.5612,
-  });
-  const [loading, setLoading] = useState(true);
-  const [searchValue, setSearch] = useState("Bay Lake, FL");
-  const { weather, isLoading } = useWeather(loading, coordinates);
+    lng: -81.5612
+  })
+  const [loading, setLoading] = useState(true)
+  const [searchValue, setSearch] = useState('Bay Lake, FL')
+  const {weather, isLoading} = useWeather(loading, coordinates)
 
   // The location returned from NWS API all prettied up.
-  const nwsLocation = `${weather?.location?.relativeLocation?.properties?.city}, ${weather?.location?.relativeLocation?.properties?.state}`;
+  const nwsLocation = `${weather?.location?.relativeLocation?.properties?.city}, ${weather?.location?.relativeLocation?.properties?.state}`
 
   /**
    * Fetch user's coordinates.
@@ -30,36 +30,36 @@ export default function Home() {
    * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
    */
   function getUsersPostion() {
-    setLoading(true);
+    setLoading(true)
     navigator.geolocation.getCurrentPosition(
       (pos) =>
         setCoordinates({
           lat: pos?.coords?.latitude,
-          lng: pos?.coords?.longitude,
+          lng: pos?.coords?.longitude
         }),
       (err) => {
-        console.warn(`There was a problem getting your location ${err}`);
+        console.warn(`There was a problem getting your location ${err}`)
       },
       {
         enableHighAccuracy: false,
         timeout: 5000,
-        maximumAge: 0,
+        maximumAge: 0
       }
-    );
-    setLoading(false);
+    )
+    setLoading(false)
   }
 
   /**
    * Convert city and state into lat/lng coordinates.
    */
   async function getCoordinates(search) {
-    setLoading(true);
+    setLoading(true)
     const response = await fetch(
       `/api/geocoding?address=${JSON.stringify(search)}`
-    );
-    const coordinates = await response.json();
-    setCoordinates(coordinates);
-    setLoading(false);
+    )
+    const coordinates = await response.json()
+    setCoordinates(coordinates)
+    setLoading(false)
   }
 
   /**
@@ -68,10 +68,10 @@ export default function Home() {
    * @param {object} event The event object.
    */
   function handleSearch(event) {
-    event.preventDefault();
-    setLoading(true);
-    setSearch(searchValue);
-    getCoordinates(searchValue);
+    event.preventDefault()
+    setLoading(true)
+    setSearch(searchValue)
+    getCoordinates(searchValue)
   }
 
   /**
@@ -79,14 +79,14 @@ export default function Home() {
    * on initial page load.
    */
   useEffect(() => {
-    getUsersPostion();
-  }, []);
+    getUsersPostion()
+  }, [])
 
   // When the user searches, update the
   // location with data from NWS.
   useEffect(() => {
-    if (!isLoading) setSearch(nwsLocation);
-  }, [isLoading, nwsLocation]);
+    if (!isLoading) setSearch(nwsLocation)
+  }, [isLoading, nwsLocation])
 
   return (
     <>
@@ -94,86 +94,64 @@ export default function Home() {
         <title>Weather</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://api.weather.gov/" />
+        <link rel="dns-prefetch" href="https://radar.weather.gov/" />
       </Head>
 
-      <header className="flex items-center space-x-2">
-        <Image src={logo} alt="" priority />
-        <h1>Weather</h1>
+      <header className="grid grid-cols-12 gap-4 items-center">
+        <div className="col-span-4">
+          <div className="flex items-center space-x-4">
+            <Image src={logo} alt="" priority />
+            <h1>Local Weather</h1>
+          </div>
+        </div>
+        <form onSubmit={handleSearch} className="col-start-7 col-span-6">
+          <label className="sr-only" htmlFor="search">
+            Enter your location
+          </label>
+          <div className="grid grid-cols-12 gap-2">
+            <input
+              className=" px-3 py-2 col-span-10 text-xl border border-zinc-500 rounded-md"
+              id="search"
+              minLength="4"
+              onChange={(e) => setSearch(e.target.value)}
+              pattern="^[^~`^<>]+$"
+              placeholder="Bay Lake, FL"
+              type="text"
+              value={searchValue}
+            />
+            <button className="col-span-2 button">Search</button>
+          </div>
+        </form>
       </header>
 
-      <form onSubmit={handleSearch}>
-        <label className="sr-only" htmlFor="search">
-          Enter your location
-        </label>
-        <div className="grid grid-cols-12 gap-2">
-          <input
-            className=" px-3 py-2 col-span-8 text-xl border border-zinc-500 rounded-md"
-            id="search"
-            minLength="4"
-            onChange={(e) => setSearch(e.target.value)}
-            pattern="^[^~`^<>]+$"
-            placeholder="Bay Lake, FL"
-            type="text"
-            value={searchValue}
-          />
-          <button className="col-span-4 button">Search</button>
-        </div>
-      </form>
-
-      <main>
+      <main className="space-y-8">
         <>
           {loading || isLoading ? (
             <p>Loading forecast...</p>
           ) : (
             <>
-              <p className="my-4">
-                As of{" "}
-                <time className="font-bold">
-                  {dayjs(weather?.properties?.updated).format(
-                    "MMMM D, YYYY @ h:mm A"
-                  )}
-                </time>{" "}
-                from{" "}
-                <a
-                  href="https://www.weather.gov/"
-                  className="dark:text-zinc-300"
-                >
-                  National Weather Service
-                </a>{" "}
-                office in {weather?.station?.name}.
-              </p>
-              <h2>Alerts</h2>
-              {weather?.alerts?.features.length >= 1 ? (
-                weather?.alerts?.features?.map((alert, index) => (
-                  <div key={index}>
-                    <p className="text-red-500">
-                      {alert?.properties?.headline}
-                    </p>
-                    <p>{alert?.properties?.description}</p>
-                    <p>{alert?.properties?.instruction}</p>
-                  </div>
-                ))
-              ) : (
-                <p>No active weather alerts.</p>
+              {weather?.alerts?.features.length >= 1 && (
+                <>
+                  <h2>Alerts</h2>
+                  {weather?.alerts?.features?.map((alert, index) => (
+                    <div key={index}>
+                      <p className="text-red-500">
+                        {alert?.properties?.headline}
+                      </p>
+                      <p>{alert?.properties?.description}</p>
+                      <p>{alert?.properties?.instruction}</p>
+                    </div>
+                  ))}
+                </>
               )}
-              <h2>Forecast for {nwsLocation}</h2>
-              <p>
-                <code>
-                  {coordinates?.lat},{coordinates?.lng}
-                </code>{" "}
-                @{" "}
-                <code>
-                  {Math.round(
-                    weather?.forecast?.properties?.elevation?.value * 3.2808
-                  )}{" "}
-                  feet
-                </code>
-              </p>
-              <div className="grid md:grid-cols-4 gap-4">
+
+              <h2>Forecast</h2>
+
+              <div className="grid md:grid-cols-2 gap-4">
                 {weather.forecast?.properties?.periods.map((period, index) => (
                   <div key={index} className="p-4 bg-zinc-300 dark:bg-zinc-800">
                     <div>
-                      <h2>{period.name}</h2>
+                      <h3>{period.name}</h3>
                       <Image
                         alt={period.name}
                         height="86"
@@ -184,7 +162,7 @@ export default function Home() {
                     </div>
                     <div>
                       <p>
-                        {period?.isDaytime ? <>High</> : <>Low</>}{" "}
+                        {period?.isDaytime ? <>High</> : <>Low</>}{' '}
                         {period?.temperature}° {period?.temperatureUnit}
                       </p>
                       <p>
@@ -195,6 +173,7 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+
               <h2>Radar</h2>
               <Image
                 alt={`Radar image loop of ${nwsLocation}`}
@@ -205,6 +184,22 @@ export default function Home() {
                 width={600}
               />
               <footer className="my-16 text-center">
+                <p className="text-sm font-mono my-4">
+                  <time className="font-bold">
+                    As of{' '}
+                    {dayjs(weather?.properties?.updated).format(
+                      'MMMM D, YYYY @ H:mm'
+                    )}
+                  </time>{' '}
+                  from{' '}
+                  <a
+                    href="https://www.weather.gov/"
+                    className="dark:text-zinc-300"
+                  >
+                    the National Weather Service
+                  </a>{' '}
+                  in {weather?.station?.name}.
+                </p>
                 <Link href="/">
                   <a className="button">Back to Top</a>
                 </Link>
@@ -214,5 +209,5 @@ export default function Home() {
         </>
       </main>
     </>
-  );
+  )
 }

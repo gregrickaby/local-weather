@@ -10,10 +10,10 @@
 
 - [Prerequisites](#prerequisites)
 - [Install](#install)
-  - [Set ENV Variable](#set-env-variable)
+    - [Set ENV Variable](#set-env-variable)
 - [Working with Next.js](#working-with-nextjs)
-  - [Folder Structure](#folder-structure)
-  - [NPM Scripts](#npm-scripts)
+    - [Folder Structure](#folder-structure)
+    - [NPM Scripts](#npm-scripts)
 
 ---
 
@@ -70,7 +70,6 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 ├── .env.sample
 ├── .eslintrc.json
 ├── .gitignore
-├── .env.sample
 ├── package-lock.json
 ├── package.json
 ├── postcss.config.js

@@ -14,39 +14,39 @@
  */
 export default async function weather(req, res) {
   // Destructure the request.
-  const { lat, lng } = req.query;
+  const {lat, lng} = req.query
 
   try {
     // NWS requires two requests.
     // The first request is to get the forecast point based on geocoding.
     const requestOne = await fetch(
       `https://api.weather.gov/points/${lat},${lng}`
-    );
-    const point = await requestOne.json();
+    )
+    const point = await requestOne.json()
 
     // The second request is to get the actual forecast.
-    const requestTwo = await fetch(point.properties.forecast);
-    const forecast = await requestTwo.json();
+    const requestTwo = await fetch(point.properties.forecast)
+    const forecast = await requestTwo.json()
 
     // Third request is to get the alerts.
     const requestThree = await fetch(
       `https://api.weather.gov/alerts/active?status=actual&message_type=alert&point=${lat},${lng}`
-    );
-    const alerts = await requestThree.json();
+    )
+    const alerts = await requestThree.json()
 
     // Four request is to get the local weather office.
-    const requestFour = await fetch(point.properties.forecastOffice);
-    const station = await requestFour.json();
+    const requestFour = await fetch(point.properties.forecastOffice)
+    const station = await requestFour.json()
 
     // Send the response.
     res.status(200).json({
       alerts,
       forecast,
       location: point?.properties,
-      station,
-    });
+      station
+    })
   } catch (error) {
     // Issue? Leave a message and bail.
-    res.status(500).json({ message: `${error}` });
+    res.status(500).json({message: `${error}`})
   }
 }
