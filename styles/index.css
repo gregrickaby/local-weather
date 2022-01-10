@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply dark:bg-zinc-900 dark:text-zinc-200 px-4 py-2 text-xl;
+  }
+
+  input {
+    @apply text-zinc-900;
+  }
+
+  h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3 {
+    @apply text-xl font-bold;
+  }
+
+  p {
+    @apply text-base;
+  }
+}
+
+.button {
+  @apply p-2 bg-zinc-700 border border-zinc-500 rounded-md no-underline hover:bg-zinc-500 hover:text-zinc-100 cursor-pointer;
+}
