@@ -97,8 +97,6 @@ export default function Home() {
           content="View the local weather forecast from the National Weather Service."
         />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://api.weather.gov/" />
-        <link rel="dns-prefetch" href="https://radar.weather.gov/" />
       </Head>
 
       <header className="grid md:grid-cols-12 gap-4 items-center mb-8">
