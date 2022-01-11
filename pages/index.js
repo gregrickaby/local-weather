@@ -91,7 +91,11 @@ export default function Home() {
   return (
     <div className="p-4">
       <Head>
-        <title>Weather</title>
+        <title>Local Weather</title>
+        <meta
+          name="description"
+          content="View the local weather forecast from the National Weather Service."
+        />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://api.weather.gov/" />
         <link rel="dns-prefetch" href="https://radar.weather.gov/" />
