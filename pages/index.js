@@ -89,7 +89,7 @@ export default function Home() {
   }, [isLoading, nwsLocation])
 
   return (
-    <>
+    <div className="p-4">
       <Head>
         <title>Weather</title>
         <link rel="icon" href="/favicon.ico" />
@@ -97,20 +97,20 @@ export default function Home() {
         <link rel="dns-prefetch" href="https://radar.weather.gov/" />
       </Head>
 
-      <header className="grid grid-cols-12 gap-4 items-center">
-        <div className="col-span-4">
-          <div className="flex items-center space-x-4">
+      <header className="grid md:grid-cols-12 gap-4 items-center mb-8">
+        <div className="md:col-span-4">
+          <div className="flex items-center justify-center space-x-4">
             <Image src={logo} alt="" priority />
             <h1>Local Weather</h1>
           </div>
         </div>
-        <form onSubmit={handleSearch} className="col-start-7 col-span-6">
+        <form onSubmit={handleSearch} className="md:col-start-7 md:col-span-6">
           <label className="sr-only" htmlFor="search">
             Enter your location
           </label>
           <div className="grid grid-cols-12 gap-2">
             <input
-              className=" px-3 py-2 col-span-10 text-xl border border-zinc-500 rounded-md"
+              className=" px-3 py-2 col-span-8 md:col-span-10 text-xl border border-zinc-500 rounded-md"
               id="search"
               minLength="4"
               onChange={(e) => setSearch(e.target.value)}
@@ -119,7 +119,7 @@ export default function Home() {
               type="text"
               value={searchValue}
             />
-            <button className="col-span-2 button">Search</button>
+            <button className="col-span-4 md:col-span-2 button">Search</button>
           </div>
         </form>
       </header>
@@ -145,31 +145,22 @@ export default function Home() {
                 </>
               )}
 
-              <h2>Forecast</h2>
-
+              <h2 className="sr-only">Forecast</h2>
               <div className="grid md:grid-cols-2 gap-4">
                 {weather.forecast?.properties?.periods.map((period, index) => (
-                  <div key={index} className="p-4 bg-zinc-300 dark:bg-zinc-800">
-                    <div>
-                      <h3>{period.name}</h3>
-                      <Image
-                        alt={period.name}
-                        height="86"
-                        loading="lazy"
-                        src={period.icon}
-                        width="86"
-                      />
-                    </div>
-                    <div>
-                      <p>
-                        {period?.isDaytime ? <>High</> : <>Low</>}{' '}
-                        {period?.temperature}° {period?.temperatureUnit}
-                      </p>
-                      <p>
-                        Wind {period?.windDirection} at {period?.windSpeed}
-                      </p>
-                      <p>{period?.detailedForecast}</p>
-                    </div>
+                  <div
+                    key={index}
+                    className="p-4 space-y-2 bg-zinc-300 dark:bg-zinc-800"
+                  >
+                    <p className="mb-4 font-bold">{period.name}</p>
+                    <Image
+                      alt={period.name}
+                      height="86"
+                      loading="lazy"
+                      src={period.icon}
+                      width="86"
+                    />
+                    <p>{period?.detailedForecast}</p>
                   </div>
                 ))}
               </div>
@@ -208,6 +199,6 @@ export default function Home() {
           )}
         </>
       </main>
-    </>
+    </div>
   )
 }
