@@ -99,7 +99,7 @@ export default function Home() {
 
       <header className="grid md:grid-cols-12 gap-4 items-center mb-8">
         <div className="md:col-span-4">
-          <div className="flex items-center justify-center space-x-4">
+          <div className="flex items-center justify-center md:justify-start space-x-4">
             <Image src={logo} alt="" priority />
             <h1>Local Weather</h1>
           </div>
