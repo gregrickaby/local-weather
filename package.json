@@ -35,7 +35,7 @@
     "@types/react": "^17.0.38",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.6.0",
-    "eslint-config-next": "^12.0.7",
+    "eslint-config-next": "^12.0.8",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "markdownlint": "^0.25.0",
