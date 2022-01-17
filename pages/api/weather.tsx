@@ -1,3 +1,5 @@
+import type {NextApiRequest, NextApiResponse} from 'next'
+
 /**
  * Weather data from The National Weather Service.
  *
@@ -12,7 +14,10 @@
  * @param {object} req The incoming request object.
  * @param {object} res The outgoing response object.
  */
-export default async function weather(req, res) {
+export default async function weather(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   // Destructure the request.
   const {lat, lng} = req.query
 

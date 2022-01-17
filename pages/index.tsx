@@ -52,7 +52,7 @@ export default function Home() {
   /**
    * Convert city and state into lat/lng coordinates.
    */
-  async function getCoordinates(search) {
+  async function getCoordinates(search: string) {
     setLoading(true)
     const response = await fetch(
       `/api/geocoding?address=${JSON.stringify(search)}`
@@ -67,7 +67,7 @@ export default function Home() {
    *
    * @param {object} event The event object.
    */
-  function handleSearch(event) {
+  function handleSearch(event: any) {
     event.preventDefault()
     setLoading(true)
     setSearch(searchValue)
@@ -114,7 +114,7 @@ export default function Home() {
             <input
               className=" px-3 py-2 col-span-8 md:col-span-10 text-xl border border-zinc-500 rounded-md"
               id="search"
-              minLength="4"
+              minLength={4}
               onChange={(e) => setSearch(e.target.value)}
               pattern="^[^~`^<>]+$"
               placeholder="Bay Lake, FL"
@@ -147,60 +147,66 @@ export default function Home() {
                 </>
               )}
 
-              <h2 className="sr-only">Forecast</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                {weather.forecast?.properties?.periods.map((period, index) => (
-                  <div
-                    key={index}
-                    className="p-4 space-y-2 bg-zinc-300 dark:bg-zinc-800"
-                  >
-                    <p className="mb-4 font-bold">{period.name}</p>
-                    <Image
-                      alt={period.name}
-                      height="86"
-                      loading="lazy"
-                      src={period.icon}
-                      width="86"
-                    />
-                    <p>{period?.detailedForecast}</p>
-                  </div>
-                ))}
-              </div>
+              <section>
+                <h2 className="sr-only">Forecast</h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {weather.forecast?.properties?.periods.map(
+                    (period, index) => (
+                      <div
+                        key={index}
+                        className="p-4 space-y-2 bg-zinc-300 dark:bg-zinc-800"
+                      >
+                        <p className="mb-4 font-bold">{period.name}</p>
+                        <Image
+                          alt={period.name}
+                          height="86"
+                          loading="lazy"
+                          src={period.icon}
+                          width="86"
+                        />
+                        <p>{period?.detailedForecast}</p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </section>
 
-              <h2>Radar</h2>
-              <Image
-                alt={`Radar image loop of ${nwsLocation}`}
-                className="radar"
-                height={550}
-                loading="lazy"
-                src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
-                width={600}
-              />
-              <footer className="my-16 text-center">
-                <p className="text-sm font-mono my-4">
-                  <time className="font-bold">
-                    As of{' '}
-                    {dayjs(weather?.properties?.updated).format(
-                      'MMMM D, YYYY @ H:mm'
-                    )}
-                  </time>{' '}
-                  from{' '}
-                  <a
-                    href="https://www.weather.gov/"
-                    className="dark:text-zinc-300"
-                  >
-                    the National Weather Service
-                  </a>{' '}
-                  in {weather?.station?.name}.
-                </p>
-                <Link href="/">
-                  <a className="button">Back to Top</a>
-                </Link>
-              </footer>
+              <section>
+                <h2>Radar</h2>
+                <Image
+                  alt={`Radar image loop of ${nwsLocation}`}
+                  className="radar"
+                  height={550}
+                  loading="lazy"
+                  src={`https://radar.weather.gov/ridge/lite/${weather?.location?.radarStation}_loop.gif`}
+                  width={600}
+                />
+              </section>
             </>
           )}
         </>
       </main>
+
+      {!isLoading && (
+        <footer className="my-16 text-center">
+          <p className="text-sm font-mono my-4">
+            <time className="font-bold">
+              As of{' '}
+              {dayjs(weather?.properties?.updated).format(
+                'MMMM D, YYYY @ H:mm'
+              )}
+            </time>{' '}
+            from{' '}
+            <a href="https://www.weather.gov/" className="dark:text-zinc-300">
+              the National Weather Service
+            </a>{' '}
+            in {weather?.station?.name}.
+          </p>
+          <Link href="/">
+            <a className="button">Back to Top</a>
+          </Link>
+        </footer>
+      )}
     </div>
   )
 }
