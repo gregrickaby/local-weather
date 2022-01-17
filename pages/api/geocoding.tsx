@@ -1,3 +1,5 @@
+import type {NextApiRequest, NextApiResponse} from 'next'
+
 /**
  * Geocode the address into latitude and longitude coordinates.
  *
@@ -16,7 +18,10 @@
  * @param {object} req The incoming request object.
  * @param {object} res The outgoing response object.
  */
-export default async function geocoding(req, res) {
+export default async function geocoding(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   // Destructure the request.
   const {address} = req.query
 
