@@ -57,11 +57,11 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 ```text
 ├── pages
 |  ├── api
-|  |  ├── geocoding.js
-|  |  └── weather.js
-|  ├── _app.js
-|  ├── _document.js
-|  └── index.js
+|  |  ├── geocoding.tsx
+|  |  └── weather.tsx
+|  ├── _app.tsx
+|  ├── _document.tsx
+|  └── index.tsx
 ├── public
 |  ├── favicon.ico
 |  ├── logo.webp
