@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply dark:bg-zinc-900 dark:text-zinc-200 px-4 py-2 text-xl;
+    @apply px-4 py-2 text-xl dark:bg-zinc-900 dark:text-zinc-200;
   }
 
   input {
@@ -25,5 +25,5 @@
 }
 
 .button {
-  @apply p-2 bg-zinc-700 border border-zinc-500 rounded-md no-underline hover:bg-zinc-500 hover:text-zinc-100 cursor-pointer;
+  @apply cursor-pointer rounded-md border border-zinc-500 bg-zinc-700 p-2 no-underline hover:bg-zinc-500 hover:text-zinc-100;
 }
