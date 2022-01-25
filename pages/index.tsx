@@ -99,20 +99,20 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <header className="grid md:grid-cols-12 gap-4 items-center mb-8">
+      <header className="mb-8 grid items-center gap-4 md:grid-cols-12">
         <div className="md:col-span-4">
-          <div className="flex items-center justify-center md:justify-start space-x-4">
+          <div className="flex items-center justify-center space-x-4 md:justify-start">
             <Image src={logo} alt="" priority />
             <h1>Local Weather</h1>
           </div>
         </div>
-        <form onSubmit={handleSearch} className="md:col-start-7 md:col-span-6">
+        <form onSubmit={handleSearch} className="md:col-span-6 md:col-start-7">
           <label className="sr-only" htmlFor="search">
             Enter your location
           </label>
           <div className="grid grid-cols-12 gap-2">
             <input
-              className=" px-3 py-2 col-span-8 md:col-span-10 text-xl border border-zinc-500 rounded-md"
+              className=" col-span-8 rounded-md border border-zinc-500 px-3 py-2 text-xl md:col-span-10"
               id="search"
               minLength={4}
               onChange={(e) => setSearch(e.target.value)}
@@ -121,7 +121,7 @@ export default function Home() {
               type="text"
               value={searchValue}
             />
-            <button className="col-span-4 md:col-span-2 button">Search</button>
+            <button className="button col-span-4 md:col-span-2">Search</button>
           </div>
         </form>
       </header>
@@ -149,12 +149,12 @@ export default function Home() {
 
               <section>
                 <h2 className="sr-only">Forecast</h2>
-                <div className="grid md:grid-cols-2 gap-4">
+                <div className="grid gap-4 md:grid-cols-2">
                   {weather.forecast?.properties?.periods.map(
                     (period, index) => (
                       <div
                         key={index}
-                        className="p-4 space-y-2 bg-zinc-300 dark:bg-zinc-800"
+                        className="space-y-2 bg-zinc-300 p-4 dark:bg-zinc-800"
                       >
                         <p className="mb-4 font-bold">{period.name}</p>
                         <Image
@@ -189,7 +189,7 @@ export default function Home() {
 
       {!isLoading && (
         <footer className="my-16 text-center">
-          <p className="text-sm font-mono my-4">
+          <p className="my-4 font-mono text-sm">
             <time className="font-bold">
               As of{' '}
               {dayjs(weather?.properties?.updated).format(
