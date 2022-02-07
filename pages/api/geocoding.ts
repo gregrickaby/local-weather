@@ -8,7 +8,6 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  *
  * Note: In Google Cloud Platform --> Credentials, you must set
  * application restrictions to "None" and then "Restrict key" to "Geocoding".
- *
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/geocoding/overview

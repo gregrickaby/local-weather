@@ -5,7 +5,6 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  *
  * @example
  * /api/weather?lat=28.3802&lng=-81.5612
- *
  * @author Greg Rickaby
  * @see https://weather-gov.github.io/api/general-faqs
  * @see https://nextjs.org/docs/api-routes/introduction
