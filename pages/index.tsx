@@ -1,16 +1,16 @@
+import dayjs from 'dayjs'
 import Head from 'next/head'
-import {useState, useEffect} from 'react'
-import {useWeather} from '../lib/swr-hooks'
 import Image from 'next/image'
 import Link from 'next/link'
-import dayjs from 'dayjs'
-import logo from '../public/logo.webp'
+import {useEffect, useState} from 'react'
+import useWeather from '~/lib/useWeather'
+import logo from '~/public/logo.webp'
 
 /**
  * The Homepage component.
  *
  * @author Greg Rickaby
- * @returns {Element} The Homepage component.
+ * @return {Element} The Homepage component.
  */
 export default function Home() {
   const [coordinates, setCoordinates] = useState({
@@ -51,6 +51,8 @@ export default function Home() {
 
   /**
    * Convert city and state into lat/lng coordinates.
+   *
+   * @param {string} search The city and state to convert.
    */
   async function getCoordinates(search: string) {
     setLoading(true)
@@ -151,7 +153,14 @@ export default function Home() {
                 <h2 className="sr-only">Forecast</h2>
                 <div className="grid gap-4 md:grid-cols-2">
                   {weather.forecast?.properties?.periods.map(
-                    (period, index) => (
+                    (
+                      period: {
+                        name: string
+                        icon: string
+                        detailedForecast: string
+                      },
+                      index: number
+                    ) => (
                       <div
                         key={index}
                         className="space-y-2 bg-zinc-300 p-4 dark:bg-zinc-800"
