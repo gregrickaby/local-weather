@@ -55,10 +55,12 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 ### Folder Structure
 
 ```text
+├── lib
+|  ├── useWeather.ts
 ├── pages
 |  ├── api
-|  |  ├── geocoding.tsx
-|  |  └── weather.tsx
+|  |  ├── geocoding.ts
+|  |  └── weather.ts
 |  ├── _app.tsx
 |  ├── _document.tsx
 |  └── index.tsx
@@ -68,14 +70,14 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 ├── styles
 |  └── globals.css
 ├── .env.sample
-├── .eslintrc.json
 ├── .gitignore
-├── package-lock.json
 ├── package.json
 ├── postcss.config.js
 ├── next.config.js
 ├── tailwind.config.js
 ```
+
+**Lib** - This folder contains internal hooks and function files.
 
 **Pages** - This folder contains standard Next.js pages and `/api` middleware routes.
 
