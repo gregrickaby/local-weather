@@ -84,11 +84,11 @@ export default function Home() {
       <main>
         {weather?.alerts?.length >= 1 && <Alerts alerts={weather?.alerts} />}
         <Forecast forecast={weather?.forecast} />
-        <Radar image={weather?.location?.radarStation} />
+        <Radar image={weather?.radar} />
       </main>
       <Footer
-        updatedTime={weather?.properties?.updated}
-        weatherStation={weather?.station?.name}
+        updatedTime={weather?.updated}
+        weatherStation={weather?.station}
       />
     </>
   )

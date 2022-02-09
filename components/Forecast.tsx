@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import {ForecastPeriodProps, ForecastProps} from '~/types'
+import {ForecastProps, ForecastsProps} from '~/types'
 
 /**
  * Render the Forecast component
@@ -14,11 +14,8 @@ export default function Forecast({forecast}: ForecastProps) {
     <section>
       <h2>Forecast</h2>
       <div>
-        {forecast?.properties?.periods.map(
-          (
-            {name, icon, detailedForecast}: ForecastPeriodProps,
-            index: number
-          ) => (
+        {forecast?.map(
+          ({name, icon, detailedForecast}: ForecastsProps, index: number) => (
             <div key={index}>
               <p>{name}</p>
               <Image

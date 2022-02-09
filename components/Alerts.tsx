@@ -1,4 +1,4 @@
-import {AlertProperties, AlertProps} from '~/types'
+import {AlertProps, AlertsProps} from '~/types'
 
 /**
  * Render the Alerts component.
@@ -10,15 +10,15 @@ import {AlertProperties, AlertProps} from '~/types'
  */
 export default function Alerts({alerts}: AlertProps) {
   return (
-    <>
+    <section>
       <h2>Alerts</h2>
-      {alerts.map(({properties}: AlertProperties, index: number) => (
+      {alerts?.map(({properties}: AlertsProps, index: number) => (
         <div key={index}>
           <p>{properties?.headline}</p>
           <p>{properties?.description}</p>
           <p>{properties?.instruction}</p>
         </div>
       ))}
-    </>
+    </section>
   )
 }
