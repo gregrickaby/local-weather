@@ -44,7 +44,7 @@ export default async function weather(
 
     // Send the response.
     res.status(200).json({
-      alerts,
+      alerts: alerts?.features,
       forecast,
       location: point?.properties,
       station
