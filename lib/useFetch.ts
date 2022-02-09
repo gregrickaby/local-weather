@@ -1,13 +1,8 @@
 import useSWR from 'swr'
+import {WeatherData} from '../types'
 
 // Generic fetcher.
 const fetcher = (url: string) => fetch(url).then((res) => res.json())
-
-interface WeatherData {
-  weather: any
-  isLoading: boolean
-  isError: boolean
-}
 
 /**
  * Reusable hook to fetch data from an API.
@@ -19,7 +14,7 @@ interface WeatherData {
  * @param  {number}  coordinates.lng The longitude of the location.
  * @return {object}                  The weather data object.
  */
-export default function useWeather(
+export default function useFetch(
   loading: boolean,
   coordinates: {lat: number; lng: number}
 ): WeatherData {
