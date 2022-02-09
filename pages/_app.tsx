@@ -1,4 +1,5 @@
 import type {AppProps} from 'next/app'
+import SearchProvider from '~/components/SearchProvider'
 import '~/styles/index.css'
 
 /**
@@ -10,5 +11,9 @@ import '~/styles/index.css'
  * @return {Element}                 The App component.
  */
 export default function App({Component, pageProps}: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <SearchProvider>
+      <Component {...pageProps} />
+    </SearchProvider>
+  )
 }
