@@ -45,9 +45,14 @@ export default async function weather(
     // Send the response.
     res.status(200).json({
       alerts: alerts?.features,
-      forecast,
-      location: point?.properties,
-      station
+      forecast: forecast?.properties?.periods,
+      location: {
+        city: point?.properties?.relativeLocation?.properties?.city,
+        state: point?.properties?.relativeLocation?.properties?.state
+      },
+      radar: point?.properties?.radarStation,
+      station: station?.name,
+      updated: forecast?.properties?.updated
     })
   } catch (error) {
     // Issue? Leave a message and bail.
