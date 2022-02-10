@@ -1,6 +1,6 @@
+import {MantineProvider} from '@mantine/core'
 import type {AppProps} from 'next/app'
 import SearchProvider from '~/components/SearchProvider'
-import '~/styles/index.css'
 
 /**
  * Render the App component.
@@ -12,8 +12,16 @@ import '~/styles/index.css'
  */
 export default function App({Component, pageProps}: AppProps) {
   return (
-    <SearchProvider>
-      <Component {...pageProps} />
-    </SearchProvider>
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        colorScheme: 'dark'
+      }}
+    >
+      <SearchProvider>
+        <Component {...pageProps} />
+      </SearchProvider>
+    </MantineProvider>
   )
 }
