@@ -1,3 +1,4 @@
+import {Container} from '@mantine/core'
 import {useEffect, useState} from 'react'
 import Alerts from '~/components/Alerts'
 import Footer from '~/components/Footer'
@@ -79,7 +80,7 @@ export default function Home() {
   }, [search])
 
   return (
-    <>
+    <Container>
       <Header />
       <main>
         {weather?.alerts?.length >= 1 && <Alerts alerts={weather?.alerts} />}
@@ -90,6 +91,6 @@ export default function Home() {
         updatedTime={weather?.updated}
         weatherStation={weather?.station}
       />
-    </>
+    </Container>
   )
 }
