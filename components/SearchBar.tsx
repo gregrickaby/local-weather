@@ -1,4 +1,4 @@
-import {Button, Grid, TextInput} from '@mantine/core'
+import {Button, TextInput} from '@mantine/core'
 import {useForm} from '@mantine/hooks'
 import {useState} from 'react'
 import {useSearchContext} from './SearchProvider'
@@ -27,37 +27,49 @@ export default function SearchBar() {
       onSubmit={form.onSubmit((values) => {
         search.setSearch(value)
       })}
+      style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}
     >
-      <Grid gutter={1}>
-        <Grid.Col span={10}>
-          <TextInput
-            styles={{
-              label: {
-                borderWidth: 0,
-                clip: 'rect(0, 0, 0, 0)',
-                height: '1px',
-                margin: '-1px',
-                overflow: 'hidden',
-                padding: 0,
-                position: 'absolute',
-                whiteSpace: 'nowrap',
-                width: '1px'
-              }
-            }}
-            label="Enter your location"
-            id="search"
-            minLength={4}
-            onChange={(e) => setValue(e.target.value)}
-            pattern="^[^~`^<>]+$"
-            placeholder="Bay Lake, FL"
-            type="text"
-            value={value}
-          />
-        </Grid.Col>
-        <Grid.Col span={2}>
-          <Button type="submit">Search</Button>
-        </Grid.Col>
-      </Grid>
+      <TextInput
+        styles={{
+          input: {
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+            borderRight: 0
+          },
+          label: {
+            borderWidth: 0,
+            clip: 'rect(0, 0, 0, 0)',
+            height: '1px',
+            margin: '-1px',
+            overflow: 'hidden',
+            padding: 0,
+            position: 'absolute',
+            whiteSpace: 'nowrap',
+            width: '1px'
+          }
+        }}
+        label="Enter your location"
+        id="search"
+        minLength={4}
+        onChange={(e) => setValue(e.target.value)}
+        pattern="^[^~`^<>]+$"
+        placeholder="Bay Lake, FL"
+        type="text"
+        value={value}
+        size="md"
+      />
+
+      <Button
+        type="submit"
+        size="md"
+        style={{
+          borderTopLeftRadius: 0,
+          borderLeft: 0,
+          borderBottomLeftRadius: 0
+        }}
+      >
+        Search
+      </Button>
     </form>
   )
 }

@@ -17,14 +17,14 @@ export default function Header() {
     <>
       <Meta />
       <header ref={targetRef}>
-        <Grid gutter="md" justify="center" align="center">
-          <Grid.Col span={4}>
+        <Grid gutter="md" justify="center" align="center" mt="lg">
+          <Grid.Col>
             <Group align="center" position="center">
               <Image src={logo} alt="" priority />
               <Title order={1}>Local Weather</Title>
             </Group>
           </Grid.Col>
-          <Grid.Col span={8}>
+          <Grid.Col>
             <SearchBar />
           </Grid.Col>
         </Grid>
