@@ -28,10 +28,10 @@ export default function SearchBar() {
         search.setSearch(value)
       })}
     >
-      <Grid gutter="md">
-        <Grid.Col span={8}>
+      <Grid gutter={1}>
+        <Grid.Col span={10}>
           <TextInput
-            sx={{
+            styles={{
               label: {
                 borderWidth: 0,
                 clip: 'rect(0, 0, 0, 0)',
@@ -54,7 +54,7 @@ export default function SearchBar() {
             value={value}
           />
         </Grid.Col>
-        <Grid.Col span={4}>
+        <Grid.Col span={2}>
           <Button type="submit">Search</Button>
         </Grid.Col>
       </Grid>

@@ -1,4 +1,4 @@
-import {Grid, Group} from '@mantine/core'
+import {Grid, Group, Title} from '@mantine/core'
 import Image from 'next/image'
 import Meta from '~/components/Meta'
 import SearchBar from '~/components/SearchBar'
@@ -15,11 +15,11 @@ export default function Header() {
     <>
       <Meta />
       <header>
-        <Grid gutter="md">
+        <Grid gutter="md" justify="center" align="center">
           <Grid.Col span={4}>
             <Group align="center" position="center">
               <Image src={logo} alt="" priority />
-              <h1>Local Weather</h1>
+              <Title order={1}>Local Weather</Title>
             </Group>
           </Grid.Col>
           <Grid.Col span={8}>
