@@ -1,4 +1,5 @@
-import {Grid, Group, Title} from '@mantine/core'
+import {Button, Grid, Group, Title} from '@mantine/core'
+import {useScrollIntoView} from '@mantine/hooks'
 import Image from 'next/image'
 import Meta from '~/components/Meta'
 import SearchBar from '~/components/SearchBar'
@@ -11,10 +12,11 @@ import logo from '~/public/logo.webp'
  * @return {Element} The Header component.
  */
 export default function Header() {
+  const {scrollIntoView, targetRef} = useScrollIntoView()
   return (
     <>
       <Meta />
-      <header>
+      <header ref={targetRef}>
         <Grid gutter="md" justify="center" align="center">
           <Grid.Col span={4}>
             <Group align="center" position="center">
@@ -27,6 +29,12 @@ export default function Header() {
           </Grid.Col>
         </Grid>
       </header>
+      <Button
+        style={{position: 'fixed', bottom: '24px', right: '24px', zIndex: 100}}
+        onClick={() => scrollIntoView({alignment: 'center'})}
+      >
+        &uarr;
+      </Button>
     </>
   )
 }
