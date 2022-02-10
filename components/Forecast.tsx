@@ -1,3 +1,4 @@
+import {Card, SimpleGrid, Text} from '@mantine/core'
 import Image from 'next/image'
 import {ForecastProps, ForecastsProps} from '~/types'
 
@@ -13,11 +14,17 @@ export default function Forecast({forecast}: ForecastProps) {
   return (
     <section>
       <h2>Forecast</h2>
-      <div>
+      <SimpleGrid
+        breakpoints={[
+          {maxWidth: 'xs', cols: 1},
+          {maxWidth: 'sm', cols: 2},
+          {maxWidth: 'md', cols: 3},
+          {maxWidth: 'xl', cols: 4}
+        ]}
+      >
         {forecast?.map(
           ({name, icon, detailedForecast}: ForecastsProps, index: number) => (
-            <div key={index}>
-              <p>{name}</p>
+            <Card shadow="sm" padding="xl" key={index}>
               <Image
                 alt={name}
                 height="86"
@@ -25,11 +32,12 @@ export default function Forecast({forecast}: ForecastProps) {
                 src={icon}
                 width="86"
               />
-              <p>{detailedForecast}</p>
-            </div>
+              <Text weight={700}>{name}</Text>
+              <Text>{detailedForecast}</Text>
+            </Card>
           )
         )}
-      </div>
+      </SimpleGrid>
     </section>
   )
 }
