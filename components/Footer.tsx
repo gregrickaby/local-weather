@@ -1,5 +1,5 @@
+import {Text} from '@mantine/core'
 import dayjs from 'dayjs'
-import Link from 'next/link'
 import {FooterProps} from '~/types'
 
 /**
@@ -13,14 +13,16 @@ import {FooterProps} from '~/types'
 export default function Footer({updatedTime, weatherStation}: FooterProps) {
   return (
     <footer>
-      <p>
-        <time>As of {dayjs(updatedTime).format('MMMM D, YYYY @ H:mm')}</time>{' '}
-        from <a href="https://www.weather.gov/">the National Weather Service</a>{' '}
+      <Text align="center" size="sm" mt="lg">
+        Last update:{' '}
+        <strong>
+          <time>{dayjs(updatedTime).format('MMMM D, YYYY @ H:mm')}</time>
+        </strong>
+      </Text>
+      <Text align="center" size="sm" mb="lg">
+        Data sourced from the <a href="https://www.weather.gov/">NWS</a> station
         in {weatherStation}.
-      </p>
-      <Link href="/">
-        <a>Back to Top</a>
-      </Link>
+      </Text>
     </footer>
   )
 }
