@@ -19,7 +19,7 @@ export default function Alerts({alerts}: AlertProps) {
    * If there are alerts, display a notification.
    */
   useEffect(() => {
-    if (alerts.length > 0) {
+    if (alerts?.length > 0) {
       notifications.showNotification({
         icon: <ExclamationTriangleIcon />,
         title: 'Warning',
