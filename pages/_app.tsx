@@ -1,4 +1,5 @@
 import {MantineProvider} from '@mantine/core'
+import {NotificationsProvider} from '@mantine/notifications'
 import type {AppProps} from 'next/app'
 import SearchProvider from '~/components/SearchProvider'
 
@@ -19,9 +20,11 @@ export default function App({Component, pageProps}: AppProps) {
         colorScheme: 'dark'
       }}
     >
-      <SearchProvider>
-        <Component {...pageProps} />
-      </SearchProvider>
+      <NotificationsProvider position="bottom-right" zIndex={2077}>
+        <SearchProvider>
+          <Component {...pageProps} />
+        </SearchProvider>
+      </NotificationsProvider>
     </MantineProvider>
   )
 }
