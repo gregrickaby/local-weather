@@ -20,8 +20,11 @@ export default function Footer({updatedTime, weatherStation}: FooterProps) {
         </strong>
       </Text>
       <Text align="center" size="sm" mb="lg">
-        Data sourced from the <a href="https://www.weather.gov/">NWS</a> station
-        in {weatherStation}.
+        Data sourced from the{' '}
+        <Text size="sm" variant="link" component="a" href="https://weather.gov">
+          NWS
+        </Text>{' '}
+        station in {weatherStation}.
       </Text>
     </footer>
   )
