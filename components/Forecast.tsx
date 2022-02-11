@@ -1,4 +1,4 @@
-import {Card, SimpleGrid, Text} from '@mantine/core'
+import {Card, SimpleGrid, Text, Title} from '@mantine/core'
 import Image from 'next/image'
 import {ForecastProps, ForecastsProps} from '~/types'
 
@@ -13,7 +13,9 @@ import {ForecastProps, ForecastsProps} from '~/types'
 export default function Forecast({forecast}: ForecastProps) {
   return (
     <section>
-      <h2>Forecast</h2>
+      <Title order={2} align="center" my="lg">
+        Forecast
+      </Title>
       <SimpleGrid
         breakpoints={[
           {maxWidth: 'xs', cols: 1},

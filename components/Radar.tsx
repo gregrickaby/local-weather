@@ -1,4 +1,4 @@
-import {Center} from '@mantine/core'
+import {Center, Title} from '@mantine/core'
 import Image from 'next/image'
 import {RadarProps} from '~/types'
 
@@ -13,7 +13,9 @@ import {RadarProps} from '~/types'
 export default function Radar({image}: RadarProps) {
   return (
     <section>
-      <h2>Radar</h2>
+      <Title order={2} align="center" my="lg">
+        Radar
+      </Title>
       <Center>
         <Image
           alt="Radar image loop"
