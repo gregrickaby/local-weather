@@ -83,9 +83,9 @@ export default function Home() {
     <Container>
       <Header />
       <main>
-        {weather?.alerts?.length >= 1 && <Alerts alerts={weather?.alerts} />}
         <Forecast forecast={weather?.forecast} />
         <Radar image={weather?.radar} />
+        {weather?.alerts?.length >= 1 && <Alerts alerts={weather?.alerts} />}
       </main>
       <Footer
         updatedTime={weather?.updated}
