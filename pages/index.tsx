@@ -79,6 +79,14 @@ export default function Home() {
     getCoordinates(search)
   }, [search])
 
+  if (loading) {
+    return (
+      <Container>
+        <Header />
+      </Container>
+    )
+  }
+
   return (
     <Container>
       <Header />
