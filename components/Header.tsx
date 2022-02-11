@@ -1,5 +1,6 @@
 import {Button, Grid, Group, Title} from '@mantine/core'
 import {useScrollIntoView} from '@mantine/hooks'
+import {ArrowUpIcon} from '@modulz/radix-icons'
 import Image from 'next/image'
 import Meta from '~/components/Meta'
 import SearchBar from '~/components/SearchBar'
@@ -33,7 +34,7 @@ export default function Header() {
         style={{position: 'fixed', bottom: '24px', right: '24px', zIndex: 100}}
         onClick={() => scrollIntoView({alignment: 'center'})}
       >
-        &uarr;
+        <ArrowUpIcon />
       </Button>
     </>
   )
