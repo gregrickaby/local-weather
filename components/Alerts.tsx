@@ -1,3 +1,7 @@
+import {Alert, Text, Title} from '@mantine/core'
+import {useNotifications} from '@mantine/notifications'
+import {ExclamationTriangleIcon} from '@modulz/radix-icons'
+import {useEffect} from 'react'
 import {AlertProps, AlertsProps} from '~/types'
 
 /**
@@ -9,15 +13,44 @@ import {AlertProps, AlertsProps} from '~/types'
  * @return {Element}              The Alerts component.
  */
 export default function Alerts({alerts}: AlertProps) {
+  const notifications = useNotifications()
+
+  /**
+   * If there are alerts, display a notification.
+   */
+  useEffect(() => {
+    if (alerts.length > 0) {
+      notifications.showNotification({
+        icon: <ExclamationTriangleIcon />,
+        title: 'Warning',
+        message: 'Hazardous weather conditions reported for this area.',
+        autoClose: true,
+        disallowClose: false,
+        color: 'red'
+      })
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // No alerts? Bail...
+  if (!alerts) {
+    return null
+  }
+
   return (
     <section>
-      <h2>Alerts</h2>
+      <Title order={2} align="center" my="lg">
+        Alerts
+      </Title>
       {alerts?.map(({properties}: AlertsProps, index: number) => (
-        <div key={index}>
-          <p>{properties?.headline}</p>
-          <p>{properties?.description}</p>
-          <p>{properties?.instruction}</p>
-        </div>
+        <Alert
+          color="red"
+          icon={<ExclamationTriangleIcon />}
+          key={index}
+          mb="lg"
+          title={properties?.headline}
+        >
+          <Text mb="md">{properties?.description}</Text>
+        </Alert>
       ))}
     </section>
   )
