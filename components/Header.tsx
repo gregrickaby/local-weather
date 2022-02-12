@@ -31,10 +31,12 @@ export default function Header() {
         </Grid>
       </header>
       <Button
-        style={{position: 'fixed', bottom: '24px', right: '24px', zIndex: 100}}
+        aria-label="Scroll to top"
         onClick={() => scrollIntoView({alignment: 'center'})}
+        sx={{position: 'fixed', bottom: '24px', right: '24px', zIndex: 100}}
+        tabIndex={0}
       >
-        <ArrowUpIcon />
+        <ArrowUpIcon aria-hidden="true" />
       </Button>
     </>
   )
