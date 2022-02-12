@@ -1,19 +1,21 @@
 import {Autocomplete} from '@mantine/core'
+import {useDebouncedValue} from '@mantine/hooks'
 import {SewingPinFilledIcon} from '@modulz/radix-icons'
 import {useState} from 'react'
 import usePlaces from '~/lib/usePlaces'
-import {useSearchContext} from './SearchProvider'
+import {useWeatherContext} from './WeatherProvider'
 
 /**
- * Render the SearchBar component.
+ * Render the Search component.
  *
  * @author Greg Rickaby
- * @return {Element} The SearchBar component.
+ * @return {Element} The Search component.
  */
-export default function SearchBar() {
-  const search = useSearchContext()
+export default function Search() {
+  const search = useWeatherContext()
   const [value, setValue] = useState('Bay Lake, FL')
-  const {cities} = usePlaces(false, value)
+  const [debounced] = useDebouncedValue(value, 200, {leading: true})
+  const {cities} = usePlaces(false, debounced)
 
   const locations =
     !!cities && cities.length > 0
@@ -33,18 +35,17 @@ export default function SearchBar() {
 
   return (
     <Autocomplete
-      aria-label="Search for your location"
+      aria-label="Enter the name of your city"
       data={locations}
       icon={<SewingPinFilledIcon />}
-      label="Search"
+      limit={10}
       onChange={setValue}
       onItemSubmit={() => {
         search.setSearch(value)
       }}
-      limit={10}
-      placeholder="Search for a city"
+      placeholder="Enter the name of your city"
       transition="pop-top-left"
-      transitionDuration={80}
+      transitionDuration={100}
       transitionTimingFunction="ease"
       value={value}
     />
