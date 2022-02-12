@@ -1,48 +1,50 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
 /**
- * Geocode the address into latitude and longitude coordinates.
+ * Predict the city via Google's Places Autocomplete API.
  *
  * @example
- * /api/geocoding?address="orlando,+fl"
+ * /api/places?city="orlando,+fl"
  *
  * Note: In Google Cloud Platform --> Credentials, you must set
- * application restrictions to "None" and then "Restrict key" to "Geocoding".
+ * application restrictions to "None" and then "Restrict key" to "Places".
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
- * @see https://developers.google.com/maps/documentation/geocoding/overview
+ * @see https://developers.google.com/maps/documentation/places/web-service/autocomplete
  * @see https://nextjs.org/docs/api-routes/introduction
  * @see https://nodejs.org/api/http.html#http_class_http_incomingmessage
  * @see https://nodejs.org/api/http.html#http_class_http_serverresponse
  * @param {object} req The incoming request object.
  * @param {object} res The outgoing response object.
  */
-export default async function geocoding(
+export default async function places(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   // Destructure the request.
-  const {address} = req.query
+  const {city} = req.query
 
-  // No address? Bail...
-  if (!address) {
-    res.status(400).json({error: 'Missing address.'})
+  // No city? Bail...
+  if (!city) {
+    res.status(400).json({error: 'Missing city.'})
     return
   }
 
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${city}&types=(cities)&key=${process.env.GOOGLE_MAPS_API_KEY}`
     )
     const data = await response.json()
 
     // If the response is "OK", continue.
     if (data.status === 'OK') {
-      // Pluck out the coordinates.
-      const coordinates = JSON.stringify(data?.results[0]?.geometry?.location)
+      // Build the list of cities.
+      const cities = data?.predictions.map((prediction: any) => {
+        return prediction?.description.replace(', USA', '')
+      })
 
-      // Return the coordinates.
-      res.status(200).json(coordinates)
+      // Return the predictions.
+      res.status(200).json(cities)
 
       // Otherwise, return an error.
     } else {

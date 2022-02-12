@@ -1,5 +1,7 @@
+import {MantineProvider} from '@mantine/core'
+import {NotificationsProvider} from '@mantine/notifications'
 import type {AppProps} from 'next/app'
-import '~/styles/index.css'
+import WeatherProvider from '~/components/WeatherProvider'
 
 /**
  * Render the App component.
@@ -10,5 +12,19 @@ import '~/styles/index.css'
  * @return {Element}                 The App component.
  */
 export default function App({Component, pageProps}: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <MantineProvider
+      withGlobalStyles
+      withNormalizeCSS
+      theme={{
+        colorScheme: 'dark'
+      }}
+    >
+      <NotificationsProvider position="bottom-right" zIndex={2077}>
+        <WeatherProvider>
+          <Component {...pageProps} />
+        </WeatherProvider>
+      </NotificationsProvider>
+    </MantineProvider>
+  )
 }

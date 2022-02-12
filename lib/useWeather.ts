@@ -1,16 +1,9 @@
 import useSWR from 'swr'
-
-// Generic fetcher.
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
-
-interface WeatherData {
-  weather: any
-  isLoading: boolean
-  isError: boolean
-}
+import {WeatherData} from '../types'
+import fetcher from './fetcher'
 
 /**
- * Reusable hook to fetch data from an API.
+ * Fetch weather data.
  *
  * @author Greg Rickaby
  * @param  {boolean} loading         Are we loading or not?
