@@ -8,13 +8,14 @@ import {ForecastProps, ForecastsProps} from '~/types'
  * @author Greg Rickaby
  * @param  {object}  props          The component properties.
  * @param  {object}  props.forecast The weather forecast data.
+ * @param  {object}  props.location The location: city and state.
  * @return {Element}                The Forecast component.
  */
-export default function Forecast({forecast}: ForecastProps) {
+export default function Forecast({forecast, location}: ForecastProps) {
   return (
     <section>
       <Title order={2} align="center" my="lg">
-        Forecast
+        Forecast for {location?.city}, {location?.state}
       </Title>
       <SimpleGrid
         breakpoints={[
