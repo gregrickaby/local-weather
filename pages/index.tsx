@@ -1,4 +1,4 @@
-import {Container} from '@mantine/core'
+import {Container, LoadingOverlay} from '@mantine/core'
 import {useEffect, useState} from 'react'
 import Alerts from '~/components/Alerts'
 import Footer from '~/components/Footer'
@@ -21,7 +21,7 @@ export default function Home() {
     lng: -81.5612
   })
   const [loading, setLoading] = useState(true)
-  const {weather} = useFetch(loading, coordinates)
+  const {weather, isLoading, error} = useFetch(loading, coordinates)
 
   /**
    * Fetch user's coordinates.
@@ -79,10 +79,11 @@ export default function Home() {
     getCoordinates(search)
   }, [search])
 
-  if (loading) {
+  if (loading || isLoading) {
     return (
       <Container>
         <Header />
+        <LoadingOverlay visible transitionDuration={500} />
       </Container>
     )
   }
