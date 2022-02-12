@@ -10,6 +10,12 @@ export interface AlertsProps {
   }
 }
 
+export interface PlacesData {
+  cities: any
+  isLoading: boolean
+  isError: boolean
+}
+
 export interface FooterProps {
   updatedTime: string
   weatherStation: string
@@ -17,6 +23,10 @@ export interface FooterProps {
 
 export interface ForecastProps {
   forecast: Object[]
+  location: {
+    city: string
+    state: string
+  }
 }
 
 export interface ForecastsProps {
