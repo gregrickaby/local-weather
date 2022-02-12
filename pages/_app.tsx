@@ -1,7 +1,7 @@
 import {MantineProvider} from '@mantine/core'
 import {NotificationsProvider} from '@mantine/notifications'
 import type {AppProps} from 'next/app'
-import SearchProvider from '~/components/SearchProvider'
+import WeatherProvider from '~/components/WeatherProvider'
 
 /**
  * Render the App component.
@@ -21,9 +21,9 @@ export default function App({Component, pageProps}: AppProps) {
       }}
     >
       <NotificationsProvider position="bottom-right" zIndex={2077}>
-        <SearchProvider>
+        <WeatherProvider>
           <Component {...pageProps} />
-        </SearchProvider>
+        </WeatherProvider>
       </NotificationsProvider>
     </MantineProvider>
   )
