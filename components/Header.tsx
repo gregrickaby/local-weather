@@ -3,7 +3,7 @@ import {useScrollIntoView} from '@mantine/hooks'
 import {ArrowUpIcon} from '@modulz/radix-icons'
 import Image from 'next/image'
 import Meta from '~/components/Meta'
-import SearchBar from '~/components/SearchBar'
+import Search from '~/components/Search'
 import logo from '~/public/logo.webp'
 
 /**
@@ -26,7 +26,7 @@ export default function Header() {
             </Group>
           </Grid.Col>
           <Grid.Col>
-            <SearchBar />
+            <Search />
           </Grid.Col>
         </Grid>
       </header>
