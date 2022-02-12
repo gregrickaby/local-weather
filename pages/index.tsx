@@ -6,7 +6,7 @@ import Forecast from '~/components/Forecast'
 import Header from '~/components/Header'
 import Radar from '~/components/Radar'
 import {useSearchContext} from '~/components/SearchProvider'
-import useFetch from '~/lib/useFetch'
+import useWeather from '~/lib/useWeather'
 
 /**
  * The Homepage component.
@@ -21,32 +21,7 @@ export default function Home() {
     lng: -81.5612
   })
   const [loading, setLoading] = useState(true)
-  const {weather, isLoading, error} = useFetch(loading, coordinates)
-
-  /**
-   * Fetch user's coordinates.
-   *
-   * @see https://developer.mozilla.org/en-US/docs/Web/API/Geolocation
-   */
-  function getUsersPostion() {
-    setLoading(true)
-    navigator.geolocation.getCurrentPosition(
-      (pos) =>
-        setCoordinates({
-          lat: pos?.coords?.latitude,
-          lng: pos?.coords?.longitude
-        }),
-      (err) => {
-        console.warn(`There was a problem getting your location ${err}`)
-      },
-      {
-        enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 0
-      }
-    )
-    setLoading(false)
-  }
+  const {weather, isLoading} = useWeather(loading, coordinates)
 
   /**
    * Convert city and state into lat/lng coordinates.
@@ -62,14 +37,6 @@ export default function Home() {
     setCoordinates(coordinates)
     setLoading(false)
   }
-
-  /**
-   * Attempt to get the user's
-   * location on initial load.
-   */
-  useEffect(() => {
-    getUsersPostion()
-  }, [])
 
   /**
    * Load the user's weather
@@ -92,7 +59,7 @@ export default function Home() {
     <Container>
       <Header />
       <main>
-        <Forecast forecast={weather?.forecast} />
+        <Forecast forecast={weather?.forecast} location={weather?.location} />
         <Radar image={weather?.radar} />
         <Alerts alerts={weather?.alerts} />
       </main>
