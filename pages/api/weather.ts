@@ -20,6 +20,12 @@ export default async function weather(
   // Destructure the request.
   const {lat, lng} = req.query
 
+  // No lat/lng? Bail...
+  if (!lat || !lng) {
+    res.status(400).json({error: 'Missing lat or lng.'})
+    return
+  }
+
   try {
     // NWS requires two requests.
     // The first request is to get the forecast point based on geocoding.

@@ -24,6 +24,12 @@ export default async function geocoding(
   // Destructure the request.
   const {address} = req.query
 
+  // No address? Bail...
+  if (!address) {
+    res.status(400).json({error: 'Missing address.'})
+    return
+  }
+
   try {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${process.env.GOOGLE_MAPS_API_KEY}`

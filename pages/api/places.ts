@@ -24,6 +24,12 @@ export default async function places(
   // Destructure the request.
   const {city} = req.query
 
+  // No city? Bail...
+  if (!city) {
+    res.status(400).json({error: 'Missing city.'})
+    return
+  }
+
   try {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${city}&types=(cities)&key=${process.env.GOOGLE_MAPS_API_KEY}`
