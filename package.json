@@ -1,23 +1,22 @@
 {
-  "name": "nextjs-weather",
-  "description": "A simple weather app using Next.js API Routes, the NWS API, and Google Maps API.",
+  "name": "local-weather",
+  "description": "A weather app using Next.js, Mantine UI and both the National Weather Service and Google Maps API's.",
   "version": "1.0",
   "homepage": "https://localwx.vercel.app/",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gregrickaby/nextjs-weather.git"
+    "url": "git+https://github.com/gregrickaby/local-weather.git"
   },
   "author": "Greg Rickaby <gregrickaby@gmail.com>",
   "bugs": {
-    "url": "https://github.com/gregrickaby/nextjs-weather/issues"
+    "url": "https://github.com/gregrickaby/local-weather/issues"
   },
   "private": true,
   "scripts": {
     "build": "next build",
     "dev": "rimraf .next && next dev",
     "format": "npx prettier '**/*.{js,jsx,ts,tsx,md,mdx,html,css,scss,json,yml}' --config=.prettierrc.js --write || true",
-    "lint": "npm run format && npm run lint:js && npm run lint:css && npm run lint:md && npm run type-check",
-    "lint:css": "npx stylelint '**/*.css' --config=.stylelintrc.js --fix || true",
+    "lint": "npm run format && npm run lint:js && npm run lint:md && npm run type-check",
     "lint:js": "npx eslint '**/*.{js,ts,jsx,tsx}' --fix || true && next lint",
     "lint:md": "npx markdownlint '**/*.{md,mdx}' --fix",
     "start": "next start",
