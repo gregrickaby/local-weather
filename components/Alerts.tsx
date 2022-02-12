@@ -30,23 +30,26 @@ export default function Alerts({alerts}: AlertProps) {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  if (alerts?.length < 1) {
+    return null
+  }
+
   return (
     <section>
       <Title order={2} align="center" my="lg">
         Alerts
       </Title>
-      {alerts?.length > 0 &&
-        alerts?.map(({properties}: AlertsProps, index: number) => (
-          <Alert
-            color="red"
-            icon={<ExclamationTriangleIcon />}
-            key={index}
-            mb="lg"
-            title={properties?.headline}
-          >
-            <Text mb="md">{properties?.description}</Text>
-          </Alert>
-        ))}
+      {alerts?.map(({properties}: AlertsProps, index: number) => (
+        <Alert
+          color="red"
+          icon={<ExclamationTriangleIcon />}
+          key={index}
+          mb="lg"
+          title={properties?.headline}
+        >
+          <Text mb="md">{properties?.description}</Text>
+        </Alert>
+      ))}
     </section>
   )
 }
