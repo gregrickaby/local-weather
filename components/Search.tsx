@@ -44,6 +44,7 @@ export default function Search() {
         search.setSearch(value)
       }}
       placeholder="Enter the name of your city"
+      size="lg"
       transition="pop-top-left"
       transitionDuration={100}
       transitionTimingFunction="ease"
