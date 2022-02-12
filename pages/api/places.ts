@@ -34,7 +34,7 @@ export default async function places(
     if (data.status === 'OK') {
       // Build the list of cities.
       const cities = data?.predictions.map((prediction: any) => {
-        return prediction?.description
+        return prediction?.description.replace(', USA', '')
       })
 
       // Return the predictions.
