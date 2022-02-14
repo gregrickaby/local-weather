@@ -6,7 +6,7 @@ import {ForecastProps, ForecastsProps} from '~/types'
  * Render the Forecast component
  *
  * @author Greg Rickaby
- * @param  {object}  props          The component properties.
+ * @param  {object}  props          The component attributes as props.
  * @param  {object}  props.forecast The weather forecast data.
  * @param  {object}  props.location The location: city and state.
  * @return {Element}                The Forecast component.
