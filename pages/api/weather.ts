@@ -1,11 +1,13 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
 /**
- * Weather data from The National Weather Service.
+ * Fetch weather data from the National Weather Service.
  *
  * @example
- * /api/weather?lat=28.3802&lng=-81.5612
+ * /api/weather?location=bay lake,+fl
  * @author Greg Rickaby
+ * @see https://console.cloud.google.com/apis/credentials
+ * @see https://developers.google.com/maps/documentation/geocoding/overview
  * @see https://weather-gov.github.io/api/general-faqs
  * @see https://nextjs.org/docs/api-routes/introduction
  * @see https://nodejs.org/api/http.html#http_class_http_incomingmessage
@@ -18,12 +20,41 @@ export default async function weather(
   res: NextApiResponse
 ) {
   // Destructure the request.
-  const {lat, lng} = req.query
+  const {location} = req.query
 
-  // No lat/lng? Bail...
-  if (!lat || !lng) {
-    res.status(400).json({error: 'Missing lat or lng.'})
+  // Set default coordinates as fallback.
+  let lat: number = 28.3886186
+  let lng: number = -81.5659069
+
+  // No address? Bail...
+  if (!location) {
+    res.status(400).json({
+      error: 'Cannot fetch weather information without a location query.'
+    })
     return
+  }
+
+  try {
+    const geocode = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+    )
+    const coordinates = await geocode.json()
+
+    // If the response is "OK", continue.
+    if (coordinates.status === 'OK') {
+      // Pluck out the coordinates.
+      lat = coordinates?.results[0]?.geometry?.location?.lat
+      lng = coordinates?.results[0]?.geometry?.location?.lng
+
+      // Otherwise, return an error.
+    } else {
+      res.status(500).json({
+        status: `${coordinates?.status}`,
+        message: `${coordinates?.error_message}`
+      })
+    }
+  } catch (error) {
+    res.status(500).json({error: error.message})
   }
 
   try {
@@ -51,6 +82,7 @@ export default async function weather(
     // Send the response.
     res.status(200).json({
       alerts: alerts?.features,
+      coordinates: {lat, lng},
       forecast: forecast?.properties?.periods,
       location: {
         city: point?.properties?.relativeLocation?.properties?.city,

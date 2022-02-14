@@ -8,7 +8,7 @@ import {AlertProps, AlertsProps} from '~/types'
  * Render the Alerts component.
  *
  * @author Greg Rickaby
- * @param  {object}  props        The component properties as props.
+ * @param  {object}  props        The component attributes as props.
  * @param  {Array}   props.alerts The weather alert array.
  * @return {Element}              The Alerts component.
  */

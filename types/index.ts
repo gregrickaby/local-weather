@@ -11,7 +11,7 @@ export interface AlertsProps {
 }
 
 export interface PlacesData {
-  cities: any
+  locations: any
   isLoading: boolean
   isError: boolean
 }

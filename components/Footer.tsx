@@ -5,7 +5,7 @@ import {FooterProps} from '~/types'
 /**
  * Render the footer component.
  *
- * @param  {object}  props                The component properties as props.
+ * @param  {object}  props                The component attributes as props.
  * @param  {string}  props.updatedTime    The time the weather data was last updated.
  * @param  {string}  props.weatherStation The name of the weather station.
  * @return {Element}                      The footer component.

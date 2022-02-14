@@ -6,7 +6,7 @@ import {RadarProps} from '~/types'
  * Render the Radar component.
  *
  * @author Greg Rickaby
- * @param  {object}  props       The component properies.
+ * @param  {object}  props       The component attributes as props.
  * @param  {object}  props.image The radar image data.
  * @return {Element}             The Radar component.
  */

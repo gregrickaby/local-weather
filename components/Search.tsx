@@ -6,20 +6,20 @@ import usePlaces from '~/lib/usePlaces'
 import {useWeatherContext} from './WeatherProvider'
 
 /**
- * Render the Search component.
+ * Render the autocomplete Search component.
  *
  * @author Greg Rickaby
  * @return {Element} The Search component.
  */
 export default function Search() {
-  const search = useWeatherContext()
+  const location = useWeatherContext()
   const [value, setValue] = useState('Bay Lake, FL')
   const [debounced] = useDebouncedValue(value, 200, {leading: true})
-  const {cities} = usePlaces(false, debounced)
+  const {locations} = usePlaces(debounced)
 
-  const locations =
-    !!cities && cities.length > 0
-      ? cities
+  const places =
+    !!locations && locations.length > 0
+      ? locations
       : [
           'New York, NY',
           'Los Angeles, CA',
@@ -35,15 +35,13 @@ export default function Search() {
 
   return (
     <Autocomplete
-      aria-label="Enter the name of your city"
-      data={locations}
+      aria-label="Enter the name of your location"
+      data={places}
       icon={<SewingPinFilledIcon />}
       limit={10}
       onChange={setValue}
-      onItemSubmit={() => {
-        search.setSearch(value)
-      }}
-      placeholder="Enter the name of your city"
+      onItemSubmit={(item) => location.setLocation(item.value)}
+      placeholder="Enter the name of your location"
       size="lg"
       transition="pop-top-left"
       transitionDuration={100}

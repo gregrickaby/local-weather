@@ -3,21 +3,17 @@ import {PlacesData} from '../types'
 import fetcher from './fetcher'
 
 /**
- * Fetch places data.
+ * Fetch places data from internal API route.
  *
  * @author Greg Rickaby
- * @param  {boolean} loading Are we loading or not?
- * @param  {string}  city    The city to find.
+ * @param  {string} location The location to find.
  * @return {object}          The places data object.
  */
-export default function usePlaces(loading: boolean, city: string): PlacesData {
-  const {data, error} = useSWR(
-    loading ? null : `/api/places?city=${city}`,
-    fetcher
-  )
+export default function usePlaces(location: string): PlacesData {
+  const {data, error} = useSWR(`/api/places?location=${location}`, fetcher)
 
   return {
-    cities: data,
+    locations: data,
     isLoading: !error && !data,
     isError: error
   }
