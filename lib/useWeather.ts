@@ -3,25 +3,14 @@ import {WeatherData} from '../types'
 import fetcher from './fetcher'
 
 /**
- * Fetch weather data.
+ * Fetch weather data from internal API route.
  *
  * @author Greg Rickaby
- * @param  {boolean} loading         Are we loading or not?
- * @param  {object}  coordinates     The coordinates to fetch weather for.
- * @param  {number}  coordinates.lat The latitude of the location.
- * @param  {number}  coordinates.lng The longitude of the location.
- * @return {object}                  The weather data object.
+ * @param  {string} location The location to fetch weather for.
+ * @return {object}          The weather data object.
  */
-export default function useWeather(
-  loading: boolean,
-  coordinates: {lat: number; lng: number}
-): WeatherData {
-  const {data, error} = useSWR(
-    loading
-      ? null
-      : `/api/weather?lat=${coordinates?.lat}&lng=${coordinates?.lng}`,
-    fetcher
-  )
+export default function useWeather(location: string): WeatherData {
+  const {data, error} = useSWR(`/api/weather?location=${location}`, fetcher)
 
   return {
     weather: data,
