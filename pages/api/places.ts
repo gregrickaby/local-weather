@@ -4,10 +4,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  * Predict the city via Google's Places Autocomplete API.
  *
  * @example
- * /api/places?city="orlando,+fl"
- *
- * Note: In Google Cloud Platform --> Credentials, you must set
- * application restrictions to "None" and then "Restrict key" to "Places".
+ * /api/places?location="bay lake, fl"
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/places/web-service/autocomplete
@@ -22,29 +19,31 @@ export default async function places(
   res: NextApiResponse
 ) {
   // Destructure the request.
-  const {city} = req.query
+  const {location} = req.query
 
-  // No city? Bail...
-  if (!city) {
-    res.status(400).json({error: 'Missing city.'})
+  // No location? Bail...
+  if (!location) {
+    res
+      .status(400)
+      .json({error: 'Cannot locate city and state without a location query.'})
     return
   }
 
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${city}&types=(cities)&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${location}&components=country:us&types=(cities)&language=en&key=${process.env.GOOGLE_MAPS_API_KEY}`
     )
     const data = await response.json()
 
     // If the response is "OK", continue.
     if (data.status === 'OK') {
-      // Build the list of cities.
-      const cities = data?.predictions.map((prediction: any) => {
+      // Build the list of locations.
+      const locations = data?.predictions.map((prediction: any) => {
         return prediction?.description.replace(', USA', '')
       })
 
       // Return the predictions.
-      res.status(200).json(cities)
+      res.status(200).json(locations)
 
       // Otherwise, return an error.
     } else {
