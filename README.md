@@ -29,7 +29,7 @@ After you've generated a key, visit the [Credentials page](https://console.cloud
 3. Choose "Geocoding" and "Places" from the dropdown
 4. Save
 
-![screenshot of google api settings](https://uc3fbe0e54e3664b3207f1984fed.previews.dropboxusercontent.com/p/thumb/ABe-Gfyc2tMfBfhBTQ9UX603fTf-5qEE91YZCqEpJQNKzdFhnpU8alHs0SU8sZhWkk0N1NgGXpDkW4JmWpOksWLbAackO8uatlunZXH9z6XnVukMTZO2_k7L2JDc17YxuxuJcllPgaToZqVtUGWW_Gl8sCu9HC1f5qPwZEB8u_-Znfw14IV612OIoaAwhv97WuFyt6zqIRLQgvP68MN9OFN6_c2muXj394z-klQzeX25zENZQu2Uk9KX4HxY9PFIoxGshNIWfDTgjVrBOfHexzEKpft4TZ5tRWN2IPyhipnYnJSPIk_R8c2rf0Y--y8UQmAXIV2T77Z3JquZERQQNLQCztf2sTWt789wJYehM7OPnl6ysfT5bh8VQSwPqaz9EUQ/p.png)
+![screenshot of google api settings](https://dl.dropbox.com/s/2vj1qa2l1602prc/Screen%20Shot%202022-02-12%20at%2008.38.25.png?dl=0)
 
 ---
 
