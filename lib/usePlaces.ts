@@ -2,7 +2,7 @@ import useSWR from 'swr'
 import fetcher from './fetcher'
 
 interface PlacesData {
-  locations: Object[]
+  locations: string[]
   isLoading: boolean
   isError: boolean
 }
