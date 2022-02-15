@@ -1,6 +1,10 @@
 import {Text} from '@mantine/core'
 import dayjs from 'dayjs'
-import {FooterProps} from '~/types'
+
+interface FooterProps {
+  updatedTime: string
+  weatherStation: string
+}
 
 /**
  * Render the footer component.

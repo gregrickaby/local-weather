@@ -1,6 +1,11 @@
 import useSWR from 'swr'
-import {PlacesData} from '../types'
 import fetcher from './fetcher'
+
+interface PlacesData {
+  locations: Object[]
+  isLoading: boolean
+  isError: boolean
+}
 
 /**
  * Fetch places data from internal API route.

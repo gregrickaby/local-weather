@@ -1,6 +1,19 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
 import Image from 'next/image'
-import {ForecastProps, ForecastsProps} from '~/types'
+
+interface ForecastProps {
+  forecast: Object[]
+  location: {
+    city: string
+    state: string
+  }
+}
+
+interface ForecastsProps {
+  name: string
+  icon: string
+  detailedForecast: string
+}
 
 /**
  * Render the Forecast component

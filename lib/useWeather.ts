@@ -1,6 +1,11 @@
 import useSWR from 'swr'
-import {WeatherData} from '../types'
 import fetcher from './fetcher'
+
+interface WeatherData {
+  weather: Object[]
+  isLoading: boolean
+  isError: boolean
+}
 
 /**
  * Fetch weather data from internal API route.

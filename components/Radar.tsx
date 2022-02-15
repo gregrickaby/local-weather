@@ -1,6 +1,9 @@
 import {Center, Title} from '@mantine/core'
 import Image from 'next/image'
-import {RadarProps} from '~/types'
+
+interface RadarProps {
+  image: string
+}
 
 /**
  * Render the Radar component.

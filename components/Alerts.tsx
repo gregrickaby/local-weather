@@ -2,7 +2,18 @@ import {Alert, Text, Title} from '@mantine/core'
 import {useNotifications} from '@mantine/notifications'
 import {ExclamationTriangleIcon} from '@modulz/radix-icons'
 import {useEffect} from 'react'
-import {AlertProps, AlertsProps} from '~/types'
+
+interface AlertProps {
+  alerts: [
+    {
+      properties: {
+        headline: string
+        description: string
+        instruction: string
+      }
+    }
+  ]
+}
 
 /**
  * Render the Alerts component.
@@ -39,7 +50,7 @@ export default function Alerts({alerts}: AlertProps) {
       <Title order={2} align="center" my="lg">
         Alerts
       </Title>
-      {alerts?.map(({properties}: AlertsProps, index: number) => (
+      {alerts?.map(({properties}, index: number) => (
         <Alert
           color="red"
           icon={<ExclamationTriangleIcon />}
