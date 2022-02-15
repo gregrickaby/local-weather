@@ -1,4 +1,5 @@
-import {createContext, useContext, useState} from 'react'
+import {useLocalStorageValue} from '@mantine/hooks'
+import {createContext, useContext} from 'react'
 import useWeather from '~/lib/useWeather'
 
 // Create the WeatherContext.
@@ -16,7 +17,10 @@ export const useWeatherContext = () => useContext(WeatherContext)
  * @return {Element}                The WeatherProvider component.
  */
 export default function WeatherProvider({children}) {
-  const [location, setLocation] = useState('Bay Lake, FL')
+  const [location, setLocation] = useLocalStorageValue({
+    key: 'location',
+    defaultValue: 'Bay Lake, FL'
+  })
   const {weather, isLoading} = useWeather(location)
 
   return (

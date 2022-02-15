@@ -13,7 +13,7 @@ import {useWeatherContext} from './WeatherProvider'
  */
 export default function Search() {
   const location = useWeatherContext()
-  const [value, setValue] = useState('Bay Lake, FL')
+  const [value, setValue] = useState(location)
   const [debounced] = useDebouncedValue(value, 200, {leading: true})
   const {locations} = usePlaces(debounced)
 
