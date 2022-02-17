@@ -19,7 +19,7 @@ export const useWeatherContext = () => useContext(WeatherContext)
 export default function WeatherProvider({children}) {
   const [location, setLocation] = useLocalStorageValue({
     key: 'location',
-    defaultValue: 'Bay Lake, FL'
+    defaultValue: 'Enterprise, AL'
   })
   const {weather, isLoading} = useWeather(location)
 
