@@ -1,58 +1,82 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
 import Image from 'next/image'
-
-interface ForecastProps {
-  forecast: Object[]
-  location: {
-    city: string
-    state: string
-  }
-}
-
-interface ForecastsProps {
-  name: string
-  icon: string
-  detailedForecast: string
-}
+import {useWeatherContext} from './WeatherProvider'
 
 /**
  * Render the Forecast component
  *
  * @author Greg Rickaby
- * @param  {object}  props          The component attributes as props.
- * @param  {object}  props.forecast The weather forecast data.
- * @param  {object}  props.location The location: city and state.
- * @return {Element}                The Forecast component.
+ * @return {Element} The Forecast component.
  */
-export default function Forecast({forecast, location}: ForecastProps) {
+export default function Forecast() {
+  const {weather, location} = useWeatherContext()
+
   return (
     <section>
       <Title order={2} align="center" my="lg">
-        Forecast for {location?.city}, {location?.state}
+        The Next 4 Hours
       </Title>
-      <SimpleGrid
-        breakpoints={[
-          {maxWidth: 'xs', cols: 1},
-          {maxWidth: 'sm', cols: 2},
-          {maxWidth: 'md', cols: 3},
-          {maxWidth: 'xl', cols: 4}
-        ]}
-      >
-        {forecast?.map(
-          ({name, icon, detailedForecast}: ForecastsProps, index: number) => (
+      <SimpleGrid cols={2} breakpoints={[{maxWidth: 'xs', cols: 2}]}>
+        {weather?.hourly
+          ?.map((forecast, index: number) => {
+            const {
+              dt,
+              weather: [{icon, main}],
+              temp
+            } = forecast
+            return (
+              <Card shadow="sm" padding="xl" key={index}>
+                <Text weight={700}>
+                  {new Intl.DateTimeFormat('en-US', {
+                    hour: 'numeric'
+                  }).format(dt * 1000)}
+                </Text>
+                <Text>{main}</Text>
+                <Text size="xl">{Math.round(temp)}°</Text>
+                <Image
+                  alt={main}
+                  height={100}
+                  src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+                  width={100}
+                />
+              </Card>
+            )
+          })
+          .slice(1, 5)}
+      </SimpleGrid>
+
+      <Title order={2} align="center" my="lg">
+        Extended Forecast
+      </Title>
+      <SimpleGrid cols={2} breakpoints={[{maxWidth: 'xs', cols: 2}]}>
+        {weather?.daily?.map((forecast, index: number) => {
+          const {
+            dt,
+            rain,
+            weather: [{icon, main}],
+            temp: {min, max}
+          } = forecast
+          return (
             <Card shadow="sm" padding="xl" key={index}>
+              <Text weight={700}>
+                {new Intl.DateTimeFormat('en-US', {
+                  weekday: 'long'
+                }).format(dt * 1000)}
+              </Text>
+              <Text>
+                {main} {rain ? `${Math.round(rain * 100)}%` : ''}
+              </Text>
+              <Text size="xl">{Math.round(min)}°</Text>
+              <Text size="sm">{Math.round(max)}°</Text>
               <Image
-                alt={name}
-                height="86"
-                loading="lazy"
-                src={icon}
-                width="86"
+                alt={main}
+                height={100}
+                src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
+                width={100}
               />
-              <Text weight={700}>{name}</Text>
-              <Text>{detailedForecast}</Text>
             </Card>
           )
-        )}
+        })}
       </SimpleGrid>
     </section>
   )

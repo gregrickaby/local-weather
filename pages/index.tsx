@@ -1,9 +1,8 @@
 import {Container, LoadingOverlay} from '@mantine/core'
-import Alerts from '~/components/Alerts'
+import CurrentConditions from '~/components/CurrentConditions'
 import Footer from '~/components/Footer'
 import Forecast from '~/components/Forecast'
 import Header from '~/components/Header'
-import Radar from '~/components/Radar'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
 /**
@@ -13,7 +12,7 @@ import {useWeatherContext} from '~/components/WeatherProvider'
  * @return {Element} The Homepage component.
  */
 export default function Home() {
-  const {isLoading, weather} = useWeatherContext()
+  const {isLoading} = useWeatherContext()
 
   return (
     <Container>
@@ -23,19 +22,12 @@ export default function Home() {
       ) : (
         <>
           <main>
-            <Forecast
-              forecast={weather?.forecast}
-              location={weather?.location}
-            />
-            <Radar image={weather?.radar} />
-            <Alerts alerts={weather?.alerts} />
+            <CurrentConditions />
+            <Forecast />
           </main>
-          <Footer
-            updatedTime={weather?.updated}
-            weatherStation={weather?.station}
-          />
         </>
       )}
+      <Footer />
     </Container>
   )
 }

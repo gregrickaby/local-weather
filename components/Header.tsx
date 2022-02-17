@@ -17,7 +17,7 @@ export default function Header() {
   return (
     <>
       <Meta />
-      <header ref={targetRef}>
+      <header ref={targetRef} style={{marginBottom: '2rem'}}>
         <Grid gutter="md" justify="center" align="center" mt="lg">
           <Grid.Col>
             <Group align="center" position="center">
