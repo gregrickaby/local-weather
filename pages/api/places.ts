@@ -31,7 +31,7 @@ export default async function places(
 
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${location}&components=country:us&types=(cities)&language=en&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${location}&types=(cities)&language=en&key=${process.env.GOOGLE_MAPS_API_KEY}`
     )
     const data = await response.json()
 
@@ -39,7 +39,7 @@ export default async function places(
     if (data.status === 'OK') {
       // Build the list of locations.
       const locations = data?.predictions.map((prediction: any) => {
-        return prediction?.description.replace(', USA', '')
+        return prediction?.description
       })
 
       // Return the predictions.

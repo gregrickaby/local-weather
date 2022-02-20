@@ -1,58 +1,97 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
-import Image from 'next/image'
-
-interface ForecastProps {
-  forecast: Object[]
-  location: {
-    city: string
-    state: string
-  }
-}
-
-interface ForecastsProps {
-  name: string
-  icon: string
-  detailedForecast: string
-}
+import Icon from './Icon'
+import {useWeatherContext} from './WeatherProvider'
 
 /**
  * Render the Forecast component
  *
  * @author Greg Rickaby
- * @param  {object}  props          The component attributes as props.
- * @param  {object}  props.forecast The weather forecast data.
- * @param  {object}  props.location The location: city and state.
- * @return {Element}                The Forecast component.
+ * @return {Element} The Forecast component.
  */
-export default function Forecast({forecast, location}: ForecastProps) {
+export default function Forecast() {
+  const {weather, location} = useWeatherContext()
+
   return (
     <section>
       <Title order={2} align="center" my="lg">
-        Forecast for {location?.city}, {location?.state}
+        The Next 4 Hours
       </Title>
       <SimpleGrid
+        cols={4}
         breakpoints={[
-          {maxWidth: 'xs', cols: 1},
-          {maxWidth: 'sm', cols: 2},
-          {maxWidth: 'md', cols: 3},
-          {maxWidth: 'xl', cols: 4}
+          {maxWidth: 980, cols: 3, spacing: 'md'},
+          {maxWidth: 755, cols: 2, spacing: 'sm'},
+          {maxWidth: 600, cols: 1, spacing: 'sm'}
         ]}
       >
-        {forecast?.map(
-          ({name, icon, detailedForecast}: ForecastsProps, index: number) => (
-            <Card shadow="sm" padding="xl" key={index}>
-              <Image
-                alt={name}
-                height="86"
-                loading="lazy"
-                src={icon}
-                width="86"
-              />
-              <Text weight={700}>{name}</Text>
-              <Text>{detailedForecast}</Text>
+        {weather?.hourly
+          ?.map((forecast, index: number) => {
+            const {
+              dt,
+              weather: [{icon, main}],
+              temp
+            } = forecast
+            return (
+              <Card
+                shadow="sm"
+                padding="xl"
+                key={index}
+                style={{textAlign: 'center'}}
+              >
+                <Text size="xl" weight={700}>
+                  {new Intl.DateTimeFormat('en', {
+                    hour: 'numeric'
+                  }).format(dt * 1000)}
+                </Text>
+                <Icon icon={icon} />
+                <Text size="lg">{main}</Text>
+                <Text size="lg">{Math.round(temp)}°</Text>
+              </Card>
+            )
+          })
+          .slice(1, 5)}
+      </SimpleGrid>
+
+      <Title order={2} align="center" my="lg">
+        Extended Forecast
+      </Title>
+      <SimpleGrid
+        cols={4}
+        breakpoints={[
+          {maxWidth: 980, cols: 3, spacing: 'md'},
+          {maxWidth: 755, cols: 2, spacing: 'sm'},
+          {maxWidth: 600, cols: 1, spacing: 'sm'}
+        ]}
+      >
+        {weather?.daily?.map((forecast, index: number) => {
+          const {
+            dt,
+            rain,
+            weather: [{icon, main}],
+            temp: {min, max}
+          } = forecast
+          return (
+            <Card
+              shadow="sm"
+              padding="xl"
+              key={index}
+              style={{textAlign: 'center'}}
+            >
+              <Text size="xl" weight={700}>
+                {new Intl.DateTimeFormat('en', {
+                  weekday: 'long'
+                }).format(dt * 1000)}
+              </Text>
+              <Text size="lg">
+                {main} {rain ? `${Math.round(rain * 10)}%` : ''}
+              </Text>
+              <Text size="lg">
+                H {Math.round(max)}° / L {Math.round(min)}°
+              </Text>
+              <Icon icon={icon} />
             </Card>
           )
-        )}
+        })}
       </SimpleGrid>
     </section>
   )
