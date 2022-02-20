@@ -1,5 +1,5 @@
 import {Center, SimpleGrid, Text} from '@mantine/core'
-import Image from 'next/image'
+import Icon from './Icon'
 import {useWeatherContext} from './WeatherProvider'
 
 /**
@@ -21,11 +21,11 @@ export default function CurrentConditions() {
   } = useWeatherContext()
 
   return (
-    <SimpleGrid cols={2} style={{maxWidth: '400px'}}>
+    <SimpleGrid cols={2}>
       <div>
-        <Text size="xl">
-          <strong>{main}</strong> as of{' '}
-          {new Intl.DateTimeFormat('en-US', {
+        <Text>
+          As of{' '}
+          {new Intl.DateTimeFormat('en', {
             timeZone: timezone,
             hour: 'numeric',
             minute: 'numeric'
@@ -40,21 +40,20 @@ export default function CurrentConditions() {
           weight={700}
           style={{
             fontFamily: 'Greycliff CF, sans-serif',
-            fontSize: '9rem',
+            fontSize: '8rem',
             margin: 0,
             lineHeight: 1
           }}
         >
-          {Math.round(temp)}°
+          {new Intl.NumberFormat(navigator.language, {
+            style: 'unit',
+            unit: 'fahrenheit'
+          }).format(Math.round(temp))}
         </Text>
+        <strong>{main}</strong>
       </div>
       <Center>
-        <Image
-          alt={main}
-          height={100}
-          src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
-          width={100}
-        />
+        <Icon icon={icon} />
       </Center>
     </SimpleGrid>
   )

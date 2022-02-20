@@ -1,5 +1,5 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
-import Image from 'next/image'
+import Icon from './Icon'
 import {useWeatherContext} from './WeatherProvider'
 
 /**
@@ -33,12 +33,7 @@ export default function Forecast() {
                 </Text>
                 <Text>{main}</Text>
                 <Text size="xl">{Math.round(temp)}°</Text>
-                <Image
-                  alt={main}
-                  height={100}
-                  src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
-                  width={100}
-                />
+                <Icon icon={icon} />
               </Card>
             )
           })
@@ -68,12 +63,7 @@ export default function Forecast() {
               </Text>
               <Text size="xl">{Math.round(min)}°</Text>
               <Text size="sm">{Math.round(max)}°</Text>
-              <Image
-                alt={main}
-                height={100}
-                src={`http://openweathermap.org/img/wn/${icon}@2x.png`}
-                width={100}
-              />
+              <Icon icon={icon} />
             </Card>
           )
         })}
