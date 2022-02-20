@@ -4,7 +4,7 @@ import {ArrowUpIcon} from '@modulz/radix-icons'
 import Image from 'next/image'
 import Meta from '~/components/Meta'
 import Search from '~/components/Search'
-import logo from '~/public/logo.webp'
+import logo from '~/public/icons/09d.svg'
 
 /**
  * Render the Header component.
@@ -21,7 +21,7 @@ export default function Header() {
         <Grid gutter="md" justify="center" align="center" mt="lg">
           <Grid.Col>
             <Group align="center" position="center">
-              <Image src={logo} alt="" priority />
+              <Image alt="" src={logo} height={75} width={75} priority />
               <Title order={1}>Local Weather</Title>
             </Group>
           </Grid.Col>
