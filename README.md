@@ -1,26 +1,34 @@
-# Local Weather <!-- omit in toc -->
+# Weather <!-- omit in toc -->
 
-⛈ A weather app using Next.js, [Mantine UI](https://mantine.dev/) and both the [National Weather Service API](https://weather-gov.github.io/api/general-faqs) and [Google Maps API's](https://developers.google.com/maps/documentation/geocoding/overview).
-
-👉 <https://localwx.vercel.app/>
+⛈ View the weather forecast: <https://localwx.vercel.app/>
 
 ---
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Prerequisites](#prerequisites)
+- [Generate API Keys](#generate-api-keys)
+  - [OpenWeather API](#openweather-api)
+  - [Google Maps API](#google-maps-api)
 - [Install](#install)
-  - [Set ENV Variable](#set-env-variable)
+  - [Setup Next.js](#setup-nextjs)
+  - [Set ENV Variables](#set-env-variables)
 - [Working with Next.js](#working-with-nextjs)
   - [Folder Structure](#folder-structure)
   - [NPM Scripts](#npm-scripts)
+- [Credits](#credits)
 - [Contributing](#contributing)
 
 ---
 
-## Prerequisites
+## Generate API Keys
 
-First, you'll need to generate a [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key).
+### OpenWeather API
+
+First, you'll need an [OpenWeather API Key](https://home.openweathermap.org/users/sign_up). If you don't have an account, you can create one for free.
+
+### Google Maps API
+
+Next, you'll need to generate a [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key).
 
 After you've generated a key, visit the [Credentials page](https://console.cloud.google.com/projectselector2/google/maps-apis/credentials) and follow the instructions below:
 
@@ -35,18 +43,22 @@ After you've generated a key, visit the [Credentials page](https://console.cloud
 
 ## Install
 
+### Setup Next.js
+
 Use [create-next-app](https://www.npmjs.com/package/create-next-app) to get up and running quickly:
 
 ```bash
 npx create-next-app local-weather --example https://github.com/gregrickaby/local-weather
 ```
 
-### Set ENV Variable
+### Set ENV Variables
 
-Rename `.env.sample` to `.env` in the root of the project. Add the Google Maps API key you generated earlier to the following ENV Var:
+Rename `.env.sample` to `.env` in the root of the project. Add the API keys you generated earlier to the following ENV Vars:
 
 ```text
+// .env
 GOOGLE_MAPS_API_KEY="YOUR-KEY"
+OPENWEATHER_API_KEY="YOUR-KEY"
 ```
 
 ---
@@ -74,6 +86,7 @@ GOOGLE_MAPS_API_KEY="YOUR-KEY"
 |  ├── _document.tsx
 |  └── index.tsx
 ├── public
+|  ├── icons/
 |  ├── favicon.ico
 |  ├── logo.webp
 ├── types
@@ -116,6 +129,15 @@ Test a build prior to deployment:
 ```bash
 npm run build && npm start
 ```
+
+---
+
+## Credits
+
+- React components from [Mantine UI](https://mantine.dev/)
+- Icons by [@basmilius](https://github.com/basmilius/weather-icons)
+- Weather data from [OpenWeather](https://openweathermap.org/)
+- Geocoding data from [Google Maps](https://developers.google.com/maps/documentation/geocoding/overview)
 
 ---
 
