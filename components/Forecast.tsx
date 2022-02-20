@@ -16,7 +16,14 @@ export default function Forecast() {
       <Title order={2} align="center" my="lg">
         The Next 4 Hours
       </Title>
-      <SimpleGrid cols={2} breakpoints={[{maxWidth: 'xs', cols: 2}]}>
+      <SimpleGrid
+        cols={4}
+        breakpoints={[
+          {maxWidth: 980, cols: 3, spacing: 'md'},
+          {maxWidth: 755, cols: 2, spacing: 'sm'},
+          {maxWidth: 600, cols: 1, spacing: 'sm'}
+        ]}
+      >
         {weather?.hourly
           ?.map((forecast, index: number) => {
             const {
@@ -25,15 +32,20 @@ export default function Forecast() {
               temp
             } = forecast
             return (
-              <Card shadow="sm" padding="xl" key={index}>
-                <Text weight={700}>
-                  {new Intl.DateTimeFormat('en-US', {
+              <Card
+                shadow="sm"
+                padding="xl"
+                key={index}
+                style={{textAlign: 'center'}}
+              >
+                <Text size="xl" weight={700}>
+                  {new Intl.DateTimeFormat('en', {
                     hour: 'numeric'
                   }).format(dt * 1000)}
                 </Text>
-                <Text>{main}</Text>
-                <Text size="xl">{Math.round(temp)}°</Text>
                 <Icon icon={icon} />
+                <Text size="lg">{main}</Text>
+                <Text size="lg">{Math.round(temp)}°</Text>
               </Card>
             )
           })
@@ -43,7 +55,14 @@ export default function Forecast() {
       <Title order={2} align="center" my="lg">
         Extended Forecast
       </Title>
-      <SimpleGrid cols={2} breakpoints={[{maxWidth: 'xs', cols: 2}]}>
+      <SimpleGrid
+        cols={4}
+        breakpoints={[
+          {maxWidth: 980, cols: 3, spacing: 'md'},
+          {maxWidth: 755, cols: 2, spacing: 'sm'},
+          {maxWidth: 600, cols: 1, spacing: 'sm'}
+        ]}
+      >
         {weather?.daily?.map((forecast, index: number) => {
           const {
             dt,
@@ -52,17 +71,23 @@ export default function Forecast() {
             temp: {min, max}
           } = forecast
           return (
-            <Card shadow="sm" padding="xl" key={index}>
-              <Text weight={700}>
-                {new Intl.DateTimeFormat('en-US', {
+            <Card
+              shadow="sm"
+              padding="xl"
+              key={index}
+              style={{textAlign: 'center'}}
+            >
+              <Text size="xl" weight={700}>
+                {new Intl.DateTimeFormat('en', {
                   weekday: 'long'
                 }).format(dt * 1000)}
               </Text>
-              <Text>
+              <Text size="lg">
                 {main} {rain ? `${Math.round(rain * 100)}%` : ''}
               </Text>
-              <Text size="xl">{Math.round(min)}°</Text>
-              <Text size="sm">{Math.round(max)}°</Text>
+              <Text size="lg">
+                H {Math.round(max)}° / L {Math.round(min)}°
+              </Text>
               <Icon icon={icon} />
             </Card>
           )
