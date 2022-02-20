@@ -83,7 +83,7 @@ export default function Forecast() {
                 }).format(dt * 1000)}
               </Text>
               <Text size="lg">
-                {main} {rain ? `${Math.round(rain * 100)}%` : ''}
+                {main} {rain ? `${Math.round(rain * 10)}%` : ''}
               </Text>
               <Text size="lg">
                 H {Math.round(max)}° / L {Math.round(min)}°
