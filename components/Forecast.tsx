@@ -1,6 +1,6 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
-import Icon from './Icon'
-import {useWeatherContext} from './WeatherProvider'
+import Icon from '~/components/Icon'
+import {useWeatherContext} from '~/components/WeatherProvider'
 
 /**
  * Render the Forecast component
@@ -9,7 +9,7 @@ import {useWeatherContext} from './WeatherProvider'
  * @return {Element} The Forecast component.
  */
 export default function Forecast() {
-  const {weather, location} = useWeatherContext()
+  const {weather} = useWeatherContext()
 
   return (
     <section>

@@ -20,12 +20,10 @@ export default function Home() {
       {isLoading ? (
         <LoadingOverlay visible transitionDuration={500} />
       ) : (
-        <>
-          <main>
-            <CurrentConditions />
-            <Forecast />
-          </main>
-        </>
+        <main>
+          <CurrentConditions />
+          <Forecast />
+        </main>
       )}
       <Footer />
     </Container>

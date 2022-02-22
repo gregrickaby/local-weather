@@ -41,7 +41,7 @@ export default function Alerts({alerts}: AlertProps) {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (alerts?.length < 1) {
+  if (!!alerts && alerts?.length < 1) {
     return null
   }
 

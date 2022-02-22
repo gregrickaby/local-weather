@@ -2,8 +2,8 @@ import {Autocomplete} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {SewingPinFilledIcon} from '@modulz/radix-icons'
 import {useState} from 'react'
+import {useWeatherContext} from '~/components/WeatherProvider'
 import usePlaces from '~/lib/usePlaces'
-import {useWeatherContext} from './WeatherProvider'
 
 /**
  * Render the autocomplete Search component.

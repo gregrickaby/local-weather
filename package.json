@@ -1,8 +1,9 @@
 {
   "name": "local-weather",
-  "description": "A weather app using Next.js, Mantine UI and both the National Weather Service and Google Maps API's.",
+  "description": "A weather app using Next.js, Mantine UI and the OpenWeather and Google Maps API's.",
   "version": "1.0",
   "homepage": "https://localwx.vercel.app/",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gregrickaby/local-weather.git"
