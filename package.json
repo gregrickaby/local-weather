@@ -24,10 +24,10 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "^3.6.9",
-    "@mantine/hooks": "^3.6.9",
-    "@mantine/next": "^3.6.9",
-    "@mantine/notifications": "^3.6.9",
+    "@mantine/core": "^3.6.11",
+    "@mantine/hooks": "^3.6.11",
+    "@mantine/next": "^3.6.11",
+    "@mantine/notifications": "^3.6.11",
     "@modulz/radix-icons": "^4.0.0",
     "dayjs": "^1.10.7",
     "next": "12.1.0",
@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.7",
-    "@types/node": "^17.0.19",
+    "@types/node": "^17.0.21",
     "@types/react": "^17.0.39",
     "eslint": "^8.9.0",
     "eslint-config-next": "^12.1.0",
