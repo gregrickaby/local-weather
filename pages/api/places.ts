@@ -38,7 +38,7 @@ export default async function places(
     // If the response is "OK", continue.
     if (data.status === 'OK') {
       // Build the list of locations.
-      const locations = data?.predictions.map((prediction: any) => {
+      const locations = data?.predictions.map((prediction) => {
         return prediction?.description
       })
 

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Meta from '~/components/Meta'
 import Search from '~/components/Search'
 import logo from '~/public/icons/09d.svg'
+import TempUnitToggle from './TempUnitToggle'
 
 /**
  * Render the Header component.
@@ -30,6 +31,7 @@ export default function Header() {
           </Grid.Col>
         </Grid>
       </header>
+      <TempUnitToggle />
       <Button
         aria-label="Scroll to top"
         onClick={() => scrollIntoView({alignment: 'center'})}

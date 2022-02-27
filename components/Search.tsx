@@ -12,8 +12,8 @@ import usePlaces from '~/lib/usePlaces'
  * @return {Element} The Search component.
  */
 export default function Search() {
-  const location = useWeatherContext()
-  const [value, setValue] = useState(location.location)
+  const {location, setLocation} = useWeatherContext()
+  const [value, setValue] = useState(location)
   const [debounced] = useDebouncedValue(value, 200, {leading: true})
   const {locations} = usePlaces(debounced)
 
@@ -40,7 +40,7 @@ export default function Search() {
       icon={<SewingPinFilledIcon />}
       limit={10}
       onChange={setValue}
-      onItemSubmit={(item) => location.setLocation(item.value)}
+      onItemSubmit={(item) => setLocation(item.value)}
       placeholder="Enter the name of your location"
       size="lg"
       transition="pop-top-left"

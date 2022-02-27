@@ -1,6 +1,7 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
 import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
+import formatTemperature from '~/lib/formatTemperature'
 
 /**
  * Render the Forecast component
@@ -9,7 +10,7 @@ import {useWeatherContext} from '~/components/WeatherProvider'
  * @return {Element} The Forecast component.
  */
 export default function Forecast() {
-  const {weather} = useWeatherContext()
+  const {weather, tempUnit} = useWeatherContext()
 
   return (
     <section>
@@ -45,7 +46,7 @@ export default function Forecast() {
                 </Text>
                 <Icon icon={icon} />
                 <Text size="lg">{main}</Text>
-                <Text size="lg">{Math.round(temp)}°</Text>
+                <Text size="lg">{formatTemperature(tempUnit, temp)}</Text>
               </Card>
             )
           })
@@ -86,7 +87,8 @@ export default function Forecast() {
                 {main} {rain ? `${Math.round(rain * 10)}%` : ''}
               </Text>
               <Text size="lg">
-                H {Math.round(max)}° / L {Math.round(min)}°
+                H {formatTemperature(tempUnit, max)} / L{' '}
+                {formatTemperature(tempUnit, min)}
               </Text>
               <Icon icon={icon} />
             </Card>

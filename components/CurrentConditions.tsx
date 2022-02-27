@@ -1,4 +1,5 @@
 import {Center, Text} from '@mantine/core'
+import formatTemperature from '~/lib/formatTemperature'
 import Icon from './Icon'
 import {useWeatherContext} from './WeatherProvider'
 
@@ -15,7 +16,8 @@ export default function CurrentConditions() {
         weather: [{icon}],
         temp
       }
-    }
+    },
+    tempUnit
   } = useWeatherContext()
 
   return (
@@ -32,7 +34,7 @@ export default function CurrentConditions() {
         variant="gradient"
         weight={700}
       >
-        {Math.round(temp)}°
+        {formatTemperature(tempUnit, temp)}
       </Text>
       <Icon icon={icon} />
     </Center>
