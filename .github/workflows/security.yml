@@ -1,4 +1,4 @@
-name: 'CodeQL'
+name: 'Security'
 
 on:
   schedule:
@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  analyze:
-    name: Analyze
+  security:
+    name: Security Scan
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -28,7 +28,9 @@ jobs:
         uses: github/codeql-action/init@v1
         with:
           languages: ${{ matrix.language }}
-          queries: security-extended
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v1
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
