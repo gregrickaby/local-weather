@@ -24,10 +24,10 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "^3.6.11",
-    "@mantine/hooks": "^3.6.11",
-    "@mantine/next": "^3.6.11",
-    "@mantine/notifications": "^3.6.11",
+    "@mantine/core": "^3.6.12",
+    "@mantine/hooks": "^3.6.12",
+    "@mantine/next": "^3.6.12",
+    "@mantine/notifications": "^3.6.12",
     "@modulz/radix-icons": "^4.0.0",
     "dayjs": "^1.10.8",
     "next": "12.1.0",
@@ -49,6 +49,6 @@
     "prettier": "^2.5.1",
     "rimraf": "^3.0.2",
     "sharp": "^0.30.1",
-    "typescript": "^4.5.5"
+    "typescript": "^4.6.2"
   }
 }
