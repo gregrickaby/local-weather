@@ -3,12 +3,6 @@ import formatTemperature from '~/lib/formatTemperature'
 import Icon from './Icon'
 import {useWeatherContext} from './WeatherProvider'
 
-/**
- * Render the CurrentConditions component.
- *
- * @author Greg Rickaby
- * @return {Element} The CurrentConditions component.
- */
 export default function CurrentConditions() {
   const {
     weather: {

@@ -3,12 +3,6 @@ import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import formatTemperature from '~/lib/formatTemperature'
 
-/**
- * Render the Forecast component
- *
- * @author Greg Rickaby
- * @return {Element} The Forecast component.
- */
 export default function Forecast() {
   const {weather, tempUnit} = useWeatherContext()
 
@@ -26,7 +20,7 @@ export default function Forecast() {
         ]}
       >
         {weather?.hourly
-          ?.map((forecast, index: number) => {
+          ?.map((forecast: Record<string, any>, index: number) => {
             const {
               dt,
               weather: [{icon, main}],
@@ -64,7 +58,7 @@ export default function Forecast() {
           {maxWidth: 600, cols: 1, spacing: 'sm'}
         ]}
       >
-        {weather?.daily?.map((forecast, index: number) => {
+        {weather?.daily?.map((forecast: Record<string, any>, index: number) => {
           const {
             dt,
             rain,

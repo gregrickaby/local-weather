@@ -1,19 +1,7 @@
 import {Center, Title} from '@mantine/core'
 import Image from 'next/image'
 
-interface RadarProps {
-  image: string
-}
-
-/**
- * Render the Radar component.
- *
- * @author Greg Rickaby
- * @param  {object}  props       The component attributes as props.
- * @param  {object}  props.image The radar image data.
- * @return {Element}             The Radar component.
- */
-export default function Radar({image}: RadarProps) {
+export default function Radar({image}: {image: string}) {
   return (
     <section>
       <Title order={2} align="center" my="lg">

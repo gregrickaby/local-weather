@@ -5,6 +5,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  *
  * @example
  * /api/weather?location=bay lake,+fl
+ *
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/geocoding/overview
@@ -12,8 +13,6 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  * @see https://nextjs.org/docs/api-routes/introduction
  * @see https://nodejs.org/api/http.html#http_class_http_incomingmessage
  * @see https://nodejs.org/api/http.html#http_class_http_serverresponse
- * @param {object} req The incoming request object.
- * @param {object} res The outgoing response object.
  */
 export default async function weather(
   req: NextApiRequest,
@@ -54,7 +53,7 @@ export default async function weather(
       })
     }
   } catch (error) {
-    res.status(500).json({error: error.message})
+    res.status(500).json({message: `${error}`})
   }
 
   try {

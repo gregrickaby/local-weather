@@ -6,7 +6,7 @@
  * @param  {number}  temp     The temperature to convert.
  * @return {number}           The converted temperature.
  */
-export default function formatTemperature(tempUnit, temp) {
+export default function formatTemperature(tempUnit: boolean, temp: number) {
   const temperature = tempUnit ? (temp - 32) * (5 / 9) : temp
 
   return new Intl.NumberFormat('en', {

@@ -1,12 +1,6 @@
 import {Switch} from '@mantine/core'
 import {useWeatherContext} from './WeatherProvider'
 
-/**
- * Toggle between Fahrenheit and Celsius units.
- *
- * @author Greg Rickaby
- * @return {Element} The TempUnitToggle component.
- */
 export default function TempUnitToggle() {
   const {tempUnit, setTempUnit} = useWeatherContext()
 

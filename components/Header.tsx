@@ -7,12 +7,6 @@ import Search from '~/components/Search'
 import logo from '~/public/icons/09d.svg'
 import TempUnitToggle from './TempUnitToggle'
 
-/**
- * Render the Header component.
- *
- * @author Greg Rickaby
- * @return {Element} The Header component.
- */
 export default function Header() {
   const {scrollIntoView, targetRef} = useScrollIntoView()
   return (

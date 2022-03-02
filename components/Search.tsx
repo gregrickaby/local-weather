@@ -5,12 +5,6 @@ import {useState} from 'react'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import usePlaces from '~/lib/usePlaces'
 
-/**
- * Render the autocomplete Search component.
- *
- * @author Greg Rickaby
- * @return {Element} The Search component.
- */
 export default function Search() {
   const {location, setLocation} = useWeatherContext()
   const [value, setValue] = useState(location)

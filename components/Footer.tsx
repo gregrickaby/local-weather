@@ -1,11 +1,5 @@
 import {Text} from '@mantine/core'
 
-/**
- * Render the footer component.
- *
- * @author Greg Rickaby
- * @return {Element} The footer component.
- */
 export default function Footer() {
   return (
     <footer>

@@ -15,14 +15,6 @@ interface AlertProps {
   ]
 }
 
-/**
- * Render the Alerts component.
- *
- * @author Greg Rickaby
- * @param  {object}  props        The component attributes as props.
- * @param  {Array}   props.alerts The weather alert array.
- * @return {Element}              The Alerts component.
- */
 export default function Alerts({alerts}: AlertProps) {
   const notifications = useNotifications()
 

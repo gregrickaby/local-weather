@@ -1,23 +1,29 @@
 import {useLocalStorageValue} from '@mantine/hooks'
+import * as React from 'react'
 import {createContext, useContext, useState} from 'react'
 import useWeather from '~/lib/useWeather'
 
+interface WeatherContextProps {
+  isLoading: boolean
+  location: string
+  setLocation: (val: any) => void
+  setTempUnit: (val: any) => void
+  tempUnit: boolean
+  weather: Record<string, any>
+}
+
+type LocationProps = 'Enterprise, AL' | 'Paris, France'
+
 // Create the WeatherContext.
-const WeatherContext = createContext(null)
+const WeatherContext = createContext({} as WeatherContextProps)
 
 // Create useWeatherContext hook.
 export const useWeatherContext = () => useContext(WeatherContext)
 
-/**
- * Render the WeatherProvider component.
- *
- * @author Greg Rickaby
- * @param  {object}  props          The component attributes as props.
- * @param  {any}     props.children The children to render.
- * @return {Element}                The WeatherProvider component.
- */
-export default function WeatherProvider({children}) {
-  const [location, setLocation] = useLocalStorageValue({
+export default function WeatherProvider({
+  children
+}: React.PropsWithChildren<{}>) {
+  const [location, setLocation] = useLocalStorageValue<LocationProps>({
     key: 'location',
     defaultValue: 'Enterprise, AL'
   })

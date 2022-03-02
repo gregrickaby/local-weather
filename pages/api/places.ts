@@ -5,14 +5,13 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  *
  * @example
  * /api/places?location="bay lake, fl"
+ *
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/places/web-service/autocomplete
  * @see https://nextjs.org/docs/api-routes/introduction
  * @see https://nodejs.org/api/http.html#http_class_http_incomingmessage
  * @see https://nodejs.org/api/http.html#http_class_http_serverresponse
- * @param {object} req The incoming request object.
- * @param {object} res The outgoing response object.
  */
 export default async function places(
   req: NextApiRequest,
@@ -38,9 +37,11 @@ export default async function places(
     // If the response is "OK", continue.
     if (data.status === 'OK') {
       // Build the list of locations.
-      const locations = data?.predictions.map((prediction) => {
-        return prediction?.description
-      })
+      const locations = data?.predictions.map(
+        (prediction: Record<string, any>) => {
+          return prediction?.description
+        }
+      )
 
       // Return the predictions.
       res.status(200).json(locations)
