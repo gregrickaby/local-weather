@@ -50,6 +50,7 @@ export default function Forecast() {
       <Title order={2} align="center" my="lg">
         Extended Forecast
       </Title>
+
       <SimpleGrid
         cols={4}
         breakpoints={[
@@ -61,7 +62,7 @@ export default function Forecast() {
         {weather?.daily?.map((forecast, index: number) => {
           const {
             dt,
-            rain,
+            pop,
             weather: [{icon, main}],
             temp: {min, max}
           } = forecast
@@ -78,7 +79,7 @@ export default function Forecast() {
                 }).format(dt * 1000)}
               </Text>
               <Text size="lg">
-                {main} {rain ? `${Math.round(rain * 10)}%` : ''}
+                {main} {pop ? `${Math.round(pop * 100)}%` : ''}
               </Text>
               <Text size="lg">
                 H {formatTemperature(tempUnit, max)} / L{' '}
