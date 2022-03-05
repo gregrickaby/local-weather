@@ -1,17 +1,19 @@
 module.exports = {
+  root: true,
+  parser: '@typescript-eslint/parser',
   env: {
     browser: true,
     node: true,
     es6: true
   },
+  plugins: ['@typescript-eslint', 'prettier'],
   extends: [
     'eslint:recommended',
     'plugin:jsx-a11y/recommended',
-    'next',
+    'plugin:@typescript-eslint/recommended',
     'next/core-web-vitals',
     'prettier'
   ],
-  plugins: ['prettier'],
   rules: {
     'no-unused-vars': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
