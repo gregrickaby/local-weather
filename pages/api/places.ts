@@ -38,7 +38,7 @@ export default async function places(
     if (data.status === 'OK') {
       // Build the list of locations.
       const locations = data?.predictions.map(
-        (prediction: Record<string, any>) => {
+        (prediction: Record<string, string>) => {
           return prediction?.description
         }
       )

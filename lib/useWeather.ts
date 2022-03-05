@@ -1,8 +1,9 @@
 import useSWR from 'swr'
 import fetcher from '~/lib/fetcher'
+import {WeatherResponse} from './types'
 
 interface WeatherData {
-  weather: Object[]
+  weather: WeatherResponse
   isLoading: boolean
   isError: boolean
 }

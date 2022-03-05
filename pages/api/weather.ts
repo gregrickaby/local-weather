@@ -22,8 +22,8 @@ export default async function weather(
   const {location} = req.query
 
   // Set default coordinates as fallback.
-  let lat: number = 28.3886186
-  let lon: number = -81.5659069
+  let lat = 28.3886186
+  let lon = -81.5659069
 
   // No address? Bail...
   if (!location) {

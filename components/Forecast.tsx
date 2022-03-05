@@ -20,7 +20,7 @@ export default function Forecast() {
         ]}
       >
         {weather?.hourly
-          ?.map((forecast: Record<string, any>, index: number) => {
+          ?.map((forecast, index: number) => {
             const {
               dt,
               weather: [{icon, main}],
@@ -58,7 +58,7 @@ export default function Forecast() {
           {maxWidth: 600, cols: 1, spacing: 'sm'}
         ]}
       >
-        {weather?.daily?.map((forecast: Record<string, any>, index: number) => {
+        {weather?.daily?.map((forecast, index: number) => {
           const {
             dt,
             rain,
