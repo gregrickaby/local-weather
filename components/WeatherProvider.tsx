@@ -28,7 +28,7 @@ export default function WeatherProvider({
     key: 'location',
     defaultValue: 'Enterprise, AL'
   })
-  const [tempUnit, setTempUnit] = useState(false)
+  const [tempUnit, setTempUnit] = useState(true)
   const {weather, isLoading} = useWeather(location)
 
   return (
