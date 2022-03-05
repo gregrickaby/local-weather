@@ -58,7 +58,7 @@ export default async function weather(
 
   try {
     const weather = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=minutely&appid=${process.env.OPENWEATHER_API_KEY}`
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely&appid=${process.env.OPENWEATHER_API_KEY}`
     )
     // Send the response.
     res.status(200).json(await weather.json())
