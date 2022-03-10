@@ -1,4 +1,5 @@
 import {Container, LoadingOverlay} from '@mantine/core'
+import Alerts from '~/components/Alerts'
 import CurrentConditions from '~/components/CurrentConditions'
 import Footer from '~/components/Footer'
 import Forecast from '~/components/Forecast'
@@ -17,6 +18,7 @@ export default function Home() {
         <main>
           <CurrentConditions />
           <Forecast />
+          <Alerts />
         </main>
       )}
       <Footer />
