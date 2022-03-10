@@ -16,7 +16,7 @@ export default function Header() {
         <Grid gutter="md" justify="center" align="center" mt="lg">
           <Grid.Col>
             <Group align="center" position="center">
-              <Image alt="" src={logo} height={75} width={75} priority />
+              <Image alt="" src={logo} height="75" width="75" priority />
               <Title order={1}>Local Weather</Title>
             </Group>
           </Grid.Col>
