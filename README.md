@@ -1,6 +1,6 @@
 # Weather <!-- omit in toc -->
 
-⛈ View the weather forecast: <https://localwx.vercel.app/>
+⛈ View the local weather forecast: <https://localwx.vercel.app/>
 
 ---
 
@@ -77,9 +77,9 @@ OPENWEATHER_API_KEY="YOUR-KEY"
 |  ├── fetcher.ts
 |  ├── useWeather.ts
 |  ├── usePlaces.ts
+|  ├── etc...
 ├── pages
 |  ├── api
-|  |  ├── geocoding.ts
 |  |  ├── places.ts
 |  |  └── weather.ts
 |  ├── _app.tsx
@@ -88,9 +88,6 @@ OPENWEATHER_API_KEY="YOUR-KEY"
 ├── public
 |  ├── icons/
 |  ├── favicon.ico
-|  ├── logo.webp
-├── types
-|  ├── index.ts
 ├── .env.sample
 ├── .gitignore
 ├── package.json
@@ -105,8 +102,6 @@ OPENWEATHER_API_KEY="YOUR-KEY"
 **Pages** - This folder contains standard Next.js pages and `/api` middleware routes.
 
 **Public** - This folder contains all of the static assets.
-
-**Types** - This folder contains all TypeScript interface definitions.
 
 ---
 
@@ -134,9 +129,9 @@ npm run build && npm start
 
 ## Credits
 
-- React components from [Mantine UI](https://mantine.dev/)
-- Icons by [@basmilius](https://github.com/basmilius/weather-icons)
-- Weather data from [OpenWeather](https://openweathermap.org/)
+- React components by [Mantine](https://mantine.dev/)
+- Icons by [@basmilius](https://github.com/basmilius/weather-icons) and [Radix](https://icons.modulz.app/)
+- Weather data from [OpenWeatherAPI](https://openweathermap.org/api)
 - Geocoding data from [Google Maps](https://developers.google.com/maps/documentation/geocoding/overview)
 
 ---
