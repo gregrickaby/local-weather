@@ -1,17 +1,8 @@
 import {useLocalStorageValue} from '@mantine/hooks'
 import * as React from 'react'
 import {createContext, useContext, useState} from 'react'
-import {WeatherResponse} from '~/lib/types'
+import {WeatherContextProps} from '~/lib/types'
 import useWeather from '~/lib/useWeather'
-
-interface WeatherContextProps {
-  isLoading: boolean
-  location: string
-  setLocation: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  setTempUnit: (tempUnit: boolean) => void
-  tempUnit: boolean
-  weather: WeatherResponse
-}
 
 // Create the WeatherContext.
 const WeatherContext = createContext({} as WeatherContextProps)

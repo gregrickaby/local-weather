@@ -1,11 +1,6 @@
 import useSWR from 'swr'
 import fetcher from '~/lib/fetcher'
-
-interface PlacesData {
-  locations: string[]
-  isLoading: boolean
-  isError: boolean
-}
+import {PlacesData} from './types'
 
 export default function usePlaces(location: string): PlacesData {
   const {data, error} = useSWR(`/api/places?location=${location}`, fetcher)

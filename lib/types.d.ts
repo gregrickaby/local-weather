@@ -224,3 +224,24 @@ export interface IpDataResponse {
   }
   count: string
 }
+
+export interface PlacesData {
+  locations: string[]
+  isLoading: boolean
+  isError: boolean
+}
+
+export interface WeatherData {
+  weather: WeatherResponse
+  isLoading: boolean
+  isError: boolean
+}
+
+export interface WeatherContextProps {
+  isLoading: boolean
+  location: string
+  setLocation: any // eslint-disable-line @typescript-eslint/no-explicit-any
+  setTempUnit: (tempUnit: boolean) => void
+  tempUnit: boolean
+  weather: WeatherResponse
+}

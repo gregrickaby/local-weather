@@ -1,12 +1,6 @@
 import useSWR from 'swr'
 import fetcher from '~/lib/fetcher'
-import {WeatherResponse} from './types'
-
-interface WeatherData {
-  weather: WeatherResponse
-  isLoading: boolean
-  isError: boolean
-}
+import {WeatherData} from './types'
 
 export default function useWeather(location: string): WeatherData {
   const {data, error} = useSWR(`/api/weather?location=${location}`, fetcher)
