@@ -5,12 +5,6 @@ import Forecast from '~/components/Forecast'
 import Header from '~/components/Header'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
-/**
- * The Homepage component.
- *
- * @author Greg Rickaby
- * @return {Element} The Homepage component.
- */
 export default function Home() {
   const {isLoading} = useWeatherContext()
 
