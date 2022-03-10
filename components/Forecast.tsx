@@ -29,7 +29,7 @@ export default function Forecast() {
             return (
               <Card
                 shadow="sm"
-                padding="xl"
+                p="xl"
                 key={index}
                 style={{textAlign: 'center'}}
               >
@@ -67,12 +67,7 @@ export default function Forecast() {
             temp: {min, max}
           } = forecast
           return (
-            <Card
-              shadow="sm"
-              padding="xl"
-              key={index}
-              style={{textAlign: 'center'}}
-            >
+            <Card shadow="sm" p="xl" key={index} style={{textAlign: 'center'}}>
               <Text size="xl" weight={700}>
                 {new Intl.DateTimeFormat('en', {
                   weekday: 'long'
