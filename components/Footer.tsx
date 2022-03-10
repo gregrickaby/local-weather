@@ -1,14 +1,31 @@
-import {Text} from '@mantine/core'
+import {Center, Text} from '@mantine/core'
 
 export default function Footer() {
   return (
     <footer>
-      <Text align="center" size="sm" m="xl">
-        Weather data from{' '}
-        <Text variant="link" component="a" href="https://openweathermap.org/">
-          OpenWeather
+      <Center>
+        <Text m="xl" size="sm">
+          Weather data from{' '}
+          <Text
+            component="a"
+            href="https://openweathermap.org/api"
+            size="sm"
+            variant="link"
+          >
+            OpenWeatherAPI
+          </Text>{' '}
+          | Website by{' '}
+          <Text
+            component="a"
+            href="https://gregrickaby.com"
+            size="sm"
+            variant="link"
+            rel="author"
+          >
+            Greg Rickaby
+          </Text>
         </Text>
-      </Text>
+      </Center>
     </footer>
   )
 }
