@@ -4,7 +4,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  * Fetch weather data from the OpenWeather API.
  *
  * @example
- * /api/weather?location=bay lake,+fl
+ * /api/weather?location="enterprise al"
  *
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
