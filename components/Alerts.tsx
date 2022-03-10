@@ -26,6 +26,11 @@ export default function Alerts() {
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // No alerts? Bail...
+  if (!alerts) {
+    return null
+  }
+
   return (
     <section>
       <Title order={2} align="center" my="lg">
