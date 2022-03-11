@@ -33,7 +33,7 @@ export default function Alerts() {
 
   return (
     <section>
-      <Title order={2} align="center" my="lg">
+      <Title align="center" my="lg" order={2}>
         Alerts
       </Title>
       {alerts?.map((alert, index: number) => (
@@ -41,7 +41,8 @@ export default function Alerts() {
           color="red"
           icon={<ExclamationTriangleIcon />}
           key={index}
-          mb="lg"
+          mb="xl"
+          sx={{textTransform: 'capitalize'}}
           title={alert?.event}
         >
           <Text mb="md">{alert?.description}</Text>
