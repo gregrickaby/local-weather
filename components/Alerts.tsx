@@ -2,7 +2,7 @@ import {Alert, Text, Title} from '@mantine/core'
 import {useNotifications} from '@mantine/notifications'
 import {ExclamationTriangleIcon} from '@modulz/radix-icons'
 import {useEffect} from 'react'
-import {useWeatherContext} from './WeatherProvider'
+import {useWeatherContext} from '~/components/WeatherProvider'
 
 export default function Alerts() {
   const notifications = useNotifications()

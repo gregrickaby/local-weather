@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {useWeatherContext} from './WeatherProvider'
+import {useWeatherContext} from '~/components/WeatherProvider'
 
 export default function Meta() {
   const {location} = useWeatherContext()
