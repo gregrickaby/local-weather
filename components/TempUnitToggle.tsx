@@ -16,9 +16,9 @@ export default function TempUnitToggle() {
       aria-label="Toggle between Fahrenheit and Celsius"
       label=""
       checked={checked}
-      offLabel="F"
+      offLabel="C"
       onChange={() => handleTempUnitChange()}
-      onLabel="C"
+      onLabel="F"
       size="lg"
       sx={{
         position: 'fixed',
