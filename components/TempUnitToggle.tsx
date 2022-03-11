@@ -1,16 +1,23 @@
 import {Switch} from '@mantine/core'
+import {useState} from 'react'
 import {useWeatherContext} from './WeatherProvider'
 
 export default function TempUnitToggle() {
   const {tempUnit, setTempUnit} = useWeatherContext()
+  const [checked, setChecked] = useState(tempUnit === 'f' ? true : false)
+
+  function handleTempUnitChange() {
+    setChecked(!checked)
+    setTempUnit(checked ? 'c' : 'f')
+  }
 
   return (
     <Switch
       aria-label="Toggle between Fahrenheit and Celsius"
       label="F"
-      checked={tempUnit}
+      checked={checked}
       offLabel="OFF"
-      onChange={() => setTempUnit(!tempUnit)}
+      onChange={() => handleTempUnitChange()}
       onLabel="ON"
       size="lg"
       sx={{

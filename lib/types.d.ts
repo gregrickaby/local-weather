@@ -251,7 +251,7 @@ export interface WeatherContextProps {
   isLoading: boolean
   location: string
   setLocation: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  setTempUnit: (tempUnit: boolean) => void
-  tempUnit: boolean
+  setTempUnit: (tempUnit: string) => void
+  tempUnit: string
   weather: WeatherResponse
 }
