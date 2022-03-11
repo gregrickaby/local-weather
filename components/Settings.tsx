@@ -1,6 +1,7 @@
-import {Button, Group, Modal} from '@mantine/core'
+import {Button, Group, Modal, Space} from '@mantine/core'
 import {GearIcon} from '@modulz/radix-icons'
 import {useState} from 'react'
+import DarkThemeToggle from '~/components/DarkThemeToggle'
 import TempUnitToggle from '~/components/TempUnitToggle'
 
 export default function Settings() {
@@ -10,6 +11,8 @@ export default function Settings() {
     <>
       <Modal onClose={() => setOpened(false)} opened={opened} title="Settings">
         <TempUnitToggle />
+        <Space h="md" />
+        <DarkThemeToggle />
       </Modal>
 
       <Group
