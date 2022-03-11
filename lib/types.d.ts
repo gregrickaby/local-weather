@@ -250,8 +250,8 @@ export interface WeatherData {
 export interface WeatherContextProps {
   isLoading: boolean
   location: string
-  setLocation: any // eslint-disable-line @typescript-eslint/no-explicit-any
-  setTempUnit: (tempUnit: string) => void
+  setLocation: (string) => void
+  setTempUnit: (string) => void
   tempUnit: string
   weather: WeatherResponse
 }
