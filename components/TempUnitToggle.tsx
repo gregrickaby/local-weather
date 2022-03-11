@@ -12,20 +12,16 @@ export default function TempUnitToggle() {
   }
 
   return (
-    <Switch
-      aria-label="Toggle between Fahrenheit and Celsius"
-      label=""
-      checked={checked}
-      offLabel="C"
-      onChange={() => handleTempUnitChange()}
-      onLabel="F"
-      size="lg"
-      sx={{
-        position: 'fixed',
-        bottom: '24px',
-        left: '24px',
-        zIndex: 100
-      }}
-    />
+    <>
+      <Switch
+        aria-label="Toggle between Fahrenheit and Celsius"
+        label="Fahrenheit"
+        checked={checked}
+        offLabel="OFF"
+        onChange={() => handleTempUnitChange()}
+        onLabel="ON"
+        size="lg"
+      />
+    </>
   )
 }

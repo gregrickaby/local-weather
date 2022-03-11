@@ -4,8 +4,8 @@ import {ArrowUpIcon} from '@modulz/radix-icons'
 import Image from 'next/image'
 import Meta from '~/components/Meta'
 import Search from '~/components/Search'
+import Settings from '~/components/Settings'
 import logo from '~/public/icons/09d.svg'
-import TempUnitToggle from './TempUnitToggle'
 
 export default function Header() {
   const {scrollIntoView, targetRef} = useScrollIntoView()
@@ -25,7 +25,7 @@ export default function Header() {
           </Grid.Col>
         </Grid>
       </header>
-      <TempUnitToggle />
+      <Settings />
       <Button
         aria-label="Scroll to top"
         onClick={() => scrollIntoView({alignment: 'center'})}
