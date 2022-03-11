@@ -45,7 +45,9 @@ export default function Alerts() {
           sx={{textTransform: 'capitalize'}}
           title={alert?.event}
         >
-          <Text mb="md">{alert?.description}</Text>
+          <Text mb="md" sx={{textTransform: 'lowercase'}}>
+            {alert?.description}
+          </Text>
         </Alert>
       ))}
     </section>
