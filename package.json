@@ -24,10 +24,10 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "^4.0.1",
-    "@mantine/hooks": "^4.0.1",
-    "@mantine/next": "^4.0.1",
-    "@mantine/notifications": "^4.0.1",
+    "@mantine/core": "^4.0.3",
+    "@mantine/hooks": "^4.0.3",
+    "@mantine/next": "^4.0.3",
+    "@mantine/notifications": "^4.0.3",
     "@modulz/radix-icons": "^4.0.0",
     "dayjs": "^1.10.8",
     "next": "12.1.0",
@@ -41,7 +41,7 @@
     "@types/react": "^17.0.40",
     "@typescript-eslint/eslint-plugin": "^5.14.0",
     "@typescript-eslint/parser": "^5.14.0",
-    "eslint": "^8.10.0",
+    "eslint": "^8.11.0",
     "eslint-config-next": "^12.1.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
