@@ -1,4 +1,4 @@
-import {useLocalStorageValue} from '@mantine/hooks'
+import {useLocalStorage} from '@mantine/hooks'
 import * as React from 'react'
 import {createContext, useContext} from 'react'
 import {WeatherContextProps} from '~/lib/types'
@@ -15,12 +15,12 @@ export default function WeatherProvider({
 }: {
   children: React.ReactNode
 }) {
-  const [location, setLocation] = useLocalStorageValue({
+  const [location, setLocation] = useLocalStorage({
     key: 'location',
     defaultValue: 'Enterprise, AL'
   })
 
-  const [tempUnit, setTempUnit] = useLocalStorageValue({
+  const [tempUnit, setTempUnit] = useLocalStorage({
     key: 'tempUnit',
     defaultValue: 'f'
   })

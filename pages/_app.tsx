@@ -1,12 +1,12 @@
 import {ColorScheme, ColorSchemeProvider, MantineProvider} from '@mantine/core'
-import {useColorScheme, useLocalStorageValue} from '@mantine/hooks'
+import {useColorScheme, useLocalStorage} from '@mantine/hooks'
 import {NotificationsProvider} from '@mantine/notifications'
 import type {AppProps} from 'next/app'
 import WeatherProvider from '~/components/WeatherProvider'
 
 export default function App({Component, pageProps}: AppProps) {
   const preferredColorScheme = useColorScheme()
-  const [colorScheme, setColorScheme] = useLocalStorageValue({
+  const [colorScheme, setColorScheme] = useLocalStorage({
     key: 'colorScheme',
     defaultValue: preferredColorScheme
   })
