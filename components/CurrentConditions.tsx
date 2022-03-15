@@ -1,6 +1,6 @@
 import {Center, Text} from '@mantine/core'
 import {useWeatherContext} from '~/components/WeatherProvider'
-import formatTemperature from '~/lib/formatTemperature'
+import {formatTemperature} from '~/lib/formatters'
 import Icon from './Icon'
 
 export default function CurrentConditions() {

@@ -1,7 +1,7 @@
 import {Card, SimpleGrid, Text, Title} from '@mantine/core'
 import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
-import formatTemperature from '~/lib/formatTemperature'
+import {formatDay, formatTemperature, formatTime} from '~/lib/formatters'
 
 export default function Forecast() {
   const {weather, tempUnit} = useWeatherContext()
@@ -34,9 +34,7 @@ export default function Forecast() {
                 style={{textAlign: 'center'}}
               >
                 <Text size="xl" weight={700}>
-                  {new Intl.DateTimeFormat('en', {
-                    hour: 'numeric'
-                  }).format(dt * 1000)}
+                  {formatTime(dt)}
                 </Text>
                 <Icon icon={icon} />
                 <Text size="lg">{main}</Text>
@@ -69,9 +67,7 @@ export default function Forecast() {
           return (
             <Card shadow="sm" p="xl" key={index} style={{textAlign: 'center'}}>
               <Text size="xl" weight={700}>
-                {new Intl.DateTimeFormat('en', {
-                  weekday: 'long'
-                }).format(dt * 1000)}
+                {formatDay(dt, index)}
               </Text>
               <Text size="lg">
                 {main} {pop ? `${Math.round(pop * 100)}%` : ''}
