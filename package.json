@@ -27,7 +27,7 @@
     "@mantine/core": "^4.0.7",
     "@mantine/hooks": "^4.0.5",
     "@mantine/next": "^4.0.7",
-    "@mantine/notifications": "^4.0.5",
+    "@mantine/notifications": "^4.0.7",
     "@modulz/radix-icons": "^4.0.0",
     "next": "12.1.0",
     "react": "17.0.2",
