@@ -1,5 +1,4 @@
 import {useLocalStorage} from '@mantine/hooks'
-import * as React from 'react'
 import {createContext, useContext} from 'react'
 import {WeatherContextProps} from '~/lib/types'
 import useWeather from '~/lib/useWeather'
