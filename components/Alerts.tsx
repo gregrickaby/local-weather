@@ -1,11 +1,10 @@
 import {Alert, Text, Title} from '@mantine/core'
-import {useNotifications} from '@mantine/notifications'
+import {showNotification} from '@mantine/notifications'
 import {ExclamationTriangleIcon} from '@modulz/radix-icons'
 import {useEffect} from 'react'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
 export default function Alerts() {
-  const notifications = useNotifications()
   const {
     weather: {alerts}
   } = useWeatherContext()
@@ -15,16 +14,16 @@ export default function Alerts() {
    */
   useEffect(() => {
     if (!!alerts && alerts?.length > 0) {
-      notifications.showNotification({
+      showNotification({
+        autoClose: 5000,
+        color: 'red',
         icon: <ExclamationTriangleIcon />,
-        title: 'Warning',
         message:
           'Hazardous weather conditions reported for this area. Scroll down for details.',
-        autoClose: true,
-        color: 'red'
+        title: 'Warning'
       })
     }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [alerts])
 
   // No alerts? Bail...
   if (!alerts) {
