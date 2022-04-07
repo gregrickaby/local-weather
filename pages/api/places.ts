@@ -4,7 +4,7 @@ import type {NextApiRequest, NextApiResponse} from 'next'
  * Predict the city via Google's Places Autocomplete API.
  *
  * @example
- * /api/places?location="bay lake, fl"
+ * /api/places?location="enterprise, al"
  *
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
@@ -17,44 +17,37 @@ export default async function places(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Destructure the request.
-  const {location} = req.query
-
   // No location? Bail...
-  if (!location) {
-    res
+  if (!req.query.location) {
+    return res
       .status(400)
-      .json({error: 'Cannot locate city and state without a location query.'})
-    return
+      .json({message: 'Cannot locate city and state without a location query.'})
   }
 
   try {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${location}&types=(cities)&language=en&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${req?.query?.location}&types=(cities)&language=en&key=${process.env.GOOGLE_MAPS_API_KEY}`
     )
     const data = await response.json()
 
     // If the response is "OK", continue.
     if (data.status === 'OK') {
       // Build the list of locations.
-      const locations = data?.predictions.map(
+      const locations = data?.predictions?.map(
         (prediction: Record<string, string>) => {
           return prediction?.description
         }
       )
 
       // Return the predictions.
-      res.status(200).json(locations)
+      return res.status(200).json(locations)
 
-      // Otherwise, return an error.
+      // Otherwise, return a message.
     } else {
-      res.status(500).json({
-        status: `${data?.status}`,
-        message: `${data?.error_message}`
-      })
+      return res.status(500).json({message: data?.status})
     }
   } catch (error) {
     // Other issue? Leave a message and bail.
-    res.status(500).json({message: `${error}`})
+    return res.status(500).json({message: error})
   }
 }

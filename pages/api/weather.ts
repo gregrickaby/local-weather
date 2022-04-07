@@ -18,24 +18,21 @@ export default async function weather(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // Destructure the request.
-  const {location} = req.query
-
   // Set default coordinates as fallback.
   let lat = 28.3886186
   let lon = -81.5659069
 
   // No address? Bail...
-  if (!location) {
-    res.status(400).json({
-      error: 'Cannot fetch weather information without a location query.'
+  if (!req.query.location) {
+    return res.status(400).json({
+      message: 'Cannot fetch weather information without a location query.'
     })
-    return
   }
 
+  // First, try to geocode the address.
   try {
     const geocode = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${req?.query?.location}&key=${process.env.GOOGLE_MAPS_API_KEY}`
     )
     const coordinates = await geocode.json()
 
@@ -47,23 +44,30 @@ export default async function weather(
 
       // Otherwise, return an error.
     } else {
-      res.status(500).json({
-        status: `${coordinates?.status}`,
-        message: `${coordinates?.error_message}`
-      })
+      return res.status(500).json({message: coordinates?.status})
     }
   } catch (error) {
-    res.status(500).json({message: `${error}`})
+    // Other issue? Leave a message and bail.
+    return res.status(500).json({message: error})
   }
 
+  // Now, fetch the weather data.
   try {
     const weather = await fetch(
       `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely&appid=${process.env.OPENWEATHER_API_KEY}`
     )
-    // Send the response.
-    res.status(200).json(await weather.json())
+    const forecast = await weather.json()
+
+    // If there's a forecast, return it.
+    if (Object.keys(forecast).length) {
+      return res.status(200).json(forecast)
+
+      // Otherwise, return an error.
+    } else {
+      return res.status(500).json({message: 'Cannot fetch weather data.'})
+    }
   } catch (error) {
-    // Issue? Leave a message and bail.
-    res.status(500).json({message: `${error}`})
+    // Other issue? Leave a message and bail.
+    return res.status(500).json({message: `${error}`})
   }
 }
