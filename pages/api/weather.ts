@@ -68,6 +68,6 @@ export default async function weather(
     }
   } catch (error) {
     // Other issue? Leave a message and bail.
-    return res.status(500).json({message: `${error}`})
+    return res.status(500).json({message: error})
   }
 }
