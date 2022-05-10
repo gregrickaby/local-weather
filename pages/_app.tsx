@@ -18,7 +18,11 @@ export default function App({Component, pageProps}: AppProps) {
       colorScheme={colorScheme}
       toggleColorScheme={toggleColorScheme}
     >
-      <MantineProvider withGlobalStyles withNormalizeCSS theme={{colorScheme}}>
+      <MantineProvider
+        withGlobalStyles
+        withNormalizeCSS
+        theme={{colorScheme: colorScheme}}
+      >
         <NotificationsProvider position="bottom-right" zIndex={2077}>
           <WeatherProvider>
             <Component {...pageProps} />
