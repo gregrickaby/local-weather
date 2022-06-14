@@ -26,7 +26,7 @@
   "dependencies": {
     "@mantine/core": "^4.2.8",
     "@mantine/hooks": "^4.2.8",
-    "@mantine/next": "^4.2.8",
+    "@mantine/next": "^4.2.9",
     "@mantine/notifications": "^4.2.9",
     "@modulz/radix-icons": "^4.0.0",
     "next": "12.1.6",
