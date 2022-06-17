@@ -10,9 +10,10 @@ export default function Settings() {
   return (
     <>
       <Modal onClose={() => setOpened(false)} opened={opened} title="Settings">
+        <DarkThemeToggle />
+        <Space h="md" />
         <TempUnitToggle />
         <Space h="md" />
-        <DarkThemeToggle />
       </Modal>
 
       <Group
