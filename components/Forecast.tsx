@@ -1,4 +1,4 @@
-import {Card, SimpleGrid, Text, Title} from '@mantine/core'
+import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
 import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {formatDay, formatTemperature, formatTime} from '~/lib/formatters'
@@ -8,6 +8,7 @@ export default function Forecast() {
 
   return (
     <section>
+      <Space h="lg" />
       <Title order={2} align="center" my="lg">
         The Next 4 Hours
       </Title>
