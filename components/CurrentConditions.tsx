@@ -32,7 +32,7 @@ export default function CurrentConditions() {
         >
           {formatTemperature(tempUnit, temp)}
         </Text>
-        {feels_like && (
+        {feels_like > temp && (
           <Text
             align="center"
             component="p"
