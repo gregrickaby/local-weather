@@ -41,7 +41,7 @@ export default function Forecast() {
                 <Text size="xl">{formatTemperature(tempUnit, temp)}</Text>
                 <Icon icon={icon} />
                 <Text size="lg">{main}</Text>
-                {feels_like >= temp && (
+                {feels_like > temp && (
                   <Text
                     size="lg"
                     gradient={{from: 'yellow', to: 'orange', deg: 45}}
@@ -89,7 +89,7 @@ export default function Forecast() {
                 {formatTemperature(tempUnit, min)}
               </Text>
               <Icon icon={icon} />
-              {day >= max && (
+              {day > max && (
                 <Text
                   size="lg"
                   gradient={{from: 'yellow', to: 'orange', deg: 45}}
