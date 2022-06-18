@@ -1,11 +1,9 @@
 import {Button, Grid, Group, Title} from '@mantine/core'
 import {useScrollIntoView} from '@mantine/hooks'
 import {ArrowUpIcon} from '@modulz/radix-icons'
-import Image from 'next/image'
 import Meta from '~/components/Meta'
 import Search from '~/components/Search'
 import Settings from '~/components/Settings'
-import logo from '~/public/icons/09d.svg'
 
 export default function Header() {
   const {scrollIntoView, targetRef} = useScrollIntoView()
@@ -15,8 +13,7 @@ export default function Header() {
       <header ref={targetRef} style={{marginBottom: '2rem'}}>
         <Grid gutter="md" justify="center" align="center" mt="lg">
           <Grid.Col>
-            <Group align="center" position="center">
-              <Image alt="" src={logo} height="75" width="75" priority />
+            <Group>
               <Title order={1}>Local Weather</Title>
             </Group>
           </Grid.Col>

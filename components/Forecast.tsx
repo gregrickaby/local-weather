@@ -25,7 +25,8 @@ export default function Forecast() {
             const {
               dt,
               weather: [{icon, main}],
-              temp
+              temp,
+              feels_like
             } = forecast
             return (
               <Card
@@ -37,9 +38,18 @@ export default function Forecast() {
                 <Text size="xl" weight={700}>
                   {formatTime(dt)}
                 </Text>
+                <Text size="xl">{formatTemperature(tempUnit, temp)}</Text>
                 <Icon icon={icon} />
                 <Text size="lg">{main}</Text>
-                <Text size="lg">{formatTemperature(tempUnit, temp)}</Text>
+                {feels_like >= temp && (
+                  <Text
+                    size="lg"
+                    gradient={{from: 'yellow', to: 'orange', deg: 45}}
+                    variant="gradient"
+                  >
+                    Feels Like: {formatTemperature(tempUnit, feels_like)}
+                  </Text>
+                )}
               </Card>
             )
           })
@@ -63,7 +73,8 @@ export default function Forecast() {
             dt,
             pop,
             weather: [{icon, main}],
-            temp: {min, max}
+            temp: {min, max},
+            feels_like: {day}
           } = forecast
           return (
             <Card shadow="sm" p="xl" key={index} style={{textAlign: 'center'}}>
@@ -78,6 +89,15 @@ export default function Forecast() {
                 {formatTemperature(tempUnit, min)}
               </Text>
               <Icon icon={icon} />
+              {day >= max && (
+                <Text
+                  size="lg"
+                  gradient={{from: 'yellow', to: 'orange', deg: 45}}
+                  variant="gradient"
+                >
+                  Feels Like: {formatTemperature(tempUnit, day)}
+                </Text>
+              )}
             </Card>
           )
         })}
