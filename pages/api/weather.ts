@@ -1,7 +1,7 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 
 /**
- * Fetch weather data from the OpenWeather API.
+ * Fetch weather data from the OpenWeatherMap API.
  *
  * @example
  * /api/weather?location="enterprise al"

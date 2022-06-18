@@ -1,13 +1,13 @@
 # Weather <!-- omit in toc -->
 
-⛈ View the local weather forecast: <https://localwx.vercel.app/>
+⛈ View your local weather forecast: <https://localwx.vercel.app/>
 
 ---
 
 ## Table of Contents <!-- omit in toc -->
 
 - [Generate API Keys](#generate-api-keys)
-  - [OpenWeather API](#openweather-api)
+  - [OpenWeatherMap API](#openweathermap-api)
   - [Google Maps API](#google-maps-api)
 - [Install](#install)
   - [Setup Next.js](#setup-nextjs)
@@ -22,9 +22,9 @@
 
 ## Generate API Keys
 
-### OpenWeather API
+### OpenWeatherMap API
 
-First, you'll need an [OpenWeather API Key](https://home.openweathermap.org/users/sign_up). If you don't have an account, you can create one for free.
+First, you'll need an [OpenWeatherMap API Key](https://home.openweathermap.org/users/sign_up). If you don't have an account, you can create one for free.
 
 ### Google Maps API
 
@@ -131,7 +131,7 @@ npm run build && npm start
 
 - React components by [Mantine](https://mantine.dev/)
 - Icons by [@basmilius](https://github.com/basmilius/weather-icons) and [Radix](https://icons.modulz.app/)
-- Weather data from [OpenWeatherAPI](https://openweathermap.org/api)
+- Weather data from [OpenWeatherMap API](https://openweathermap.org/api)
 - Geocoding data from [Google Maps](https://developers.google.com/maps/documentation/geocoding/overview)
 
 ---
