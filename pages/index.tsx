@@ -12,15 +12,19 @@ export default function Home() {
   return (
     <Container>
       <Header />
-      {isLoading ? (
-        <LoadingOverlay visible transitionDuration={500} />
-      ) : (
+      <LoadingOverlay
+        visible={isLoading}
+        transitionDuration={250}
+        exitTransitionDuration={250}
+      />
+      {!isLoading && (
         <main>
           <CurrentConditions />
           <Forecast />
           <Alerts />
         </main>
       )}
+
       <Footer />
     </Container>
   )
