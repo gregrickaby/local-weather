@@ -24,10 +24,10 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "^4.2.9",
-    "@mantine/hooks": "^4.2.9",
-    "@mantine/next": "^4.2.9",
-    "@mantine/notifications": "^4.2.9",
+    "@mantine/core": "^4.2.10",
+    "@mantine/hooks": "^4.2.10",
+    "@mantine/next": "^4.2.10",
+    "@mantine/notifications": "^4.2.10",
     "@modulz/radix-icons": "^4.0.0",
     "next": "12.1.6",
     "react": "18.2.0",
