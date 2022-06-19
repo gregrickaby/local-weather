@@ -1,13 +1,12 @@
 import {Group, Stack, Text} from '@mantine/core'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {formatTemperature} from '~/lib/formatters'
-import Icon from './Icon'
 
 export default function CurrentConditions() {
   const {
     weather: {
       current: {
-        weather: [{icon}],
+        weather: [{description}],
         temp,
         feels_like
       }
@@ -18,6 +17,21 @@ export default function CurrentConditions() {
   return (
     <Group position="center">
       <Stack>
+        <Text
+          align="center"
+          component="p"
+          gradient={{from: 'indigo', to: 'cyan', deg: 45}}
+          style={{
+            fontSize: '2rem',
+            lineHeight: 1,
+            margin: 0,
+            textTransform: 'capitalize'
+          }}
+          variant="gradient"
+          weight={700}
+        >
+          {description}
+        </Text>
         <Text
           align="center"
           component="p"
@@ -49,7 +63,6 @@ export default function CurrentConditions() {
           </Text>
         )}
       </Stack>
-      <Icon icon={icon} />
     </Group>
   )
 }
