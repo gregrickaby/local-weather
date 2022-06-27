@@ -24,7 +24,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "^4.2.10",
+    "@mantine/core": "^4.2.11",
     "@mantine/hooks": "^4.2.10",
     "@mantine/next": "^4.2.10",
     "@mantine/notifications": "^4.2.10",
