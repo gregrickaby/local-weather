@@ -24,7 +24,7 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@emotion/react": "^11.9.3",
+    "@emotion/react": "^11.10.0",
     "@emotion/server": "^11.4.0",
     "@mantine/core": "^5.0.0",
     "@mantine/hooks": "^5.0.0",
