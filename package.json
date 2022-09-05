@@ -28,7 +28,7 @@
     "@emotion/server": "^11.10.0",
     "@mantine/core": "^5.2.4",
     "@mantine/hooks": "^5.2.4",
-    "@mantine/next": "^5.2.4",
+    "@mantine/next": "^5.2.5",
     "@mantine/notifications": "^5.2.4",
     "@modulz/radix-icons": "^4.0.0",
     "next": "12.2.5",
