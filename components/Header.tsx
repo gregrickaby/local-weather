@@ -1,12 +1,12 @@
 import {Button, Grid, Group, Title} from '@mantine/core'
 import {useScrollIntoView} from '@mantine/hooks'
-import {ArrowUpIcon} from '@modulz/radix-icons'
+import {FiChevronUp} from 'react-icons/fi'
 import Meta from '~/components/Meta'
 import Search from '~/components/Search'
 import Settings from '~/components/Settings'
 
 export default function Header() {
-  const {scrollIntoView, targetRef} = useScrollIntoView()
+  const {scrollIntoView, targetRef} = useScrollIntoView<HTMLDivElement>()
   return (
     <>
       <Meta />
@@ -26,11 +26,16 @@ export default function Header() {
       <Button
         aria-label="Scroll to top"
         onClick={() => scrollIntoView({alignment: 'center'})}
-        sx={{position: 'fixed', bottom: '24px', right: '24px', zIndex: 100}}
+        leftIcon={<FiChevronUp />}
+        sx={{
+          position: 'fixed',
+          bottom: '24px',
+          right: '24px',
+          paddingRight: 0,
+          zIndex: 100
+        }}
         tabIndex={0}
-      >
-        <ArrowUpIcon aria-hidden="true" />
-      </Button>
+      ></Button>
     </>
   )
 }

@@ -1,7 +1,7 @@
 import {Autocomplete} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
-import {SewingPinFilledIcon} from '@modulz/radix-icons'
 import {useState} from 'react'
+import {FiMapPin} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import usePlaces from '~/lib/usePlaces'
 
@@ -31,7 +31,7 @@ export default function Search() {
     <Autocomplete
       aria-label="Enter the name of your location"
       data={places}
-      icon={<SewingPinFilledIcon />}
+      icon={<FiMapPin />}
       limit={10}
       onChange={setValue}
       onItemSubmit={(item) => setLocation(item.value)}

@@ -1,7 +1,7 @@
 import {Alert, Text, Title} from '@mantine/core'
 import {showNotification} from '@mantine/notifications'
-import {ExclamationTriangleIcon} from '@modulz/radix-icons'
 import {useEffect} from 'react'
+import {FiTriangle} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
 export default function Alerts() {
@@ -17,7 +17,7 @@ export default function Alerts() {
       showNotification({
         autoClose: 5000,
         color: 'red',
-        icon: <ExclamationTriangleIcon />,
+        icon: <FiTriangle />,
         message:
           'Hazardous weather conditions reported for this area. Scroll down for details.',
         title: 'Warning'
@@ -38,7 +38,7 @@ export default function Alerts() {
       {alerts?.map((alert, index: number) => (
         <Alert
           color="red"
-          icon={<ExclamationTriangleIcon />}
+          icon={<FiTriangle />}
           key={index}
           mb="xl"
           sx={{textTransform: 'capitalize'}}

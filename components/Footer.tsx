@@ -1,5 +1,5 @@
 import {Center, Text} from '@mantine/core'
-import {GitHubLogoIcon} from '@modulz/radix-icons'
+import {FiGithub} from 'react-icons/fi'
 
 export default function Footer() {
   return (
@@ -23,7 +23,7 @@ export default function Footer() {
             href="https://github.com/gregrickaby/local-weather"
             sx={{verticalAlign: 'sub'}}
           >
-            <GitHubLogoIcon />
+            <FiGithub />
           </Text>
         </Text>
       </Center>

@@ -1,6 +1,6 @@
 import {Button, Group, Modal, Space} from '@mantine/core'
-import {GearIcon} from '@modulz/radix-icons'
 import {useState} from 'react'
+import {FiSettings} from 'react-icons/fi'
 import DarkThemeToggle from '~/components/DarkThemeToggle'
 import TempUnitToggle from '~/components/TempUnitToggle'
 
@@ -30,7 +30,7 @@ export default function Settings() {
           onClick={() => setOpened(true)}
           variant="subtle"
         >
-          <GearIcon />
+          <FiSettings />
         </Button>
       </Group>
     </>
