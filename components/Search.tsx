@@ -8,7 +8,7 @@ import usePlaces from '~/lib/usePlaces'
 export default function Search() {
   const {location, setLocation} = useWeatherContext()
   const [value, setValue] = useState(location)
-  const [debounced] = useDebouncedValue(value, 200, {leading: true})
+  const [debounced] = useDebouncedValue(value, 400)
   const {locations} = usePlaces(debounced)
 
   const places =
