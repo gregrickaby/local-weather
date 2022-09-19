@@ -1,7 +1,10 @@
-import {Center, Text} from '@mantine/core'
-import {FiGithub} from 'react-icons/fi'
+import {Button, Center, Text} from '@mantine/core'
+import {useWindowScroll} from '@mantine/hooks'
+import {FiChevronUp, FiGithub} from 'react-icons/fi'
 
 export default function Footer() {
+  const [scroll, scrollTo] = useWindowScroll()
+
   return (
     <footer>
       <Center>
@@ -27,6 +30,21 @@ export default function Footer() {
           </Text>
         </Text>
       </Center>
+      {scroll.y > 100 && (
+        <Button
+          aria-label="Scroll to top"
+          leftIcon={<FiChevronUp />}
+          onClick={() => scrollTo({y: 0})}
+          sx={{
+            bottom: '24px',
+            paddingRight: 0,
+            position: 'fixed',
+            right: '24px',
+            zIndex: 100
+          }}
+          tabIndex={0}
+        ></Button>
+      )}
     </footer>
   )
 }
