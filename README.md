@@ -1,32 +1,37 @@
 # Weather <!-- omit in toc -->
 
+A weather app using Next.js, Mantine, Edge API Routes, and the OpenWeatherMap and Google Maps API's.
+
 ⛈ View your local weather forecast: <https://localwx.vercel.app/>
 
 ---
 
 ## Table of Contents <!-- omit in toc -->
 
-- [Generate API Keys](#generate-api-keys)
-  - [OpenWeatherMap API](#openweathermap-api)
-  - [Google Maps API](#google-maps-api)
-- [Install](#install)
-  - [Setup Next.js](#setup-nextjs)
-  - [Set ENV Variables](#set-env-variables)
-- [Working with Next.js](#working-with-nextjs)
-  - [Folder Structure](#folder-structure)
-  - [NPM Scripts](#npm-scripts)
+- [Development Setup](#development-setup)
+  - [Generate API Keys](#generate-api-keys)
+    - [OpenWeatherMap API](#openweathermap-api)
+    - [Google Maps API](#google-maps-api)
+  - [Install](#install)
+    - [Setup Next.js](#setup-nextjs)
+    - [Set ENV Variables](#set-env-variables)
+  - [Working with Next.js](#working-with-nextjs)
+    - [Folder Structure](#folder-structure)
+    - [NPM Scripts](#npm-scripts)
 - [Credits](#credits)
 - [Contributing](#contributing)
 
 ---
 
-## Generate API Keys
+## Development Setup
 
-### OpenWeatherMap API
+### Generate API Keys
+
+#### OpenWeatherMap API
 
 First, you'll need an [OpenWeatherMap API Key](https://home.openweathermap.org/users/sign_up). If you don't have an account, you can create one for free.
 
-### Google Maps API
+#### Google Maps API
 
 Next, you'll need to generate a [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key).
 
@@ -41,9 +46,9 @@ After you've generated a key, visit the [Credentials page](https://console.cloud
 
 ---
 
-## Install
+### Install
 
-### Setup Next.js
+#### Setup Next.js
 
 Use [create-next-app](https://www.npmjs.com/package/create-next-app) to get up and running quickly:
 
@@ -51,7 +56,7 @@ Use [create-next-app](https://www.npmjs.com/package/create-next-app) to get up a
 npx create-next-app local-weather --example https://github.com/gregrickaby/local-weather
 ```
 
-### Set ENV Variables
+#### Set ENV Variables
 
 Rename `.env.sample` to `.env` in the root of the project. Add the API keys you generated earlier to the following ENV Vars:
 
@@ -63,9 +68,9 @@ OPENWEATHER_API_KEY="YOUR-KEY"
 
 ---
 
-## Working with Next.js
+### Working with Next.js
 
-### Folder Structure
+#### Folder Structure
 
 ```text
 ├── components
@@ -74,9 +79,9 @@ OPENWEATHER_API_KEY="YOUR-KEY"
 |  ├── Forecast.tsx
 |  ├── etc...
 ├── lib
-|  ├── fetcher.ts
-|  ├── useWeather.ts
-|  ├── usePlaces.ts
+|  ├── helpers.ts
+|  ├── hooks.ts
+|  ├── types.d.ts
 |  ├── etc...
 ├── pages
 |  ├── api
@@ -105,7 +110,7 @@ OPENWEATHER_API_KEY="YOUR-KEY"
 
 ---
 
-### NPM Scripts
+#### NPM Scripts
 
 Start local dev server:
 
@@ -130,7 +135,7 @@ npm run build && npm start
 ## Credits
 
 - React components by [Mantine](https://mantine.dev/)
-- Icons by [@basmilius](https://github.com/basmilius/weather-icons) and [Radix](https://icons.modulz.app/)
+- Weather icons by [@basmilius](https://github.com/basmilius/weather-icons)
 - Weather data from [OpenWeatherMap API](https://openweathermap.org/api)
 - Geocoding data from [Google Maps](https://developers.google.com/maps/documentation/geocoding/overview)
 
