@@ -52,7 +52,7 @@ export default async function places(req: NextRequest) {
           error: `${data.status}`
         }),
         {
-          status: 404
+          status: 400
         }
       )
     }
