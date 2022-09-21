@@ -1,6 +1,7 @@
 {
-  "name": "local-weather",
-  "description": "A weather app using Next.js, Mantine UI and the OpenWeatherMap and Google Maps API's.",
+  "name": "@gregrickaby/local-weather",
+  "description": "A weather app using Next.js, Mantine, Edge API Routes, and the OpenWeatherMap and Google Maps API's.",
+  "private": true,
   "version": "1.0",
   "homepage": "https://localwx.vercel.app/",
   "license": "MIT",
@@ -12,7 +13,6 @@
   "bugs": {
     "url": "https://github.com/gregrickaby/local-weather/issues"
   },
-  "private": true,
   "scripts": {
     "build": "next build",
     "dev": "rimraf .next && next dev",
