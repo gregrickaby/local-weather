@@ -1,6 +1,7 @@
 import {Button, Center, Text} from '@mantine/core'
 import {useWindowScroll} from '@mantine/hooks'
 import {FiChevronUp, FiGithub} from 'react-icons/fi'
+import Settings from '~/components/Settings'
 
 export default function Footer() {
   const [scroll, scrollTo] = useWindowScroll()
@@ -30,6 +31,7 @@ export default function Footer() {
           </Text>
         </Text>
       </Center>
+      <Settings />
       {scroll.y > 100 && (
         <Button
           aria-label="Scroll to top"

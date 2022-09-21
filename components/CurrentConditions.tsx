@@ -1,8 +1,35 @@
-import {Group, Stack, Text} from '@mantine/core'
+import {createStyles, Group, Stack, Text} from '@mantine/core'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {formatTemperature} from '~/lib/helpers'
 
+const useStyles = createStyles((theme) => ({
+  description: {
+    fontSize: '2rem',
+    fontWeight: 700,
+    lineHeight: 1,
+    margin: 0,
+    textAlign: 'center',
+    textTransform: 'capitalize'
+  },
+  bigTemp: {
+    fontSize: '8rem',
+    fontWeight: 700,
+    lineHeight: 1,
+    margin: 0,
+    textAlign: 'center'
+  },
+  feelsLike: {
+    fontSize: '2rem',
+    fontWeight: 700,
+    lineHeight: 1,
+    margin: 0,
+    textAlign: 'center'
+  }
+}))
+
 export default function CurrentConditions() {
+  const {classes} = useStyles()
+
   const {
     weather: {
       current: {
@@ -18,46 +45,27 @@ export default function CurrentConditions() {
     <Group position="center">
       <Stack>
         <Text
-          align="center"
+          className={classes.description}
           component="p"
           gradient={{from: 'indigo', to: 'cyan', deg: 45}}
-          style={{
-            fontSize: '2rem',
-            lineHeight: 1,
-            margin: 0,
-            textTransform: 'capitalize'
-          }}
           variant="gradient"
-          weight={700}
         >
           {description}
         </Text>
         <Text
-          align="center"
+          className={classes.bigTemp}
           component="p"
           gradient={{from: 'indigo', to: 'cyan', deg: 45}}
-          style={{
-            fontSize: '8rem',
-            lineHeight: 1,
-            margin: 0
-          }}
           variant="gradient"
-          weight={700}
         >
           {formatTemperature(tempUnit, temp)}
         </Text>
         {feels_like > temp && (
           <Text
-            align="center"
+            className={classes.feelsLike}
             component="p"
             gradient={{from: 'yellow', to: 'orange', deg: 45}}
-            style={{
-              fontSize: '2rem',
-              lineHeight: 1,
-              margin: 0
-            }}
             variant="gradient"
-            weight={700}
           >
             Feels Like: {formatTemperature(tempUnit, feels_like)}
           </Text>
