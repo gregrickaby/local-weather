@@ -1,7 +1,7 @@
 import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
 import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
-import {formatDay, formatTemperature, formatTime} from '~/lib/formatters'
+import {formatDay, formatTemperature, formatTime} from '~/lib/helpers'
 
 export default function Forecast() {
   const {weather, tempUnit} = useWeatherContext()

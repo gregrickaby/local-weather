@@ -1,6 +1,6 @@
 import {Group, Stack, Text} from '@mantine/core'
 import {useWeatherContext} from '~/components/WeatherProvider'
-import {formatTemperature} from '~/lib/formatters'
+import {formatTemperature} from '~/lib/helpers'
 
 export default function CurrentConditions() {
   const {

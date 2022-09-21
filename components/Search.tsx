@@ -3,12 +3,12 @@ import {useDebouncedValue} from '@mantine/hooks'
 import {useState} from 'react'
 import {FiMapPin} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
-import usePlaces from '~/lib/usePlaces'
+import {usePlaces} from '~/lib/hooks'
 
 export default function Search() {
   const {location, setLocation} = useWeatherContext()
-  const [value, setValue] = useState(location)
-  const [debounced] = useDebouncedValue(value, 400)
+  const [searchTerm, setSearchTerm] = useState(location)
+  const [debounced] = useDebouncedValue(searchTerm, 400)
   const {locations} = usePlaces(debounced)
 
   const places =
@@ -33,14 +33,14 @@ export default function Search() {
       data={places}
       icon={<FiMapPin />}
       limit={10}
-      onChange={setValue}
+      onChange={setSearchTerm}
       onItemSubmit={(item) => setLocation(item.value)}
       placeholder="Enter the name of your location"
       size="lg"
       transition="pop-top-left"
       transitionDuration={100}
       transitionTimingFunction="ease"
-      value={value}
+      value={searchTerm}
     />
   )
 }
