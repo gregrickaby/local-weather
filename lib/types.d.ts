@@ -1,3 +1,9 @@
+/** Global Types */
+
+export interface ChildrenProps {
+  children: React.ReactNode
+}
+
 export interface WeatherResponse {
   lat: number
   lon: number
@@ -233,25 +239,4 @@ export interface IpDataResponse {
     is_bogon: boolean
   }
   count: string
-}
-
-export interface PlacesData {
-  locations: string[]
-  isLoading: boolean
-  isError: boolean
-}
-
-export interface WeatherData {
-  weather: WeatherResponse
-  isLoading: boolean
-  isError: boolean
-}
-
-export interface WeatherContextProps {
-  isLoading: boolean
-  location: string
-  setLocation: (string) => void
-  setTempUnit: (string) => void
-  tempUnit: string
-  weather: WeatherResponse
 }
