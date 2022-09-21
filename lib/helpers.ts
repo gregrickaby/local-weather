@@ -1,3 +1,7 @@
+export async function fetcher(url: string) {
+  return await fetch(url).then((res) => res.json())
+}
+
 export function formatTemperature(tempUnit: string, temp: number): string {
   const temperature = tempUnit === 'c' ? temp : temp * 1.8 + 32
 
