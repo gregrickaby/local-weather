@@ -34,6 +34,7 @@ export default function Search() {
       icon={<FiMapPin />}
       limit={10}
       onChange={setSearchTerm}
+      onDropdownOpen={() => setSearchTerm('')}
       onItemSubmit={(item) => setLocation(item.value)}
       placeholder="Enter the name of your location"
       size="lg"
