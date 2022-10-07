@@ -4,6 +4,9 @@ import {useEffect} from 'react'
 import {FiTriangle} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
+/**
+ * Alerts component.
+ */
 export default function Alerts() {
   const {
     weather: {alerts}

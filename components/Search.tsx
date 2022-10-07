@@ -5,6 +5,9 @@ import {FiMapPin} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {usePlaces} from '~/lib/hooks'
 
+/**
+ * Search component.
+ */
 export default function Search() {
   const {location, setLocation} = useWeatherContext()
   const [searchTerm, setSearchTerm] = useState(location)

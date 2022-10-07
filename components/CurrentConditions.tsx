@@ -27,6 +27,9 @@ const useStyles = createStyles((theme) => ({
   }
 }))
 
+/**
+ * Current Conditions component.
+ */
 export default function CurrentConditions() {
   const {classes} = useStyles()
 

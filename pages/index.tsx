@@ -6,7 +6,10 @@ import Forecast from '~/components/Forecast'
 import Header from '~/components/Header'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
-export default function Home() {
+/**
+ * Homepage Component.
+ */
+export default function Homepage() {
   const {isLoading} = useWeatherContext()
 
   return (

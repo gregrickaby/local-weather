@@ -3,6 +3,9 @@ import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {formatDay, formatTemperature, formatTime} from '~/lib/helpers'
 
+/**
+ * Forecast component.
+ */
 export default function Forecast() {
   const {weather, tempUnit} = useWeatherContext()
 

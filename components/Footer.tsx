@@ -3,6 +3,9 @@ import {useWindowScroll} from '@mantine/hooks'
 import {FiChevronUp, FiGithub} from 'react-icons/fi'
 import Settings from '~/components/Settings'
 
+/**
+ * Footer component.
+ */
 export default function Footer() {
   const [scroll, scrollTo] = useWindowScroll()
 

@@ -4,6 +4,9 @@ import {FiSettings} from 'react-icons/fi'
 import DarkThemeToggle from '~/components/DarkThemeToggle'
 import TempUnitToggle from '~/components/TempUnitToggle'
 
+/**
+ * Settings component.
+ */
 export default function Settings() {
   const [opened, setOpened] = useState(false)
 
