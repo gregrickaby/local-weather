@@ -33,8 +33,14 @@ export interface GeocodeResponse {
  * @see https://nextjs.org/docs/api-reference/edge-runtime
  */
 export default async function weather(req: NextRequest) {
-  // Get the location from the query string.
-  const location = new URL(req.url).searchParams.get('location')
+  // Get query params from request.
+  const {searchParams} = new URL(req.url)
+
+  // Parse params.
+  const unsanitizedLocation = searchParams.get('location') || ''
+
+  // Sanitize the location.
+  const location = encodeURI(unsanitizedLocation)
 
   // No location? Bail...
   if (!location) {
@@ -131,6 +137,10 @@ export default async function weather(req: NextRequest) {
 
     // Return the weather data.
     return new Response(JSON.stringify(forecast), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, s-maxage=1, stale-while-revalidate=59'
+      },
       status: 200,
       statusText: 'OK'
     })
