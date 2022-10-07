@@ -4,6 +4,9 @@ import {NotificationsProvider} from '@mantine/notifications'
 import type {AppProps} from 'next/app'
 import WeatherProvider from '~/components/WeatherProvider'
 
+/**
+ * Custom app component.
+ */
 export default function App({Component, pageProps}: AppProps) {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: 'color-scheme',
@@ -11,8 +14,9 @@ export default function App({Component, pageProps}: AppProps) {
     getInitialValueInEffect: true
   })
 
-  const toggleColorScheme = (value?: ColorScheme) =>
+  function toggleColorScheme(value?: ColorScheme) {
     setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'))
+  }
 
   useHotkeys([['mod+j', () => toggleColorScheme()]])
 

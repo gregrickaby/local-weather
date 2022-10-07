@@ -16,7 +16,9 @@ export interface WeatherContextProps {
 const WeatherContext = createContext({} as WeatherContextProps)
 
 // Create useWeatherContext hook.
-export const useWeatherContext = () => useContext(WeatherContext)
+export function useWeatherContext() {
+  return useContext(WeatherContext)
+}
 
 export default function WeatherProvider({children}: ChildrenProps) {
   const [location, setLocation] = useLocalStorage({
