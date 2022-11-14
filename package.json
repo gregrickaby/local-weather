@@ -28,7 +28,7 @@
     "@emotion/server": "^11.10.0",
     "@mantine/core": "^5.7.1",
     "@mantine/hooks": "^5.7.1",
-    "@mantine/next": "^5.7.1",
+    "@mantine/next": "^5.7.2",
     "@mantine/notifications": "^5.7.1",
     "next": "^13.0.3",
     "react": "^18.2.0",
