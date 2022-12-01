@@ -33,12 +33,12 @@
     "next": "^13.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-icons": "^4.6.0",
+    "react-icons": "^4.7.1",
     "swr": "^2.0.0-rc.0"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.2.2",
-    "@types/node": "^18.11.9",
+    "@evilmartians/lefthook": "^1.2.3",
+    "@types/node": "^18.11.10",
     "@types/react": "^18.0.25",
     "eslint": "^8.28.0",
     "eslint-config-next": "^13.0.5",
