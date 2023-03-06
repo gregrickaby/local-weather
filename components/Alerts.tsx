@@ -1,5 +1,5 @@
 import {Alert, Text, Title} from '@mantine/core'
-import {showNotification} from '@mantine/notifications'
+import {notifications} from '@mantine/notifications'
 import {useEffect} from 'react'
 import {FiTriangle} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
@@ -17,7 +17,7 @@ export default function Alerts() {
    */
   useEffect(() => {
     if (!!alerts && alerts?.length > 0) {
-      showNotification({
+      notifications.show({
         autoClose: 5000,
         color: 'red',
         icon: <FiTriangle />,

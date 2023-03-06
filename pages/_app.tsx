@@ -1,6 +1,6 @@
 import {ColorScheme, ColorSchemeProvider, MantineProvider} from '@mantine/core'
 import {useHotkeys, useLocalStorage} from '@mantine/hooks'
-import {NotificationsProvider} from '@mantine/notifications'
+import {Notifications} from '@mantine/notifications'
 import type {AppProps} from 'next/app'
 import WeatherProvider from '~/components/WeatherProvider'
 
@@ -26,11 +26,10 @@ export default function App({Component, pageProps}: AppProps) {
       toggleColorScheme={toggleColorScheme}
     >
       <MantineProvider theme={{colorScheme}} withGlobalStyles withNormalizeCSS>
-        <NotificationsProvider position="bottom-right" zIndex={2077}>
-          <WeatherProvider>
-            <Component {...pageProps} />
-          </WeatherProvider>
-        </NotificationsProvider>
+        <Notifications position="bottom-right" zIndex={2077} />
+        <WeatherProvider>
+          <Component {...pageProps} />
+        </WeatherProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   )

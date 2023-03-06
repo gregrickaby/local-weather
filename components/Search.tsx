@@ -40,9 +40,11 @@ export default function Search() {
       onItemSubmit={(item) => setLocation(item.value)}
       placeholder="Enter the name of your location"
       size="lg"
-      transition="pop-top-left"
-      transitionDuration={100}
-      transitionTimingFunction="ease"
+      transitionProps={{
+        transition: 'pop-top-left',
+        duration: 80,
+        timingFunction: 'ease'
+      }}
       value={searchTerm}
     />
   )

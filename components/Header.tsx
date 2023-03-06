@@ -4,11 +4,11 @@ import Search from '~/components/Search'
 
 const useStyles = createStyles((theme) => ({
   header: {
-    margin: `${theme.spacing.xl}px 0`
+    margin: `${theme.spacing.xl} 0`
   },
   title: {
     textAlign: 'center',
-    marginBottom: `${theme.spacing.xl}px`
+    marginBottom: theme.spacing.xl
   }
 }))
 
