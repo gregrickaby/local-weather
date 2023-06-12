@@ -24,13 +24,13 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.0",
+    "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
     "@mantine/core": "^6.0.13",
     "@mantine/hooks": "^6.0.13",
     "@mantine/next": "^6.0.13",
     "@mantine/notifications": "^6.0.13",
-    "next": "^13.4.4",
+    "next": "^13.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.9.0",
@@ -38,15 +38,15 @@
   },
   "devDependencies": {
     "@evilmartians/lefthook": "^1.4.1",
-    "@types/node": "^20.2.5",
-    "@types/react": "^18.2.7",
-    "eslint": "^8.41.0",
-    "eslint-config-next": "^13.4.4",
+    "@types/node": "^20.3.0",
+    "@types/react": "^18.2.11",
+    "eslint": "^8.42.0",
+    "eslint-config-next": "^13.4.5",
     "eslint-config-prettier": "^8.8.0",
-    "markdownlint": "^0.28.2",
+    "markdownlint": "^0.29.0",
     "markdownlint-cli": "^0.34.0",
     "prettier": "^2.8.8",
     "rimraf": "^5.0.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.1.3"
   }
 }
