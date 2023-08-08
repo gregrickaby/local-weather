@@ -26,10 +26,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
-    "@mantine/core": "^6.0.17",
-    "@mantine/hooks": "^6.0.17",
-    "@mantine/next": "^6.0.17",
-    "@mantine/notifications": "^6.0.17",
+    "@mantine/core": "^6.0.18",
+    "@mantine/hooks": "^6.0.18",
+    "@mantine/next": "^6.0.18",
+    "@mantine/notifications": "^6.0.18",
     "next": "^13.4.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@evilmartians/lefthook": "^1.4.8",
     "@types/node": "^20.4.8",
-    "@types/react": "^18.2.18",
+    "@types/react": "^18.2.19",
     "eslint": "^8.46.0",
     "eslint-config-next": "^13.4.13",
     "eslint-config-prettier": "^9.0.0",
