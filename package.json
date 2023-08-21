@@ -30,7 +30,7 @@
     "@mantine/hooks": "^6.0.19",
     "@mantine/next": "^6.0.19",
     "@mantine/notifications": "^6.0.19",
-    "next": "^13.4.16",
+    "next": "^13.4.19",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.10.1",
@@ -38,14 +38,14 @@
   },
   "devDependencies": {
     "@evilmartians/lefthook": "^1.4.9",
-    "@types/node": "^20.5.0",
+    "@types/node": "^20.5.1",
     "@types/react": "^18.2.20",
     "eslint": "^8.47.0",
-    "eslint-config-next": "^13.4.16",
+    "eslint-config-next": "^13.4.19",
     "eslint-config-prettier": "^9.0.0",
     "markdownlint": "^0.30.0",
     "markdownlint-cli": "^0.35.0",
-    "prettier": "^3.0.1",
+    "prettier": "^3.0.2",
     "rimraf": "^5.0.1",
     "typescript": "^5.1.6"
   }
