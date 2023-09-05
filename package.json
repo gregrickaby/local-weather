@@ -26,10 +26,10 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/server": "^11.11.0",
-    "@mantine/core": "^6.0.19",
-    "@mantine/hooks": "^6.0.19",
-    "@mantine/next": "^6.0.19",
-    "@mantine/notifications": "^6.0.19",
+    "@mantine/core": "^6.0.20",
+    "@mantine/hooks": "^6.0.20",
+    "@mantine/next": "^6.0.20",
+    "@mantine/notifications": "^6.0.20",
     "next": "^13.4.19",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -37,15 +37,15 @@
     "swr": "^2.2.2"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.4.9",
-    "@types/node": "^20.5.7",
+    "@evilmartians/lefthook": "^1.4.10",
+    "@types/node": "^20.5.9",
     "@types/react": "^18.2.21",
     "eslint": "^8.48.0",
     "eslint-config-next": "^13.4.19",
     "eslint-config-prettier": "^9.0.0",
     "markdownlint": "^0.30.0",
-    "markdownlint-cli": "^0.35.0",
-    "prettier": "^3.0.2",
+    "markdownlint-cli": "^0.36.0",
+    "prettier": "^3.0.3",
     "rimraf": "^5.0.1",
     "typescript": "^5.2.2"
   }
