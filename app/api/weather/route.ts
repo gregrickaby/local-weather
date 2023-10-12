@@ -1,9 +1,6 @@
-import type {NextRequest} from 'next/server'
 import {WeatherResponse} from '~/lib/types'
 
-export const config = {
-  runtime: 'edge'
-}
+export const runtime = 'edge'
 
 export interface GeocodeResponse {
   status: string
@@ -29,12 +26,12 @@ export interface GeocodeResponse {
  * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/geocoding/overview
  * @see https://openweathermap.org/api/one-call-api
- * @see https://nextjs.org/docs/api-routes/edge-api-routes
- * @see https://nextjs.org/docs/api-reference/edge-runtime
+ * @see https://nextjs.org/docs/app/building-your-application/routing/route-handlers
+ * @see https://nextjs.org/docs/pages/api-reference/edge
  */
-export default async function weather(req: NextRequest) {
+export async function GET(request: Request) {
   // Get query params from request.
-  const {searchParams} = new URL(req.url)
+  const {searchParams} = new URL(request.url)
 
   // Parse params.
   const unsanitizedLocation = searchParams.get('location') || ''

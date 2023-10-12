@@ -1,0 +1,11 @@
+.title {
+  text-align: center;
+}
+
+.card {
+  text-align: center;
+
+  img {
+    margin: 0 auto;
+  }
+}

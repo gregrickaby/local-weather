@@ -1,0 +1,24 @@
+.description {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.bigtemp {
+  font-size: 8rem;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}
+
+.feelslike {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+}

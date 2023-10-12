@@ -1,3 +1,5 @@
+'use client'
+
 import {useLocalStorage} from '@mantine/hooks'
 import {createContext, useContext} from 'react'
 import {useWeather} from '~/lib/hooks'
@@ -23,26 +25,30 @@ export function useWeatherContext() {
 export default function WeatherProvider({children}: ChildrenProps) {
   const [location, setLocation] = useLocalStorage({
     key: 'location',
-    defaultValue: 'Enterprise, AL'
+    defaultValue: 'Enterprise, AL',
+    getInitialValueInEffect: true
   })
 
   const [tempUnit, setTempUnit] = useLocalStorage({
     key: 'tempUnit',
-    defaultValue: 'f'
+    defaultValue: 'f',
+    getInitialValueInEffect: true
   })
 
-  const {weather, isLoading} = useWeather(location)
+  const {weather, isLoading} = useWeather(location as string)
 
   return (
     <WeatherContext.Provider
-      value={{
-        isLoading,
-        location,
-        setLocation,
-        weather,
-        tempUnit,
-        setTempUnit
-      }}
+      value={
+        {
+          isLoading,
+          location,
+          setLocation,
+          weather,
+          tempUnit,
+          setTempUnit
+        } as WeatherContextProps
+      }
     >
       {children}
     </WeatherContext.Provider>

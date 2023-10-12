@@ -1,7 +1,9 @@
+'use client'
+
 import {Alert, Text, Title} from '@mantine/core'
 import {notifications} from '@mantine/notifications'
+import {IconAlertTriangle} from '@tabler/icons-react'
 import {useEffect} from 'react'
-import {FiTriangle} from 'react-icons/fi'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
 /**
@@ -20,7 +22,7 @@ export default function Alerts() {
       notifications.show({
         autoClose: 5000,
         color: 'red',
-        icon: <FiTriangle />,
+        icon: <IconAlertTriangle />,
         message:
           'Hazardous weather conditions reported for this area. Scroll down for details.',
         title: 'Warning'
@@ -35,21 +37,18 @@ export default function Alerts() {
 
   return (
     <section>
-      <Title align="center" my="lg" order={2}>
+      <Title my="lg" order={2}>
         Alerts
       </Title>
       {alerts?.map((alert, index: number) => (
         <Alert
           color="red"
-          icon={<FiTriangle />}
+          icon={<IconAlertTriangle />}
           key={index}
           mb="xl"
-          sx={{textTransform: 'capitalize'}}
           title={alert?.event}
         >
-          <Text mb="md" sx={{textTransform: 'lowercase'}}>
-            {alert?.description}
-          </Text>
+          <Text mb="md">{alert?.description}</Text>
         </Alert>
       ))}
     </section>

@@ -1,16 +1,13 @@
-import Head from 'next/head'
+import config from '~/lib/config'
 
 /**
  * Meta component.
  */
 export default function Meta() {
   return (
-    <Head>
-      <title>Local Weather</title>
-      <meta
-        name="description"
-        content="View the current weather conditions, long-range forecast, and get weather alerts for your local area."
-      />
+    <>
+      <title>{config.siteName}</title>
+      <meta name="description" content={config.metaDescription} />
       <link
         as="fetch"
         rel="preload"
@@ -24,6 +21,6 @@ export default function Meta() {
         crossOrigin="anonymous"
       />
       <link rel="icon" href="/favicon.ico" />
-    </Head>
+    </>
   )
 }
