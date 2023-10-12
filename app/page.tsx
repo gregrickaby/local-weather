@@ -1,11 +1,14 @@
 'use client'
 
-import {Container, LoadingOverlay} from '@mantine/core'
+import {LoadingOverlay} from '@mantine/core'
+import classes from '~/Page.module.css'
 import Alerts from '~/components/Alerts'
+import BackToTop from '~/components/BackTopTop'
 import CurrentConditions from '~/components/CurrentConditions'
 import Footer from '~/components/Footer'
 import Forecast from '~/components/Forecast'
 import Header from '~/components/Header'
+import Search from '~/components/Search'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
 /**
@@ -16,18 +19,22 @@ export default function HomePage() {
 
   return (
     <>
-      <Container>
+      <div className={classes.container}>
         <Header />
         <LoadingOverlay visible={isLoading} />
         {!isLoading && (
-          <main>
+          <main className={classes.main}>
+            <div className={classes.search}>
+              <Search />
+            </div>
             <CurrentConditions />
             <Forecast />
             <Alerts />
           </main>
         )}
         <Footer />
-      </Container>
+        <BackToTop />
+      </div>
     </>
   )
 }
