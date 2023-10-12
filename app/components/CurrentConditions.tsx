@@ -1,6 +1,6 @@
 'use client'
 
-import {Group, Stack, Text} from '@mantine/core'
+import {Stack, Text} from '@mantine/core'
 import classes from '~/components/CurrentConditions.module.css'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {formatTemperature} from '~/lib/helpers'
@@ -21,35 +21,33 @@ export default function CurrentConditions() {
   } = useWeatherContext()
 
   return (
-    <Group position="center">
-      <Stack>
+    <Stack align="center">
+      <Text
+        className={classes.description}
+        component="p"
+        gradient={{from: 'indigo', to: 'cyan', deg: 45}}
+        variant="gradient"
+      >
+        {description}
+      </Text>
+      <Text
+        className={classes.bigtemp}
+        component="p"
+        gradient={{from: 'indigo', to: 'cyan', deg: 45}}
+        variant="gradient"
+      >
+        {formatTemperature(tempUnit, temp)}
+      </Text>
+      {feels_like > temp && (
         <Text
-          className={classes.description}
+          className={classes.feelslike}
           component="p"
-          gradient={{from: 'indigo', to: 'cyan', deg: 45}}
+          gradient={{from: 'yellow', to: 'orange', deg: 45}}
           variant="gradient"
         >
-          {description}
+          Feels Like: {formatTemperature(tempUnit, feels_like)}
         </Text>
-        <Text
-          className={classes.bigtemp}
-          component="p"
-          gradient={{from: 'indigo', to: 'cyan', deg: 45}}
-          variant="gradient"
-        >
-          {formatTemperature(tempUnit, temp)}
-        </Text>
-        {feels_like > temp && (
-          <Text
-            className={classes.feelslike}
-            component="p"
-            gradient={{from: 'yellow', to: 'orange', deg: 45}}
-            variant="gradient"
-          >
-            Feels Like: {formatTemperature(tempUnit, feels_like)}
-          </Text>
-        )}
-      </Stack>
-    </Group>
+      )}
+    </Stack>
   )
 }
