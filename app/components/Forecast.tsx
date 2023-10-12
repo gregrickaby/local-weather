@@ -1,4 +1,5 @@
 import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
+import classes from '~/components/Forecast.module.css'
 import Icon from '~/components/Icon'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {formatDay, formatTemperature, formatTime} from '~/lib/helpers'
@@ -12,17 +13,10 @@ export default function Forecast() {
   return (
     <section>
       <Space h="lg" />
-      <Title order={2} my="lg">
+      <Title className={classes.title} order={2} my="lg">
         The Next 4 Hours
       </Title>
-      <SimpleGrid
-        cols={4}
-        breakpoints={[
-          {maxWidth: 980, cols: 3, spacing: 'md'},
-          {maxWidth: 755, cols: 2, spacing: 'sm'},
-          {maxWidth: 600, cols: 1, spacing: 'sm'}
-        ]}
-      >
+      <SimpleGrid cols={{base: 1, sm: 2, lg: 4}}>
         {weather?.hourly
           ?.map((forecast, index: number) => {
             const {
@@ -32,22 +26,15 @@ export default function Forecast() {
               feels_like
             } = forecast
             return (
-              <Card
-                shadow="sm"
-                p="xl"
-                key={index}
-                style={{textAlign: 'center'}}
-              >
-                <Text size="xl" weight={700}>
-                  {formatTime(dt)}
-                </Text>
+              <Card className={classes.card} shadow="sm" p="xl" key={index}>
+                <Text size="xl">{formatTime(dt)}</Text>
                 <Text size="xl">{formatTemperature(tempUnit, temp)}</Text>
                 <Icon icon={icon} />
                 <Text size="lg">{main}</Text>
                 {feels_like > temp && (
                   <Text
-                    size="lg"
                     gradient={{from: 'yellow', to: 'orange', deg: 45}}
+                    size="lg"
                     variant="gradient"
                   >
                     Feels Like: {formatTemperature(tempUnit, feels_like)}
@@ -59,18 +46,11 @@ export default function Forecast() {
           .slice(1, 5)}
       </SimpleGrid>
 
-      <Title order={2} align="center" my="lg">
+      <Title className={classes.title} order={2} my="lg">
         Extended Forecast
       </Title>
 
-      <SimpleGrid
-        cols={4}
-        breakpoints={[
-          {maxWidth: 980, cols: 3, spacing: 'md'},
-          {maxWidth: 755, cols: 2, spacing: 'sm'},
-          {maxWidth: 600, cols: 1, spacing: 'sm'}
-        ]}
-      >
+      <SimpleGrid cols={{base: 1, sm: 2, lg: 4}}>
         {weather?.daily?.map((forecast, index: number) => {
           const {
             dt,
@@ -80,10 +60,8 @@ export default function Forecast() {
             feels_like: {day}
           } = forecast
           return (
-            <Card shadow="sm" p="xl" key={index} style={{textAlign: 'center'}}>
-              <Text size="xl" weight={700}>
-                {formatDay(dt, index)}
-              </Text>
+            <Card className={classes.card} shadow="sm" p="xl" key={index}>
+              <Text size="xl">{formatDay(dt, index)}</Text>
               <Text size="lg">
                 {main} {pop ? `${Math.round(pop * 100)}%` : ''}
               </Text>
@@ -94,8 +72,8 @@ export default function Forecast() {
               <Icon icon={icon} />
               {day > max && (
                 <Text
-                  size="lg"
                   gradient={{from: 'yellow', to: 'orange', deg: 45}}
+                  size="lg"
                   variant="gradient"
                 >
                   Feels Like: {formatTemperature(tempUnit, day)}
