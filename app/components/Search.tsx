@@ -2,8 +2,10 @@
 
 import {Autocomplete} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
+import {IconMapPin} from '@tabler/icons-react'
 import {useState} from 'react'
-import {FiMapPin} from 'react-icons/fi'
+import classes from '~/components/Search.module.css'
+import Settings from '~/components/Settings'
 import {useWeatherContext} from '~/components/WeatherProvider'
 import {usePlaces} from '~/lib/hooks'
 
@@ -33,16 +35,20 @@ export default function Search() {
         ]
 
   return (
-    <Autocomplete
-      aria-label="Enter the name of your location"
-      data={places}
-      leftSection={<FiMapPin />}
-      limit={10}
-      onChange={setSearchTerm}
-      onOptionSubmit={(item) => setLocation(item.value)}
-      placeholder="Enter the name of your location"
-      size="lg"
-      value={searchTerm}
-    />
+    <>
+      <Autocomplete
+        aria-label="Enter the name of your location"
+        className={classes.searchbar}
+        data={places}
+        leftSection={<IconMapPin />}
+        limit={10}
+        onChange={setSearchTerm}
+        onOptionSubmit={(item) => setLocation(item)}
+        placeholder="Enter the name of your location"
+        size="lg"
+        value={searchTerm}
+      />
+      <Settings />
+    </>
   )
 }
