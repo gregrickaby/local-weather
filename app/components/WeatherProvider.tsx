@@ -35,18 +35,20 @@ export default function WeatherProvider({children}: ChildrenProps) {
     getInitialValueInEffect: true
   })
 
-  const {weather, isLoading} = useWeather(location)
+  const {weather, isLoading} = useWeather(location as string)
 
   return (
     <WeatherContext.Provider
-      value={{
-        isLoading,
-        location,
-        setLocation,
-        weather,
-        tempUnit,
-        setTempUnit
-      }}
+      value={
+        {
+          isLoading,
+          location,
+          setLocation,
+          weather,
+          tempUnit,
+          setTempUnit
+        } as WeatherContextProps
+      }
     >
       {children}
     </WeatherContext.Provider>
