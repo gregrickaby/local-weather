@@ -1,3 +1,5 @@
+'use client'
+
 import {Autocomplete} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {useState} from 'react'
@@ -34,17 +36,12 @@ export default function Search() {
     <Autocomplete
       aria-label="Enter the name of your location"
       data={places}
-      icon={<FiMapPin />}
+      leftSection={<FiMapPin />}
       limit={10}
       onChange={setSearchTerm}
-      onItemSubmit={(item) => setLocation(item.value)}
+      onOptionSubmit={(item) => setLocation(item.value)}
       placeholder="Enter the name of your location"
       size="lg"
-      transitionProps={{
-        transition: 'pop-top-left',
-        duration: 80,
-        timingFunction: 'ease'
-      }}
       value={searchTerm}
     />
   )

@@ -1,3 +1,5 @@
+'use client'
+
 import {Container, LoadingOverlay} from '@mantine/core'
 import Alerts from '~/components/Alerts'
 import CurrentConditions from '~/components/CurrentConditions'
@@ -7,27 +9,25 @@ import Header from '~/components/Header'
 import {useWeatherContext} from '~/components/WeatherProvider'
 
 /**
- * Homepage Component.
+ * Home page component.
  */
-export default function Homepage() {
+export default function HomePage() {
   const {isLoading} = useWeatherContext()
 
   return (
-    <Container>
-      <Header />
-      <LoadingOverlay
-        visible={isLoading}
-        transitionDuration={250}
-        exitTransitionDuration={250}
-      />
-      {!isLoading && (
-        <main>
-          <CurrentConditions />
-          <Forecast />
-          <Alerts />
-        </main>
-      )}
-      <Footer />
-    </Container>
+    <>
+      <Container>
+        <Header />
+        <LoadingOverlay visible={isLoading} />
+        {!isLoading && (
+          <main>
+            <CurrentConditions />
+            <Forecast />
+            <Alerts />
+          </main>
+        )}
+        <Footer />
+      </Container>
+    </>
   )
 }

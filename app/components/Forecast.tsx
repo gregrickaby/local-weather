@@ -12,7 +12,7 @@ export default function Forecast() {
   return (
     <section>
       <Space h="lg" />
-      <Title order={2} align="center" my="lg">
+      <Title order={2} my="lg">
         The Next 4 Hours
       </Title>
       <SimpleGrid

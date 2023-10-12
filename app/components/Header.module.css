@@ -1,0 +1,8 @@
+.header {
+  margin: var(--mantine-spacing-xl) 0;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: var(--mantine-spacing-xl);
+}
