@@ -24,9 +24,9 @@
     "type-check": "tsc"
   },
   "dependencies": {
-    "@mantine/core": "7.4.2",
-    "@mantine/hooks": "7.4.2",
-    "@mantine/notifications": "^7.4.2",
+    "@mantine/core": "7.5.0",
+    "@mantine/hooks": "7.5.0",
+    "@mantine/notifications": "^7.5.0",
     "@tabler/icons-react": "^2.46.0",
     "next": "^14.1.0",
     "react": "^18.2.0",
@@ -34,14 +34,14 @@
     "swr": "^2.2.4"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.6.0",
-    "@types/node": "^20.11.5",
+    "@evilmartians/lefthook": "^1.6.1",
+    "@types/node": "^20.11.10",
     "@types/react": "^18.2.48",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.1.0",
     "eslint-config-prettier": "^9.1.0",
     "markdownlint": "^0.33.0",
-    "markdownlint-cli": "^0.38.0",
+    "markdownlint-cli": "^0.39.0",
     "postcss": "^8.4.33",
     "postcss-preset-mantine": "1.12.3",
     "postcss-simple-vars": "^7.0.1",
