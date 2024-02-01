@@ -65,10 +65,10 @@ After you've generated a key, visit the [Credentials page](https://console.cloud
 
 Now add the API keys to `.env.`
 
-Copy `.env.sample` to `.env` in the root of the project:
+Copy `.env.example` to `.env` in the root of the project:
 
 ```bash
-cp .env.sample .env
+cp .env.example .env
 ```
 
 Open `.env` and add your API keys to `.env`
