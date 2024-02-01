@@ -1,5 +1,8 @@
 'use client'
 
+import classes from '@/components/Settings.module.css'
+import {useWeatherContext} from '@/components/WeatherProvider'
+import config from '@/lib/config'
 import {
   ActionIcon,
   Flex,
@@ -11,9 +14,6 @@ import {
 import {useDisclosure, useHotkeys} from '@mantine/hooks'
 import {IconSettings} from '@tabler/icons-react'
 import {useState} from 'react'
-import classes from '~/components/Settings.module.css'
-import {useWeatherContext} from '~/components/WeatherProvider'
-import config from '~/lib/config'
 
 /**
  * Settings component.
@@ -37,7 +37,7 @@ export default function Settings() {
         aria-label="open settings"
         className={classes.settings}
         onClick={open}
-        size="lg"
+        size={48}
         variant="transparent"
       >
         <IconSettings size={48} />

@@ -1,9 +1,9 @@
 'use client'
 
+import {useWeather} from '@/lib/hooks'
+import {ChildrenProps, WeatherResponse} from '@/lib/types'
 import {useLocalStorage} from '@mantine/hooks'
 import {createContext, useContext} from 'react'
-import {useWeather} from '~/lib/hooks'
-import {ChildrenProps, WeatherResponse} from '~/lib/types'
 
 export interface WeatherContextProps {
   isLoading: boolean

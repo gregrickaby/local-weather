@@ -1,6 +1,6 @@
+import classes from '@/components/Header.module.css'
+import config from '@/lib/config'
 import {Title} from '@mantine/core'
-import classes from '~/components/Header.module.css'
-import config from '~/lib/config'
 
 /**
  * Header component.

@@ -1,4 +1,4 @@
-import {WeatherResponse} from '~/lib/types'
+import {WeatherResponse} from '@/lib/types'
 
 export const runtime = 'edge'
 

@@ -1,9 +1,9 @@
+import Meta from '@/components/Meta'
+import WeatherProvider from '@/components/WeatherProvider'
+import config from '@/lib/config'
+import theme from '@/lib/theme'
 import {ColorSchemeScript, MantineProvider} from '@mantine/core'
 import '@mantine/core/styles.css'
-import Meta from '~/components/Meta'
-import WeatherProvider from '~/components/WeatherProvider'
-import config from '~/lib/config'
-import {theme} from '../theme'
 
 export const metadata = {
   title: `${config.siteName} - ${config.siteDescription}`,

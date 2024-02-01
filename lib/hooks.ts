@@ -1,6 +1,6 @@
+import {fetcher} from '@/lib/helpers'
+import {PlacesData, WeatherData} from '@/lib/types'
 import useSWR from 'swr'
-import {fetcher} from '~/lib/helpers'
-import {WeatherResponse} from '~/lib/types'
 
 /**
  * Fetches the list of locations from `/api/places`.
@@ -30,16 +30,4 @@ export function useWeather(location: string): WeatherData {
     isLoading: !error && !data,
     isError: error
   }
-}
-
-export interface PlacesData {
-  locations: string[]
-  isLoading: boolean
-  isError: boolean
-}
-
-export interface WeatherData {
-  weather: WeatherResponse
-  isLoading: boolean
-  isError: boolean
 }

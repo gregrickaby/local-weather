@@ -1,10 +1,10 @@
 'use client'
 
+import {useWeatherContext} from '@/components/WeatherProvider'
 import {Alert, Text, Title} from '@mantine/core'
 import {notifications} from '@mantine/notifications'
 import {IconAlertTriangle} from '@tabler/icons-react'
 import {useEffect} from 'react'
-import {useWeatherContext} from '~/components/WeatherProvider'
 
 /**
  * Alerts component.

@@ -1,9 +1,9 @@
 'use client'
 
+import classes from '@/components/CurrentConditions.module.css'
+import {useWeatherContext} from '@/components/WeatherProvider'
+import {formatTemperature} from '@/lib/helpers'
 import {Stack, Text} from '@mantine/core'
-import classes from '~/components/CurrentConditions.module.css'
-import {useWeatherContext} from '~/components/WeatherProvider'
-import {formatTemperature} from '~/lib/helpers'
 
 /**
  * Current Conditions component.
