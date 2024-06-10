@@ -34,7 +34,7 @@
   },
   "devDependencies": {
     "@evilmartians/lefthook": "^1.6.15",
-    "@types/node": "^20.14.0",
+    "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.3",
@@ -44,7 +44,7 @@
     "postcss": "^8.4.38",
     "postcss-preset-mantine": "1.15.0",
     "postcss-simple-vars": "^7.0.1",
-    "prettier": "^3.3.0",
+    "prettier": "^3.3.1",
     "rimraf": "^5.0.7",
     "stylelint": "^16.6.1",
     "stylelint-config-standard": "^36.0.0",
