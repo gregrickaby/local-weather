@@ -33,8 +33,8 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.6.16",
-    "@types/node": "^20.14.2",
+    "@evilmartians/lefthook": "^1.6.18",
+    "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.4",
@@ -47,7 +47,7 @@
     "prettier": "^3.3.2",
     "rimraf": "^5.0.7",
     "stylelint": "^16.6.1",
-    "stylelint-config-standard": "^36.0.0",
-    "typescript": "^5.4.5"
+    "stylelint-config-standard": "^36.0.1",
+    "typescript": "^5.5.2"
   }
 }
