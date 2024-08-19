@@ -23,9 +23,9 @@
     "start": "next start"
   },
   "dependencies": {
-    "@mantine/core": "7.12.0",
-    "@mantine/hooks": "7.12.0",
-    "@mantine/notifications": "^7.12.0",
+    "@mantine/core": "7.12.1",
+    "@mantine/hooks": "7.12.1",
+    "@mantine/notifications": "^7.12.1",
     "@tabler/icons-react": "^3.12.0",
     "next": "^14.2.5",
     "react": "^18.3.1",
@@ -33,8 +33,8 @@
     "swr": "^2.2.5"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.7.12",
-    "@types/node": "^22.2.0",
+    "@evilmartians/lefthook": "^1.7.14",
+    "@types/node": "^22.4.1",
     "@types/react": "^18.3.3",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.5",
@@ -46,7 +46,7 @@
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
-    "stylelint": "^16.8.1",
+    "stylelint": "^16.8.2",
     "stylelint-config-standard": "^36.0.1",
     "typescript": "^5.5.4"
   }
