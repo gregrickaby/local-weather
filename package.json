@@ -23,11 +23,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "@mantine/core": "7.13.1",
-    "@mantine/hooks": "7.13.1",
-    "@mantine/notifications": "^7.13.1",
+    "@mantine/core": "7.13.2",
+    "@mantine/hooks": "7.13.2",
+    "@mantine/notifications": "^7.13.2",
     "@tabler/icons-react": "^3.19.0",
-    "next": "^14.2.13",
+    "next": "^14.2.14",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "swr": "^2.2.5"
@@ -35,9 +35,9 @@
   "devDependencies": {
     "@evilmartians/lefthook": "^1.7.18",
     "@types/node": "^22.7.4",
-    "@types/react": "^18.3.10",
+    "@types/react": "^18.3.11",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^14.2.13",
+    "eslint-config-next": "^14.2.14",
     "eslint-config-prettier": "^9.1.0",
     "markdownlint": "^0.35.0",
     "markdownlint-cli": "^0.42.0",
