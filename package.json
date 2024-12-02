@@ -23,31 +23,31 @@
     "start": "next start"
   },
   "dependencies": {
-    "@mantine/core": "7.14.1",
-    "@mantine/hooks": "7.14.1",
-    "@mantine/notifications": "^7.14.1",
-    "@tabler/icons-react": "^3.22.0",
+    "@mantine/core": "7.14.3",
+    "@mantine/hooks": "7.14.3",
+    "@mantine/notifications": "^7.14.3",
+    "@tabler/icons-react": "^3.23.0",
     "next": "^15.0.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "swr": "^2.2.5"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.8.4",
-    "@types/node": "^22.9.0",
+    "@evilmartians/lefthook": "^1.8.5",
+    "@types/node": "^22.10.1",
     "@types/react": "^18.3.12",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.3",
     "eslint-config-prettier": "^9.1.0",
     "markdownlint": "^0.36.1",
-    "markdownlint-cli": "^0.42.0",
+    "markdownlint-cli": "^0.43.0",
     "postcss": "^8.4.49",
     "postcss-preset-mantine": "1.17.0",
     "postcss-simple-vars": "^7.0.1",
-    "prettier": "^3.3.3",
+    "prettier": "^3.4.1",
     "rimraf": "^6.0.1",
-    "stylelint": "^16.10.0",
+    "stylelint": "^16.11.0",
     "stylelint-config-standard": "^36.0.1",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   }
 }
