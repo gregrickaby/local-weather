@@ -1,14 +1,14 @@
 'use client'
 
 import classes from '@/app/Page.module.css'
-import Alerts from '@/components/Alerts'
-import BackToTop from '@/components/BackTopTop'
-import CurrentConditions from '@/components/CurrentConditions'
-import Footer from '@/components/Footer'
-import Forecast from '@/components/Forecast'
-import Header from '@/components/Header'
-import Search from '@/components/Search'
-import {useWeatherContext} from '@/components/WeatherProvider'
+import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
+import Footer from '@/components/Layout/Footer/Footer'
+import Header from '@/components/Layout/Header/Header'
+import Alerts from '@/components/UI/Alerts/Alerts'
+import BackToTop from '@/components/UI/BackToTop/BackToTop'
+import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditions'
+import Forecast from '@/components/UI/Forecast/Forecast'
+import Search from '@/components/UI/Search/Search'
 import {Skeleton, Stack} from '@mantine/core'
 
 /**

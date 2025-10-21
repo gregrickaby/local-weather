@@ -1,7 +1,6 @@
 'use client'
 
-import classes from '@/components/Settings.module.css'
-import {useWeatherContext} from '@/components/WeatherProvider'
+import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
 import config from '@/lib/config'
 import {
   ActionIcon,
@@ -14,6 +13,7 @@ import {
 import {useDisclosure, useHotkeys} from '@mantine/hooks'
 import {IconSettings} from '@tabler/icons-react'
 import {useState} from 'react'
+import classes from './Settings.module.css'
 
 /**
  * Settings component.

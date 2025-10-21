@@ -1,6 +1,5 @@
-import classes from '@/components/Forecast.module.css'
-import Icon from '@/components/Icon'
-import {useWeatherContext} from '@/components/WeatherProvider'
+import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
+import Icon from '@/components/UI/Icon/Icon'
 import {
   formatDay,
   formatTemperature,
@@ -8,6 +7,7 @@ import {
   getWeatherInfo
 } from '@/lib/helpers'
 import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
+import classes from './Forecast.module.css'
 
 /**
  * Forecast component.

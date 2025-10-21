@@ -1,5 +1,5 @@
-import Meta from '@/components/Meta'
-import WeatherProvider from '@/components/WeatherProvider'
+import WeatherProvider from '@/components/Context/WeatherProvider/WeatherProvider'
+import Meta from '@/components/Layout/Meta/Meta'
 import config from '@/lib/config'
 import theme from '@/lib/theme'
 import {ColorSchemeScript, MantineProvider} from '@mantine/core'

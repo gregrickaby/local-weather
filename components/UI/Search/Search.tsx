@@ -1,13 +1,13 @@
 'use client'
 
-import classes from '@/components/Search.module.css'
-import Settings from '@/components/Settings'
-import {useWeatherContext} from '@/components/WeatherProvider'
+import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
+import Settings from '@/components/UI/Settings/Settings'
 import {usePlaces} from '@/lib/hooks'
 import {Autocomplete} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {IconMapPin} from '@tabler/icons-react'
 import {useState} from 'react'
+import classes from './Search.module.css'
 
 /**
  * Search component.
