@@ -2,16 +2,14 @@
 
 Here are the ways to get involved with this project:
 
-- [Issues & Discussions](#issues--discussions)
+- [Issues \& Discussions](#issues--discussions)
 - [Contributing Code](#contributing-code)
   - [Install Locally](#install-locally)
   - [Generate API Keys](#generate-api-keys)
-    - [OpenWeatherMap API](#openweathermap-api)
     - [Google Maps API](#google-maps-api)
     - [ENV Variables](#env-variables)
   - [Git Workflow](#git-workflow)
   - [NPM Scripts](#npm-scripts)
-  - [Vercel CLI](#vercel-cli)
 - [Legal Stuff](#legal-stuff)
 
 ---
@@ -44,10 +42,6 @@ cd local-weather && npm i
 
 ### Generate API Keys
 
-#### OpenWeatherMap API
-
-First, you'll need an [OpenWeatherMap API Key](https://home.openweathermap.org/users/sign_up). If you don't have an account, you can create one for free.
-
 #### Google Maps API
 
 Next, you'll need to generate a [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key).
@@ -63,7 +57,7 @@ After you've generated a key, visit the [Credentials page](https://console.cloud
 
 #### ENV Variables
 
-Now add the API keys to `.env.`
+Now add the API key to `.env.`
 
 Copy `.env.example` to `.env` in the root of the project:
 
@@ -71,13 +65,14 @@ Copy `.env.example` to `.env` in the root of the project:
 cp .env.example .env
 ```
 
-Open `.env` and add your API keys to `.env`
+Open `.env` and add your Google Maps API key:
 
 ```text
 // .env
 GOOGLE_MAPS_API_KEY="YOUR-KEY-HERE"
-OPENWEATHER_API_KEY="YOUR-KEY-HERE"
 ```
+
+**Note:** This app uses [Open-Meteo](https://open-meteo.com/) for weather data, which is free and requires no API key.
 
 ---
 
@@ -113,24 +108,6 @@ Test a build prior to deployment:
 
 ```bash
 npm run build && npm start
-```
-
----
-
-### Vercel CLI
-
-I've found that running `vercel` locally is a great way to verify Edge Functions and Middleware are working as expected.
-
-To install the [Vercel CLI](https://vercel.com/docs/cli), run:
-
-```bash
-npm i -g vercel
-```
-
-Start a Vercel development server locally:
-
-```bash
-vercel dev
 ```
 
 ---

@@ -22,7 +22,7 @@ export default function Settings() {
   const [opened, {open, close}] = useDisclosure(false)
   const {colorScheme, toggleColorScheme} = useMantineColorScheme()
   const {tempUnit, setTempUnit} = useWeatherContext()
-  const [checked, setChecked] = useState(tempUnit === 'f' ? true : false)
+  const [checked, setChecked] = useState(tempUnit === 'f')
 
   function toggleTempUnit() {
     setChecked(!checked)

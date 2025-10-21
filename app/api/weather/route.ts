@@ -1,6 +1,4 @@
-import {WeatherResponse} from '@/lib/types'
-
-export const runtime = 'edge'
+import {OpenMeteoResponse} from '@/lib/types'
 
 export interface GeocodeResponse {
   status: string
@@ -17,7 +15,7 @@ export interface GeocodeResponse {
 }
 
 /**
- * Fetch weather data from the OpenWeatherMap API.
+ * Fetch weather data from the Open-Meteo API.
  *
  * @example
  * /api/weather?location="enterprise al"
@@ -25,7 +23,7 @@ export interface GeocodeResponse {
  * @author Greg Rickaby
  * @see https://console.cloud.google.com/apis/credentials
  * @see https://developers.google.com/maps/documentation/geocoding/overview
- * @see https://openweathermap.org/api/one-call-api
+ * @see https://open-meteo.com/en/docs
  * @see https://nextjs.org/docs/app/building-your-application/routing/route-handlers
  * @see https://nextjs.org/docs/pages/api-reference/edge
  */
@@ -74,7 +72,7 @@ export async function GET(request: Request) {
     const coordinates = (await geocode.json()) as GeocodeResponse
 
     // Issue with the response? Bail...
-    if (coordinates.status != 'OK' || !coordinates.results.length) {
+    if (coordinates.status !== 'OK' || !coordinates.results.length) {
       return new Response(
         JSON.stringify({
           error: `${coordinates.status}`
@@ -98,13 +96,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Now, fetch the weather data.
+    // Now, fetch the weather data from Open-Meteo.
     const weather = await fetch(
-      `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=metric&exclude=minutely&appid=${process.env.OPENWEATHER_API_KEY}`
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=auto`
     )
 
     // Issue with the weather response? Bail...
-    if (weather.status != 200) {
+    if (weather.status !== 200) {
       return new Response(
         JSON.stringify({
           error: `${weather.statusText}`
@@ -117,10 +115,10 @@ export async function GET(request: Request) {
     }
 
     // Parse the response.
-    const forecast = (await weather.json()) as WeatherResponse
+    const forecast = (await weather.json()) as OpenMeteoResponse
 
     // Issue with the forecast? Bail...
-    if (!forecast.lat || !forecast.lon) {
+    if (!forecast.latitude || !forecast.longitude) {
       return new Response(
         JSON.stringify({
           error: 'No forecast data.'

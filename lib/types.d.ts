@@ -5,7 +5,7 @@ export interface PlacesData {
 }
 
 export interface WeatherData {
-  weather: WeatherResponse
+  weather: OpenMeteoResponse
   isLoading: boolean
   isError: boolean
 }
@@ -14,7 +14,40 @@ export interface ChildrenProps {
   children: React.ReactNode
 }
 
-export interface WeatherResponse {
+export interface OpenMeteoResponse {
+  latitude: number
+  longitude: number
+  timezone: string
+  current: {
+    time: string
+    temperature_2m: number
+    relative_humidity_2m: number
+    apparent_temperature: number
+    precipitation: number
+    weather_code: number
+    wind_speed_10m: number
+  }
+  hourly: {
+    time: string[]
+    temperature_2m: number[]
+    apparent_temperature: number[]
+    precipitation_probability: number[]
+    weather_code: number[]
+    wind_speed_10m: number[]
+  }
+  daily: {
+    time: string[]
+    weather_code: number[]
+    temperature_2m_max: number[]
+    temperature_2m_min: number[]
+    apparent_temperature_max: number[]
+    apparent_temperature_min: number[]
+    precipitation_probability_max: number[]
+  }
+}
+
+// Legacy type for backwards compatibility (will be removed)
+export interface WeatherResponse_OLD {
   lat: number
   lon: number
   timezone: string

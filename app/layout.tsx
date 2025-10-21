@@ -13,11 +13,11 @@ export const metadata = {
 /**
  * Root layout component.
  */
-export default function RootLayout({children}: {children: any}) {
+export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <ColorSchemeScript />
+        <ColorSchemeScript defaultColorScheme="auto" />
         <Meta />
       </head>
       <body>

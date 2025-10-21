@@ -2,23 +2,25 @@
 
 import classes from '@/components/CurrentConditions.module.css'
 import {useWeatherContext} from '@/components/WeatherProvider'
-import {formatTemperature} from '@/lib/helpers'
+import {formatTemperature, getWeatherInfo} from '@/lib/helpers'
 import {Stack, Text} from '@mantine/core'
 
 /**
  * Current Conditions component.
  */
 export default function CurrentConditions() {
+  const {weather, tempUnit} = useWeatherContext()
+
+  // Return null if weather data isn't loaded yet
+  if (!weather || !weather.current) {
+    return null
+  }
+
   const {
-    weather: {
-      current: {
-        weather: [{description}],
-        temp,
-        feels_like
-      }
-    },
-    tempUnit
-  } = useWeatherContext()
+    current: {weather_code, temperature_2m, apparent_temperature}
+  } = weather
+
+  const {description} = getWeatherInfo(weather_code)
 
   return (
     <Stack align="center">
@@ -36,16 +38,16 @@ export default function CurrentConditions() {
         gradient={{from: 'indigo', to: 'cyan', deg: 45}}
         variant="gradient"
       >
-        {formatTemperature(tempUnit, temp)}
+        {formatTemperature(tempUnit, temperature_2m)}
       </Text>
-      {feels_like > temp && (
+      {apparent_temperature > temperature_2m && (
         <Text
           className={classes.feelslike}
           component="p"
           gradient={{from: 'yellow', to: 'orange', deg: 45}}
           variant="gradient"
         >
-          Feels Like: {formatTemperature(tempUnit, feels_like)}
+          Feels Like: {formatTemperature(tempUnit, apparent_temperature)}
         </Text>
       )}
     </Stack>

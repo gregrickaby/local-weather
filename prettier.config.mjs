@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   tabWidth: 2,
   useTabs: false,
   singleQuote: true,
@@ -6,3 +6,4 @@ module.exports = {
   semi: false,
   trailingComma: 'none'
 }
+export default config

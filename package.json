@@ -1,9 +1,9 @@
 {
   "name": "@gregrickaby/local-weather",
-  "description": "A weather app using Next.js, Mantine, Edge API Routes, and the OpenWeatherMap and Google Maps API's.",
+  "description": "A weather app using Next.js, Mantine, Edge API Routes, Open-Meteo, and Google Maps API.",
   "private": true,
   "version": "1.0",
-  "homepage": "https://localwx.vercel.app/",
+  "homepage": "https://weather.gregrickaby.com/",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -16,39 +16,38 @@
   "scripts": {
     "build": "next build",
     "dev": "rimraf .next && next dev",
-    "format": "prettier . --ignore-path .gitignore --write",
-    "lint": "npm run lint:css && npm run lint:js && next lint && tsc",
-    "lint:css": "stylelint '**/*.css' --ignore-path .gitignore --fix",
-    "lint:js": "eslint . --ignore-path .gitignore --fix",
+    "format": "prettier  '**/*.{mjs,cjs,js,jsx,ts,tsx,md,css,json,yml,yaml}' --ignore-path .prettierignore --cache --write",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "start": "next start"
   },
   "dependencies": {
-    "@mantine/core": "7.16.2",
-    "@mantine/hooks": "7.16.2",
-    "@mantine/notifications": "^7.16.2",
-    "@tabler/icons-react": "^3.29.0",
-    "next": "^15.1.6",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "swr": "^2.3.0"
+    "@mantine/core": "8.3.5",
+    "@mantine/hooks": "8.3.5",
+    "@mantine/notifications": "^8.3.5",
+    "@tabler/icons-react": "^3.35.0",
+    "next": "^15.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "swr": "^2.3.6"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^1.10.10",
-    "@types/node": "^22.13.0",
-    "@types/react": "^19.0.8",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^15.1.6",
-    "eslint-config-prettier": "^10.0.1",
-    "markdownlint": "^0.37.4",
-    "markdownlint-cli": "^0.44.0",
-    "postcss": "^8.5.1",
-    "postcss-preset-mantine": "1.17.0",
+    "@evilmartians/lefthook": "^2.0.0",
+    "@types/node": "^24.9.1",
+    "@types/react": "^19.2.2",
+    "eslint": "^9.38.0",
+    "eslint-config-mantine": "^4.0.3",
+    "eslint-config-next": "^15.5.6",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jest-dom": "^5.5.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-testing-library": "^7.13.3",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "1.18.0",
     "postcss-simple-vars": "^7.0.1",
-    "prettier": "^3.4.2",
+    "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "stylelint": "^16.14.1",
-    "stylelint-config-standard": "^37.0.0",
-    "typescript": "^5.7.3"
-  },
-  "packageManager": "yarn@1.22.22"
+    "typescript": "^5.9.3"
+  }
 }

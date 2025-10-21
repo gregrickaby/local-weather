@@ -1,15 +1,11 @@
-# Refer for explanation to following link:
-# https://github.com/evilmartians/lefthook/blob/master/docs/usage.md
+# Refer for explanation to following link: https://lefthook.dev/
 
 pre-commit:
   parallel: true
   commands:
     eslint:
       glob: '*.{js,jsx,ts,tsx}'
-      run: npx eslint {staged_files} --ignore-path .gitignore --fix
-    stylelint:
-      glob: '*.css'
-      run: npx stylelint {staged_files} --ignore-path .gitignore --fix
+      run: npx eslint {staged_files} --fix
     prettier:
-      glob: '.'
-      run: npx prettier {staged_files} --ignore-path .gitignore --write
+      glob: '*.{mjs,cjs,js,jsx,ts,tsx,md,css,json,yml,yaml}'
+      run: npx prettier {staged_files} --ignore-path .prettierignore --write

@@ -1,5 +1,3 @@
-export const runtime = 'edge'
-
 export interface PredictionResponse {
   description: string
 }
@@ -46,7 +44,7 @@ export async function GET(request: Request) {
     )
 
     // Issue with the places response? Bail...
-    if (places.status != 200) {
+    if (places.status !== 200) {
       return new Response(
         JSON.stringify({
           error: `${places.statusText}`
@@ -62,7 +60,7 @@ export async function GET(request: Request) {
     const place = (await places.json()) as Place
 
     // Issue with the response? Bail...
-    if (place.status != 'OK' || !place.predictions.length) {
+    if (place.status !== 'OK' || !place.predictions.length) {
       return new Response(
         JSON.stringify({
           error: place.status
