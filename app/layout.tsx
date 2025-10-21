@@ -1,13 +1,42 @@
 import WeatherProvider from '@/components/Context/WeatherProvider/WeatherProvider'
-import Meta from '@/components/Layout/Meta/Meta'
 import config from '@/lib/config'
 import theme from '@/lib/theme'
 import {ColorSchemeScript, MantineProvider} from '@mantine/core'
 import '@mantine/core/styles.css'
+import type {Metadata} from 'next'
 
-export const metadata = {
-  title: `${config.siteName} - ${config.siteDescription}`,
-  description: config.siteDescription
+export const metadata: Metadata = {
+  title: {
+    default: config.siteName,
+    template: `%s | ${config.siteName}`
+  },
+  description: config.metaDescription,
+  keywords: ['weather', 'forecast', 'local weather', 'weather app'],
+  authors: [
+    {
+      name: config.siteAuthor,
+      url: config.authorUrl
+    }
+  ],
+  creator: config.siteAuthor,
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: config.siteUrl,
+    title: config.siteName,
+    description: config.metaDescription,
+    siteName: config.siteName
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: config.siteName,
+    description: config.metaDescription,
+    creator: '@gregrickaby'
+  },
+  metadataBase: new URL(config.siteUrl),
+  icons: {
+    icon: '/favicon.ico'
+  }
 }
 
 /**
@@ -20,7 +49,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
-        <Meta />
+        <link
+          as="fetch"
+          rel="preload"
+          href="/api/places?location=Enterprise,%20AL"
+          crossOrigin="anonymous"
+        />
+        <link
+          as="fetch"
+          rel="preload"
+          href="/api/weather?location=Enterprise,%20AL"
+          crossOrigin="anonymous"
+        />
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="auto">
