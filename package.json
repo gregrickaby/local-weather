@@ -36,7 +36,7 @@
     "@evilmartians/lefthook": "^1.10.10",
     "@types/node": "^22.13.0",
     "@types/react": "^19.0.8",
-    "eslint": "^8.57.0",
+    "eslint": "^9.38.0",
     "eslint-config-next": "^15.1.6",
     "eslint-config-prettier": "^10.0.1",
     "markdownlint": "^0.37.4",
