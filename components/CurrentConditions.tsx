@@ -12,7 +12,7 @@ export default function CurrentConditions() {
   const {weather, tempUnit} = useWeatherContext()
 
   // Return null if weather data isn't loaded yet
-  if (!weather || !weather.current) {
+  if (!weather?.current) {
     return null
   }
 

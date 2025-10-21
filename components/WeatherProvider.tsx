@@ -3,7 +3,7 @@
 import {useWeather} from '@/lib/hooks'
 import {ChildrenProps, OpenMeteoResponse} from '@/lib/types'
 import {useLocalStorage} from '@mantine/hooks'
-import {createContext, useContext, useState, useEffect} from 'react'
+import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 
 export interface WeatherContextProps {
   isLoading: boolean
@@ -26,7 +26,7 @@ export function useWeatherContext() {
   return context
 }
 
-export default function WeatherProvider({children}: ChildrenProps) {
+export default function WeatherProvider({children}: Readonly<ChildrenProps>) {
   // Use useState for initial load to avoid hydration issues
   const [mounted, setMounted] = useState(false)
 
@@ -42,20 +42,23 @@ export default function WeatherProvider({children}: ChildrenProps) {
     getInitialValueInEffect: false
   })
 
-  const {weather, isLoading} = useWeather(location as string)
+  const {weather, isLoading} = useWeather(location)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  const value: WeatherContextProps = {
-    isLoading: !mounted || isLoading,
-    location: location as string,
-    setLocation,
-    weather,
-    tempUnit: tempUnit as string,
-    setTempUnit
-  }
+  const value: WeatherContextProps = useMemo(
+    () => ({
+      isLoading: !mounted || isLoading,
+      location,
+      setLocation,
+      weather,
+      tempUnit,
+      setTempUnit
+    }),
+    [mounted, isLoading, location, setLocation, weather, tempUnit, setTempUnit]
+  )
 
   return (
     <WeatherContext.Provider value={value}>{children}</WeatherContext.Provider>

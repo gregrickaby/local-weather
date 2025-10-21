@@ -7,12 +7,10 @@ import {Title} from '@mantine/core'
  */
 export default function Header() {
   return (
-    <>
-      <header className={classes.header}>
-        <Title className={classes.title} order={1}>
-          {config.siteName}
-        </Title>
-      </header>
-    </>
+    <header className={classes.header}>
+      <Title className={classes.title} order={1}>
+        {config.siteName}
+      </Title>
+    </header>
   )
 }
