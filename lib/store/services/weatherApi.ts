@@ -185,13 +185,6 @@ export const weatherApi = createApi({
             }
           }
 
-          console.info('[weatherApi] Transformed data:', {
-            hasData: !!data,
-            currentTemp: data.current.temperature_2m,
-            hourlyCount: data.hourly.time.length,
-            dailyCount: data.daily.time.length
-          })
-
           return {data}
         } catch (error) {
           console.error('[weatherApi] Error:', error)
