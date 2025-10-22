@@ -14,9 +14,12 @@ export default function CurrentConditions() {
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
   const mounted = useAppSelector((state) => state.preferences.mounted)
 
-  const {data: weather} = useGetWeatherQuery(location, {
-    skip: !mounted || !location
-  })
+  const {data: weather} = useGetWeatherQuery(
+    {location, tempUnit},
+    {
+      skip: !mounted || !location
+    }
+  )
 
   // Return null if weather data isn't loaded yet
   if (!weather?.current) {
@@ -24,10 +27,17 @@ export default function CurrentConditions() {
   }
 
   const {
-    current: {weather_code, temperature_2m, apparent_temperature}
+    current: {weather_code, temperature_2m, apparent_temperature, time},
+    daily: {sunrise, sunset}
   } = weather
 
-  const {description} = getWeatherInfo(weather_code)
+  // Get current conditions with day/night icon
+  const {description} = getWeatherInfo(
+    weather_code,
+    time,
+    sunrise[0],
+    sunset[0]
+  )
 
   return (
     <Stack align="center">

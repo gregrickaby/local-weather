@@ -1,5 +1,6 @@
 import {configureStore} from '@reduxjs/toolkit'
 import {localStorageMiddleware} from './middlewares/localStorageMiddleware'
+import {airQualityApi} from './services/airQualityApi'
 import {placesApi} from './services/placesApi'
 import {weatherApi} from './services/weatherApi'
 import preferencesReducer from './slices/preferencesSlice'
@@ -12,12 +13,14 @@ export const makeStore = () => {
     reducer: {
       preferences: preferencesReducer,
       [weatherApi.reducerPath]: weatherApi.reducer,
-      [placesApi.reducerPath]: placesApi.reducer
+      [placesApi.reducerPath]: placesApi.reducer,
+      [airQualityApi.reducerPath]: airQualityApi.reducer
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
         .concat(weatherApi.middleware)
         .concat(placesApi.middleware)
+        .concat(airQualityApi.middleware)
         .concat(localStorageMiddleware)
   })
 }

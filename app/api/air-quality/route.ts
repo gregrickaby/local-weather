@@ -1,4 +1,4 @@
-import {OpenMeteoResponse} from '@/lib/types'
+import {AirQualityResponse} from '@/lib/types'
 
 export interface GeocodeResponse {
   status: string
@@ -15,17 +15,14 @@ export interface GeocodeResponse {
 }
 
 /**
- * Fetch weather data from the Open-Meteo API.
+ * Fetch air quality data from the Open-Meteo Air Quality API.
  *
  * @example
- * /api/weather?location="enterprise al"
+ * /api/air-quality?location="enterprise al"
  *
  * @author Greg Rickaby
- * @see https://console.cloud.google.com/apis/credentials
- * @see https://developers.google.com/maps/documentation/geocoding/overview
- * @see https://open-meteo.com/en/docs
+ * @see https://open-meteo.com/en/docs/air-quality-api
  * @see https://nextjs.org/docs/app/building-your-application/routing/route-handlers
- * @see https://nextjs.org/docs/pages/api-reference/edge
  */
 export async function GET(request: Request) {
   // Get query params from request.
@@ -33,14 +30,9 @@ export async function GET(request: Request) {
 
   // Parse params.
   const unsanitizedLocation = searchParams.get('location') || ''
-  const tempUnit = searchParams.get('tempUnit') || 'f'
 
   // Sanitize the location.
   const location = encodeURI(unsanitizedLocation)
-
-  // Determine temperature unit for API.
-  const temperatureUnit = tempUnit === 'c' ? 'celsius' : 'fahrenheit'
-  const windSpeedUnit = tempUnit === 'c' ? 'kmh' : 'mph'
 
   // No location? Bail...
   if (!location) {
@@ -101,32 +93,32 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Now, fetch the weather data from Open-Meteo.
-    const weather = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,visibility,surface_pressure,dew_point_2m&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max,sunrise,sunset,uv_index_max&temperature_unit=${temperatureUnit}&wind_speed_unit=${windSpeedUnit}&precipitation_unit=inch&timezone=auto`
+    // Now, fetch the air quality data from Open-Meteo.
+    const airQuality = await fetch(
+      `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi,pm2_5,pm10,european_aqi&timezone=auto`
     )
 
-    // Issue with the weather response? Bail...
-    if (weather.status !== 200) {
+    // Issue with the air quality response? Bail...
+    if (airQuality.status !== 200) {
       return new Response(
         JSON.stringify({
-          error: `${weather.statusText}`
+          error: `${airQuality.statusText}`
         }),
         {
-          status: weather.status,
-          statusText: weather.statusText
+          status: airQuality.status,
+          statusText: airQuality.statusText
         }
       )
     }
 
     // Parse the response.
-    const forecast = (await weather.json()) as OpenMeteoResponse
+    const data = (await airQuality.json()) as AirQualityResponse
 
-    // Issue with the forecast? Bail...
-    if (!forecast.latitude || !forecast.longitude) {
+    // Issue with the data? Bail...
+    if (!data.latitude || !data.longitude) {
       return new Response(
         JSON.stringify({
-          error: 'No forecast data.'
+          error: 'No air quality data.'
         }),
         {
           status: 400,
@@ -135,11 +127,11 @@ export async function GET(request: Request) {
       )
     }
 
-    // Return the weather data.
-    return new Response(JSON.stringify(forecast), {
+    // Return the air quality data.
+    return new Response(JSON.stringify(data), {
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=300, stale-while-revalidate'
+        'Cache-Control': 's-maxage=600, stale-while-revalidate'
       },
       status: 200,
       statusText: 'OK'

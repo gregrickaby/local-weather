@@ -1,6 +1,11 @@
 import {OpenMeteoResponse} from '@/lib/types'
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 
+interface WeatherQueryParams {
+  location: string
+  tempUnit: 'c' | 'f'
+}
+
 /**
  * RTK Query API for weather data.
  *
@@ -11,8 +16,9 @@ export const weatherApi = createApi({
   baseQuery: fetchBaseQuery({baseUrl: '/api'}),
   tagTypes: ['Weather'],
   endpoints: (builder) => ({
-    getWeather: builder.query<OpenMeteoResponse, string>({
-      query: (location) => `/weather?location=${encodeURIComponent(location)}`,
+    getWeather: builder.query<OpenMeteoResponse, WeatherQueryParams>({
+      query: ({location, tempUnit}) =>
+        `/weather?location=${encodeURIComponent(location)}&tempUnit=${tempUnit}`,
       providesTags: ['Weather'],
       keepUnusedDataFor: 300 // 5 minutes cache
     })

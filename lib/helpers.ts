@@ -1,45 +1,67 @@
 /**
  * Map WMO weather codes to descriptions and icon codes.
+ * Automatically determines day (d) vs night (n) icon variant based on time.
+ *
+ * @param code - WMO weather code
+ * @param time - Optional ISO timestamp to determine day/night. If not provided, uses current time.
+ * @param sunrise - Optional sunrise time (ISO string)
+ * @param sunset - Optional sunset time (ISO string)
  *
  * @see https://open-meteo.com/en/docs
  * @see https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM
  */
-export function getWeatherInfo(code: number): {
+export function getWeatherInfo(
+  code: number,
+  time?: string,
+  sunrise?: string,
+  sunset?: string
+): {
   description: string
   icon: string
 } {
-  const weatherCodes: Record<number, {description: string; icon: string}> = {
-    0: {description: 'Clear sky', icon: '01d'},
-    1: {description: 'Mainly clear', icon: '01d'},
-    2: {description: 'Partly cloudy', icon: '02d'},
-    3: {description: 'Overcast', icon: '03d'},
-    45: {description: 'Foggy', icon: '50d'},
-    48: {description: 'Depositing rime fog', icon: '50d'},
-    51: {description: 'Light drizzle', icon: '09d'},
-    53: {description: 'Moderate drizzle', icon: '09d'},
-    55: {description: 'Dense drizzle', icon: '09d'},
-    56: {description: 'Light freezing drizzle', icon: '09d'},
-    57: {description: 'Dense freezing drizzle', icon: '09d'},
-    61: {description: 'Slight rain', icon: '10d'},
-    63: {description: 'Moderate rain', icon: '10d'},
-    65: {description: 'Heavy rain', icon: '10d'},
-    66: {description: 'Light freezing rain', icon: '13d'},
-    67: {description: 'Heavy freezing rain', icon: '13d'},
-    71: {description: 'Slight snow fall', icon: '13d'},
-    73: {description: 'Moderate snow fall', icon: '13d'},
-    75: {description: 'Heavy snow fall', icon: '13d'},
-    77: {description: 'Snow grains', icon: '13d'},
-    80: {description: 'Slight rain showers', icon: '09d'},
-    81: {description: 'Moderate rain showers', icon: '09d'},
-    82: {description: 'Violent rain showers', icon: '09d'},
-    85: {description: 'Slight snow showers', icon: '13d'},
-    86: {description: 'Heavy snow showers', icon: '13d'},
-    95: {description: 'Thunderstorm', icon: '11d'},
-    96: {description: 'Thunderstorm with slight hail', icon: '11d'},
-    99: {description: 'Thunderstorm with heavy hail', icon: '11d'}
+  // Determine if it's day or night
+  let isDaytime = true // default to day
+  if (time && sunrise && sunset) {
+    const timestamp = new Date(time).getTime()
+    const sunriseTime = new Date(sunrise).getTime()
+    const sunsetTime = new Date(sunset).getTime()
+    isDaytime = timestamp >= sunriseTime && timestamp < sunsetTime
   }
 
-  return weatherCodes[code] || {description: 'Unknown', icon: '01d'}
+  const dayNight = isDaytime ? 'd' : 'n'
+
+  const weatherCodes: Record<number, {description: string; icon: string}> = {
+    0: {description: 'Clear sky', icon: `01${dayNight}`},
+    1: {description: 'Mainly clear', icon: `01${dayNight}`},
+    2: {description: 'Partly cloudy', icon: `02${dayNight}`},
+    3: {description: 'Overcast', icon: `03${dayNight}`},
+    45: {description: 'Foggy', icon: `50${dayNight}`},
+    48: {description: 'Depositing rime fog', icon: `50${dayNight}`},
+    51: {description: 'Light drizzle', icon: `09${dayNight}`},
+    53: {description: 'Moderate drizzle', icon: `09${dayNight}`},
+    55: {description: 'Dense drizzle', icon: `09${dayNight}`},
+    56: {description: 'Light freezing drizzle', icon: `09${dayNight}`},
+    57: {description: 'Dense freezing drizzle', icon: `09${dayNight}`},
+    61: {description: 'Slight rain', icon: `10${dayNight}`},
+    63: {description: 'Moderate rain', icon: `10${dayNight}`},
+    65: {description: 'Heavy rain', icon: `10${dayNight}`},
+    66: {description: 'Light freezing rain', icon: `13${dayNight}`},
+    67: {description: 'Heavy freezing rain', icon: `13${dayNight}`},
+    71: {description: 'Slight snow fall', icon: `13${dayNight}`},
+    73: {description: 'Moderate snow fall', icon: `13${dayNight}`},
+    75: {description: 'Heavy snow fall', icon: `13${dayNight}`},
+    77: {description: 'Snow grains', icon: `13${dayNight}`},
+    80: {description: 'Slight rain showers', icon: `09${dayNight}`},
+    81: {description: 'Moderate rain showers', icon: `09${dayNight}`},
+    82: {description: 'Violent rain showers', icon: `09${dayNight}`},
+    85: {description: 'Slight snow showers', icon: `13${dayNight}`},
+    86: {description: 'Heavy snow showers', icon: `13${dayNight}`},
+    95: {description: 'Thunderstorm', icon: `11${dayNight}`},
+    96: {description: 'Thunderstorm with slight hail', icon: `11${dayNight}`},
+    99: {description: 'Thunderstorm with heavy hail', icon: `11${dayNight}`}
+  }
+
+  return weatherCodes[code] || {description: 'Unknown', icon: `01${dayNight}`}
 }
 
 /**
@@ -94,4 +116,31 @@ export function formatTime(isoTime: string): string {
   return new Intl.DateTimeFormat('en-US', {
     hour: 'numeric'
   }).format(new Date(isoTime))
+}
+
+/**
+ * Format pressure based on unit preference.
+ * Celsius users get hPa (hectopascals/millibars).
+ * Fahrenheit users get inHg (inches of mercury).
+ *
+ * Conversion: 1 hPa = 0.02953 inHg
+ */
+export function formatPressure(
+  tempUnit: string,
+  pressureHpa: number
+): {value: string; unit: string} {
+  if (tempUnit === 'f') {
+    // Convert to inches of mercury for US/Imperial
+    const inHg = pressureHpa * 0.02953
+    return {
+      value: inHg.toFixed(2),
+      unit: 'inHg'
+    }
+  }
+
+  // Return hPa for metric
+  return {
+    value: Math.round(pressureHpa).toString(),
+    unit: 'hPa'
+  }
 }

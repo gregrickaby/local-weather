@@ -6,11 +6,12 @@ import Header from '@/components/Layout/Header/Header'
 import Alerts from '@/components/UI/Alerts/Alerts'
 import BackToTop from '@/components/UI/BackToTop/BackToTop'
 import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditions'
+import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
 import Forecast from '@/components/UI/Forecast/Forecast'
 import Search from '@/components/UI/Search/Search'
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {Skeleton, Stack} from '@mantine/core'
+import {Grid, Skeleton, Stack} from '@mantine/core'
 
 /**
  * Loading skeleton component.
@@ -32,10 +33,14 @@ function WeatherSkeleton() {
 export default function HomePage() {
   const location = useAppSelector((state) => state.preferences.location)
   const mounted = useAppSelector((state) => state.preferences.mounted)
+  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
 
-  const {data: weather, isLoading} = useGetWeatherQuery(location, {
-    skip: !mounted || !location
-  })
+  const {data: weather, isLoading} = useGetWeatherQuery(
+    {location, tempUnit},
+    {
+      skip: !mounted || !location
+    }
+  )
 
   return (
     <div className={classes.container}>
@@ -47,11 +52,21 @@ export default function HomePage() {
         {isLoading || !weather ? (
           <WeatherSkeleton />
         ) : (
-          <>
-            <CurrentConditions />
-            <Forecast />
-            <Alerts />
-          </>
+          <Grid gutter="md">
+            {/* Main content column */}
+            <Grid.Col span={{base: 12, md: 8}}>
+              <Stack gap="md">
+                <CurrentConditions />
+                <Forecast />
+                <Alerts />
+              </Stack>
+            </Grid.Col>
+
+            {/* Details sidebar */}
+            <Grid.Col span={{base: 12, md: 4}}>
+              <DetailsGrid />
+            </Grid.Col>
+          </Grid>
         )}
       </main>
       <Footer />

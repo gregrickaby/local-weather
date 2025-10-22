@@ -18,9 +18,12 @@ export default function Forecast() {
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
   const mounted = useAppSelector((state) => state.preferences.mounted)
 
-  const {data: weather} = useGetWeatherQuery(location, {
-    skip: !mounted || !location
-  })
+  const {data: weather} = useGetWeatherQuery(
+    {location, tempUnit},
+    {
+      skip: !mounted || !location
+    }
+  )
 
   if (!weather?.hourly || !weather?.daily) {
     return null
@@ -39,17 +42,27 @@ export default function Forecast() {
     }
   })
 
-  const dailyForecasts = weather.daily.time.map((date, index) => ({
+  // Skip "Today" in daily forecast if it's after 8 PM (late evening)
+  // At this point, users are more interested in tomorrow's forecast
+  const skipToday = currentHourIndex >= 20
+  const dailyForecastsRaw = weather.daily.time.map((date, index) => ({
     date,
     weather_code: weather.daily.weather_code[index],
     temp_max: weather.daily.temperature_2m_max[index],
     temp_min: weather.daily.temperature_2m_min[index],
     temp_current:
-      index === 0 ? weather.hourly.temperature_2m[currentHourIndex] : undefined,
+      index === 0 && !skipToday
+        ? weather.hourly.temperature_2m[currentHourIndex]
+        : undefined,
     feels_like: weather.daily.apparent_temperature_max[index],
     precipitation_probability:
       weather.daily.precipitation_probability_max[index]
   }))
+
+  // Filter out today if it's late evening
+  const dailyForecasts = skipToday
+    ? dailyForecastsRaw.slice(1)
+    : dailyForecastsRaw
 
   return (
     <section>
@@ -59,7 +72,14 @@ export default function Forecast() {
       </Title>
       <SimpleGrid cols={{base: 1, sm: 2, lg: 4}}>
         {nextFourHours.map((forecast) => {
-          const {description, icon} = getWeatherInfo(forecast.weather_code)
+          const sunrise = weather.daily.sunrise[0]
+          const sunset = weather.daily.sunset[0]
+          const {description, icon} = getWeatherInfo(
+            forecast.weather_code,
+            forecast.time,
+            sunrise,
+            sunset
+          )
           return (
             <Card
               className={classes.card}
@@ -92,66 +112,93 @@ export default function Forecast() {
       </Title>
 
       <div className={classes.forecastList}>
-        {dailyForecasts.map((forecast) => {
-          const {icon} = getWeatherInfo(forecast.weather_code)
-
-          // Calculate percentage positions for temp range (0-100°F scale)
-          const minTempScale = 0
-          const maxTempScale = 100
+        {(() => {
+          // Calculate dynamic temperature scale based on actual data
+          const allTemps = dailyForecasts.flatMap((f) => [
+            f.temp_min,
+            f.temp_max,
+            f.temp_current
+          ])
+          const validTemps = allTemps.filter(
+            (t): t is number => t !== undefined
+          )
+          const minTempScale = Math.floor(Math.min(...validTemps) - 5)
+          const maxTempScale = Math.ceil(Math.max(...validTemps) + 5)
           const range = maxTempScale - minTempScale
-          const minPercent = ((forecast.temp_min - minTempScale) / range) * 100
-          const maxPercent = ((forecast.temp_max - minTempScale) / range) * 100
-          const barWidth = maxPercent - minPercent
 
-          // Calculate current temp indicator position (only for today)
-          let currentTempPercent: number | undefined
-          if (forecast.temp_current !== undefined) {
-            currentTempPercent =
-              ((forecast.temp_current - minTempScale) / range) * 100
-          }
+          return dailyForecasts.map((forecast, index) => {
+            // For daily forecast, use noon as reference time (daytime icon)
+            const noonTime = `${forecast.date}T12:00:00`
+            const sunrise = weather.daily.sunrise[index]
+            const sunset = weather.daily.sunset[index]
+            const {icon} = getWeatherInfo(
+              forecast.weather_code,
+              noonTime,
+              sunrise,
+              sunset
+            )
 
-          return (
-            <div key={forecast.date} className={classes.forecastItem}>
-              <div className={classes.dayLabel}>
-                <Text size="lg" fw={500}>
-                  {formatDay(forecast.date)}
-                </Text>
-              </div>
+            // Calculate percentage positions for temp range
+            const minPercent =
+              ((forecast.temp_min - minTempScale) / range) * 100
+            const maxPercent =
+              ((forecast.temp_max - minTempScale) / range) * 100
+            const barWidth = maxPercent - minPercent
 
-              <div className={classes.weatherIcon}>
-                <Icon icon={icon} />
-              </div>
+            // Calculate current temp indicator position (only for today)
+            let currentTempPercent: number | undefined
+            if (forecast.temp_current !== undefined) {
+              currentTempPercent =
+                ((forecast.temp_current - minTempScale) / range) * 100
+            }
 
-              <div className={classes.tempRange}>
-                <div className={classes.tempBarContainer}>
-                  <Text size="sm" c="dimmed" className={classes.tempLabelLeft}>
-                    {formatTemperature(tempUnit, forecast.temp_min)}
-                  </Text>
-                  <div className={classes.tempBar}>
-                    <div
-                      className={classes.tempBarFill}
-                      style={{
-                        marginLeft: `${minPercent}%`,
-                        width: `${barWidth}%`
-                      }}
-                    />
-                    {currentTempPercent !== undefined && (
-                      <div
-                        className={classes.tempIndicator}
-                        style={{
-                          left: `${currentTempPercent}%`
-                        }}
-                      />
-                    )}
-                  </div>
-                  <Text size="sm" fw={500} className={classes.tempLabelRight}>
-                    {formatTemperature(tempUnit, forecast.temp_max)}
+            return (
+              <div key={forecast.date} className={classes.forecastItem}>
+                <div className={classes.dayLabel}>
+                  <Text size="lg" fw={500}>
+                    {formatDay(forecast.date)}
                   </Text>
                 </div>
+
+                <div className={classes.weatherIcon}>
+                  <Icon icon={icon} />
+                </div>
+
+                <div className={classes.tempRange}>
+                  <div className={classes.tempBarContainer}>
+                    <Text
+                      size="sm"
+                      c="dimmed"
+                      className={classes.tempLabelLeft}
+                    >
+                      {formatTemperature(tempUnit, forecast.temp_min)}
+                    </Text>
+                    <div className={classes.tempBar}>
+                      <div
+                        className={classes.tempBarFill}
+                        style={{
+                          marginLeft: `${minPercent}%`,
+                          width: `${barWidth}%`
+                        }}
+                      />
+                      {currentTempPercent !== undefined && (
+                        <div
+                          className={classes.tempIndicator}
+                          style={{
+                            left: `${currentTempPercent}%`
+                          }}
+                        />
+                      )}
+                    </div>
+                    <Text size="sm" fw={500} className={classes.tempLabelRight}>
+                      {formatTemperature(tempUnit, forecast.temp_max)}
+                    </Text>
+                  </div>
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })
+        })()}
       </div>
     </section>
   )

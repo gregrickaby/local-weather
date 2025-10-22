@@ -13,14 +13,14 @@ import {
   Divider,
   Flex,
   Modal,
+  Select,
   Stack,
   Switch,
   Text,
   useMantineColorScheme
 } from '@mantine/core'
-import {useDisclosure, useHotkeys} from '@mantine/hooks'
+import {useDisclosure} from '@mantine/hooks'
 import {IconSettings, IconTrash} from '@tabler/icons-react'
-import {useEffect, useState} from 'react'
 import classes from './Settings.module.css'
 
 /**
@@ -37,17 +37,12 @@ export default function Settings() {
   const searchHistory = useAppSelector(
     (state) => state.preferences.searchHistory
   )
-  const [checked, setChecked] = useState(tempUnit === 'f')
 
-  // Sync temp unit checked state
-  useEffect(() => {
-    setChecked(tempUnit === 'f')
-  }, [tempUnit])
-
-  function toggleTempUnit() {
-    const newUnit = checked ? 'c' : 'f'
-    setChecked(!checked)
-    dispatch(setTempUnit(newUnit))
+  function handleUnitChange(value: string | null) {
+    if (value === 'imperial' || value === 'metric') {
+      const newUnit = value === 'imperial' ? 'f' : 'c'
+      dispatch(setTempUnit(newUnit))
+    }
   }
 
   function toggleColorScheme() {
@@ -59,8 +54,6 @@ export default function Settings() {
   function handleClearHistory() {
     dispatch(clearSearchHistory())
   }
-
-  useHotkeys([['mod+u', () => toggleTempUnit()]])
 
   return (
     <>
@@ -81,21 +74,29 @@ export default function Settings() {
         title="Settings"
       >
         <Stack justify="space-between">
+          <Select
+            label="Select Units"
+            description="Choose your preferred measurement system"
+            value={tempUnit === 'f' ? 'imperial' : 'metric'}
+            onChange={handleUnitChange}
+            data={[
+              {
+                value: 'imperial',
+                label: 'Imperial (°F, mph, inHg)'
+              },
+              {
+                value: 'metric',
+                label: 'Metric (°C, km/h, hPa)'
+              }
+            ]}
+            size="md"
+          />
           <Switch
             aria-label="Toggle between light and theme."
             label="Toggle Dark Theme (⌘+J)"
             checked={mantineColorScheme === 'dark'}
             offLabel="OFF"
             onChange={() => toggleColorScheme()}
-            onLabel="ON"
-            size="lg"
-          />
-          <Switch
-            aria-label="Toggle between Fahrenheit and Celsius"
-            label="Toggle Fahrenheit (⌘+U)"
-            checked={checked}
-            offLabel="OFF"
-            onChange={() => toggleTempUnit()}
             onLabel="ON"
             size="lg"
           />

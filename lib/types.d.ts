@@ -14,6 +14,12 @@ export interface OpenMeteoResponse {
     precipitation: number
     weather_code: number
     wind_speed_10m: number
+    wind_direction_10m: number
+    wind_gusts_10m: number
+    uv_index: number
+    visibility: number
+    surface_pressure: number
+    dew_point_2m: number
   }
   hourly: {
     time: string[]
@@ -31,6 +37,22 @@ export interface OpenMeteoResponse {
     apparent_temperature_max: number[]
     apparent_temperature_min: number[]
     precipitation_probability_max: number[]
+    sunrise: string[]
+    sunset: string[]
+    uv_index_max: number[]
+  }
+}
+
+export interface AirQualityResponse {
+  latitude: number
+  longitude: number
+  timezone: string
+  current: {
+    time: string
+    us_aqi: number
+    pm2_5: number
+    pm10: number
+    european_aqi: number
   }
 }
 
