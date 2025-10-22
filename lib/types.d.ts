@@ -1,15 +1,3 @@
-export interface PlacesData {
-  locations: string[]
-  isLoading: boolean
-  isError: boolean
-}
-
-export interface WeatherData {
-  weather: OpenMeteoResponse
-  isLoading: boolean
-  isError: boolean
-}
-
 export interface ChildrenProps {
   children: React.ReactNode
 }

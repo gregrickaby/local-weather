@@ -1,4 +1,4 @@
-import WeatherProvider from '@/components/Context/WeatherProvider/WeatherProvider'
+import StoreProvider from '@/components/Providers/StoreProvider'
 import config from '@/lib/config'
 import theme from '@/lib/theme'
 import {ColorSchemeScript, MantineProvider} from '@mantine/core'
@@ -64,7 +64,7 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <WeatherProvider>{children}</WeatherProvider>
+          <StoreProvider>{children}</StoreProvider>
         </MantineProvider>
       </body>
     </html>

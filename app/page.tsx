@@ -1,7 +1,6 @@
 'use client'
 
 import classes from '@/app/Page.module.css'
-import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
 import Footer from '@/components/Layout/Footer/Footer'
 import Header from '@/components/Layout/Header/Header'
 import Alerts from '@/components/UI/Alerts/Alerts'
@@ -9,6 +8,8 @@ import BackToTop from '@/components/UI/BackToTop/BackToTop'
 import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditions'
 import Forecast from '@/components/UI/Forecast/Forecast'
 import Search from '@/components/UI/Search/Search'
+import {useAppSelector} from '@/lib/store/hooks'
+import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {Skeleton, Stack} from '@mantine/core'
 
 /**
@@ -29,7 +30,12 @@ function WeatherSkeleton() {
  * Home page component.
  */
 export default function HomePage() {
-  const {isLoading, weather} = useWeatherContext()
+  const location = useAppSelector((state) => state.preferences.location)
+  const mounted = useAppSelector((state) => state.preferences.mounted)
+
+  const {data: weather, isLoading} = useGetWeatherQuery(location, {
+    skip: !mounted || !location
+  })
 
   return (
     <div className={classes.container}>

@@ -1,4 +1,3 @@
-import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
 import Icon from '@/components/UI/Icon/Icon'
 import {
   formatDay,
@@ -6,6 +5,8 @@ import {
   formatTime,
   getWeatherInfo
 } from '@/lib/helpers'
+import {useAppSelector} from '@/lib/store/hooks'
+import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
 import classes from './Forecast.module.css'
 
@@ -13,7 +14,13 @@ import classes from './Forecast.module.css'
  * Forecast component.
  */
 export default function Forecast() {
-  const {weather, tempUnit} = useWeatherContext()
+  const location = useAppSelector((state) => state.preferences.location)
+  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
+  const mounted = useAppSelector((state) => state.preferences.mounted)
+
+  const {data: weather} = useGetWeatherQuery(location, {
+    skip: !mounted || !location
+  })
 
   if (!weather?.hourly || !weather?.daily) {
     return null
@@ -37,6 +44,8 @@ export default function Forecast() {
     weather_code: weather.daily.weather_code[index],
     temp_max: weather.daily.temperature_2m_max[index],
     temp_min: weather.daily.temperature_2m_min[index],
+    temp_current:
+      index === 0 ? weather.hourly.temperature_2m[currentHourIndex] : undefined,
     feels_like: weather.daily.apparent_temperature_max[index],
     precipitation_probability:
       weather.daily.precipitation_probability_max[index]
@@ -49,10 +58,15 @@ export default function Forecast() {
         The Next 4 Hours
       </Title>
       <SimpleGrid cols={{base: 1, sm: 2, lg: 4}}>
-        {nextFourHours.map((forecast, index) => {
+        {nextFourHours.map((forecast) => {
           const {description, icon} = getWeatherInfo(forecast.weather_code)
           return (
-            <Card className={classes.card} shadow="sm" p="xl" key={index}>
+            <Card
+              className={classes.card}
+              shadow="sm"
+              p="xl"
+              key={forecast.time}
+            >
               <Text size="xl">{formatTime(forecast.time)}</Text>
               <Text size="xl">
                 {formatTemperature(tempUnit, forecast.temp)}
@@ -77,36 +91,68 @@ export default function Forecast() {
         Extended Forecast
       </Title>
 
-      <SimpleGrid cols={{base: 1, sm: 2, lg: 4}}>
-        {dailyForecasts.map((forecast, index) => {
-          const {description, icon} = getWeatherInfo(forecast.weather_code)
+      <div className={classes.forecastList}>
+        {dailyForecasts.map((forecast) => {
+          const {icon} = getWeatherInfo(forecast.weather_code)
+
+          // Calculate percentage positions for temp range (0-100°F scale)
+          const minTempScale = 0
+          const maxTempScale = 100
+          const range = maxTempScale - minTempScale
+          const minPercent = ((forecast.temp_min - minTempScale) / range) * 100
+          const maxPercent = ((forecast.temp_max - minTempScale) / range) * 100
+          const barWidth = maxPercent - minPercent
+
+          // Calculate current temp indicator position (only for today)
+          let currentTempPercent: number | undefined
+          if (forecast.temp_current !== undefined) {
+            currentTempPercent =
+              ((forecast.temp_current - minTempScale) / range) * 100
+          }
+
           return (
-            <Card className={classes.card} shadow="sm" p="xl" key={index}>
-              <Text size="xl">{formatDay(forecast.date, index)}</Text>
-              <Text size="lg">
-                {description}{' '}
-                {forecast.precipitation_probability
-                  ? `${Math.round(forecast.precipitation_probability)}%`
-                  : ''}
-              </Text>
-              <Text size="lg">
-                H {formatTemperature(tempUnit, forecast.temp_max)} / L{' '}
-                {formatTemperature(tempUnit, forecast.temp_min)}
-              </Text>
-              <Icon icon={icon} />
-              {forecast.feels_like > forecast.temp_max && (
-                <Text
-                  gradient={{from: 'yellow', to: 'orange', deg: 45}}
-                  size="lg"
-                  variant="gradient"
-                >
-                  Feels Like: {formatTemperature(tempUnit, forecast.feels_like)}
+            <div key={forecast.date} className={classes.forecastItem}>
+              <div className={classes.dayLabel}>
+                <Text size="lg" fw={500}>
+                  {formatDay(forecast.date)}
                 </Text>
-              )}
-            </Card>
+              </div>
+
+              <div className={classes.weatherIcon}>
+                <Icon icon={icon} />
+              </div>
+
+              <div className={classes.tempRange}>
+                <div className={classes.tempBarContainer}>
+                  <Text size="sm" c="dimmed" className={classes.tempLabelLeft}>
+                    {formatTemperature(tempUnit, forecast.temp_min)}
+                  </Text>
+                  <div className={classes.tempBar}>
+                    <div
+                      className={classes.tempBarFill}
+                      style={{
+                        marginLeft: `${minPercent}%`,
+                        width: `${barWidth}%`
+                      }}
+                    />
+                    {currentTempPercent !== undefined && (
+                      <div
+                        className={classes.tempIndicator}
+                        style={{
+                          left: `${currentTempPercent}%`
+                        }}
+                      />
+                    )}
+                  </div>
+                  <Text size="sm" fw={500} className={classes.tempLabelRight}>
+                    {formatTemperature(tempUnit, forecast.temp_max)}
+                  </Text>
+                </div>
+              </div>
+            </div>
           )
         })}
-      </SimpleGrid>
+      </div>
     </section>
   )
 }

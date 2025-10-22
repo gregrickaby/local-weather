@@ -1,18 +1,26 @@
 'use client'
 
-import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
 import config from '@/lib/config'
+import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
+import {
+  clearSearchHistory,
+  setColorScheme,
+  setTempUnit
+} from '@/lib/store/slices/preferencesSlice'
 import {
   ActionIcon,
+  Button,
+  Divider,
   Flex,
   Modal,
   Stack,
   Switch,
+  Text,
   useMantineColorScheme
 } from '@mantine/core'
 import {useDisclosure, useHotkeys} from '@mantine/hooks'
-import {IconSettings} from '@tabler/icons-react'
-import {useState} from 'react'
+import {IconSettings, IconTrash} from '@tabler/icons-react'
+import {useEffect, useState} from 'react'
 import classes from './Settings.module.css'
 
 /**
@@ -20,13 +28,36 @@ import classes from './Settings.module.css'
  */
 export default function Settings() {
   const [opened, {open, close}] = useDisclosure(false)
-  const {colorScheme, toggleColorScheme} = useMantineColorScheme()
-  const {tempUnit, setTempUnit} = useWeatherContext()
+  const {
+    colorScheme: mantineColorScheme,
+    setColorScheme: setMantineColorScheme
+  } = useMantineColorScheme()
+  const dispatch = useAppDispatch()
+  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
+  const searchHistory = useAppSelector(
+    (state) => state.preferences.searchHistory
+  )
   const [checked, setChecked] = useState(tempUnit === 'f')
 
+  // Sync temp unit checked state
+  useEffect(() => {
+    setChecked(tempUnit === 'f')
+  }, [tempUnit])
+
   function toggleTempUnit() {
+    const newUnit = checked ? 'c' : 'f'
     setChecked(!checked)
-    setTempUnit(checked ? 'c' : 'f')
+    dispatch(setTempUnit(newUnit))
+  }
+
+  function toggleColorScheme() {
+    const newScheme = mantineColorScheme === 'dark' ? 'light' : 'dark'
+    setMantineColorScheme(newScheme)
+    dispatch(setColorScheme(newScheme))
+  }
+
+  function handleClearHistory() {
+    dispatch(clearSearchHistory())
   }
 
   useHotkeys([['mod+u', () => toggleTempUnit()]])
@@ -53,7 +84,7 @@ export default function Settings() {
           <Switch
             aria-label="Toggle between light and theme."
             label="Toggle Dark Theme (⌘+J)"
-            checked={colorScheme === 'dark'}
+            checked={mantineColorScheme === 'dark'}
             offLabel="OFF"
             onChange={() => toggleColorScheme()}
             onLabel="ON"
@@ -68,6 +99,26 @@ export default function Settings() {
             onLabel="ON"
             size="lg"
           />
+          {searchHistory.length > 0 && (
+            <>
+              <Divider />
+              <div>
+                <Text size="sm" fw={500} mb="xs">
+                  Search History ({searchHistory.length})
+                </Text>
+                <Button
+                  leftSection={<IconTrash size={16} />}
+                  variant="light"
+                  color="red"
+                  fullWidth
+                  onClick={handleClearHistory}
+                  size="sm"
+                >
+                  Clear History
+                </Button>
+              </div>
+            </>
+          )}
           <Flex
             gap="md"
             justify="center"

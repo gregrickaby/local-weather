@@ -1,11 +1,4 @@
 /**
- * Generic fetcher for SWR library.
- */
-export async function fetcher(url: string) {
-  return await fetch(url).then((res) => res.json())
-}
-
-/**
  * Map WMO weather codes to descriptions and icon codes.
  *
  * @see https://open-meteo.com/en/docs
@@ -65,34 +58,31 @@ export function formatTemperature(tempUnit: string, temp: number): string {
 /**
  * Format ISO date string to day of week.
  */
-export function formatDay(isoDate: string, index: number): string {
-  const date = new Date(isoDate)
+export function formatDay(isoDate: string): string {
+  // Parse the ISO date as local date (YYYY-MM-DD format)
+  const [year, month, day] = isoDate.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
+
   const now = new Date()
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const tomorrow = new Date(today)
+  tomorrow.setDate(tomorrow.getDate() + 1)
 
-  // Format today's day of the week.
-  const today = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(now)
+  // Compare dates directly
+  const dateTime = date.getTime()
+  const todayTime = today.getTime()
+  const tomorrowTime = tomorrow.getTime()
 
-  // Format tomorrow's day of the week.
-  const tomorrowDate = new Date(now)
-  tomorrowDate.setDate(tomorrowDate.getDate() + 1)
-  const tomorrow = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(
-    tomorrowDate
-  )
-
-  // Format the day of the week from the ISO date.
-  let dayOfWeek = new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(
-    date
-  )
-
-  if (dayOfWeek === today && index === 0) {
-    dayOfWeek = 'Today'
+  if (dateTime === todayTime) {
+    return 'Today'
   }
 
-  if (dayOfWeek === tomorrow) {
-    dayOfWeek = 'Tomorrow'
+  if (dateTime === tomorrowTime) {
+    return 'Tomorrow'
   }
 
-  return dayOfWeek
+  // Format the day of the week from the ISO date
+  return new Intl.DateTimeFormat('en-US', {weekday: 'long'}).format(date)
 }
 
 /**

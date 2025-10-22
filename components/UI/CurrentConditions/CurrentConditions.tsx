@@ -1,7 +1,8 @@
 'use client'
 
-import {useWeatherContext} from '@/components/Context/WeatherProvider/WeatherProvider'
 import {formatTemperature, getWeatherInfo} from '@/lib/helpers'
+import {useAppSelector} from '@/lib/store/hooks'
+import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {Stack, Text} from '@mantine/core'
 import classes from './CurrentConditions.module.css'
 
@@ -9,7 +10,13 @@ import classes from './CurrentConditions.module.css'
  * Current Conditions component.
  */
 export default function CurrentConditions() {
-  const {weather, tempUnit} = useWeatherContext()
+  const location = useAppSelector((state) => state.preferences.location)
+  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
+  const mounted = useAppSelector((state) => state.preferences.mounted)
+
+  const {data: weather} = useGetWeatherQuery(location, {
+    skip: !mounted || !location
+  })
 
   // Return null if weather data isn't loaded yet
   if (!weather?.current) {
