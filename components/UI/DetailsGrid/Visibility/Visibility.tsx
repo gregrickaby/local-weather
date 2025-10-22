@@ -24,11 +24,16 @@ export default function Visibility() {
 
   const visibilityMeters = weather?.current?.visibility || 0
 
+  // Open-Meteo can return theoretical max visibility (24km+)
+  // But weather services typically cap at 10 miles / 16 km (standard reporting limit)
+  // This matches what NOAA and other services show
+  const cappedVisibilityMeters = Math.min(visibilityMeters, 16000)
+
   // Convert to miles (imperial) or kilometers (metric)
   const visibilityValue =
     tempUnit === 'c'
-      ? (visibilityMeters / 1000).toFixed(1) // km
-      : ((visibilityMeters / 1000) * 0.621371).toFixed(1) // mi
+      ? Math.round(cappedVisibilityMeters / 1000) // km (whole number)
+      : Math.round((cappedVisibilityMeters / 1000) * 0.621371) // mi (whole number)
   const visibilityUnit = tempUnit === 'c' ? 'km' : 'mi'
 
   return (

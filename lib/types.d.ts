@@ -18,7 +18,7 @@ export interface OpenMeteoResponse {
     wind_gusts_10m: number
     uv_index: number
     visibility: number
-    surface_pressure: number
+    pressure_msl: number
     dew_point_2m: number
   }
   hourly: {

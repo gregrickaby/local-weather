@@ -24,7 +24,7 @@ export default function Pressure() {
     }
   )
 
-  const pressureHpa = weather?.current?.surface_pressure || 1013
+  const pressureHpa = weather?.current?.pressure_msl || 1013
   const {value: pressureValue, unit: pressureUnit} = formatPressure(
     tempUnit,
     pressureHpa
