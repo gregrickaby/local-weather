@@ -30,11 +30,10 @@ If visual changes, you must verify using Playwright MCP at http://localhost:3000
 
 ## Required Environment Variables
 
-Create `.env` from `.env.example`:
+**No environment variables required!** All APIs used in this project are free and require no authentication:
 
-- `GOOGLE_MAPS_API_KEY` - For geocoding and Places Autocomplete
-
-**Note:** Weather data comes from Open-Meteo, which is free and requires no API key.
+- **Weather Data**: Open-Meteo API (free, no key needed)
+- **Geocoding/Location Search**: Open-Meteo Geocoding API (free, no key needed)
 
 ## Architecture
 
@@ -51,9 +50,9 @@ Create `.env` from `.env.example`:
 
 ### Data Flow
 
-1. **User Input** → Search component queries `/api/places` for location autocomplete (Google Places API)
+1. **User Input** → Search component queries `/api/places` for location autocomplete (Open-Meteo Geocoding API)
 2. **Location Selection** → Dispatched to Redux store, saved to localStorage via middleware
-3. **Weather Fetch** → RTK Query fetches from `/api/weather` (geocodes location via Google Maps API, then fetches forecast from Open-Meteo API)
+3. **Weather Fetch** → RTK Query fetches from `/api/weather` (geocodes location via Open-Meteo Geocoding API, then fetches forecast from Open-Meteo Weather API)
 4. **State Management** → Redux Toolkit + RTK Query handle state and caching
 5. **Rendering** → Components consume data from Redux store via hooks
 
@@ -116,6 +115,7 @@ Create `.env` from `.env.example`:
 
 ## API Integration Notes
 
-- Open-Meteo: Free weather API, no key required. Returns current conditions, hourly forecasts (up to 16 days), and daily forecasts. Uses WMO weather codes for conditions.
-- Google Maps: Requires Geocoding API and Places API to be enabled with proper restrictions. API key must have "None" or "IP addresses" restriction (not "Websites") for server-side usage.
+- **Open-Meteo Weather API**: Free weather API, no key required. Returns current conditions, hourly forecasts (up to 16 days), and daily forecasts. Uses WMO weather codes for conditions.
+- **Open-Meteo Geocoding API**: Free geocoding and location search API, no key required. Returns lat/lng coordinates and location details including city name, admin regions, and country.
 - Weather icons mapped from WMO codes to existing icon set via `getWeatherInfo()` helper in `lib/helpers.ts`
+- Location search results formatted as: `"{name}, {admin1}, {country}"` (e.g., "Enterprise, Alabama, United States")

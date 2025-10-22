@@ -4,23 +4,42 @@ import Settings from '@/components/UI/Settings/Settings'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
 import {setLocation} from '@/lib/store/slices/preferencesSlice'
-import {Autocomplete} from '@mantine/core'
+import type {Location} from '@/lib/types'
+import {Autocomplete, ComboboxItem} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {IconHeart, IconMapPin} from '@tabler/icons-react'
 import {useEffect, useState} from 'react'
 import classes from './Search.module.css'
 
-const DEFAULT_PLACES = [
-  'New York, NY',
-  'Los Angeles, CA',
-  'Chicago, IL',
-  'Houston, TX',
-  'Phoenix, AZ',
-  'Philadelphia, PA',
-  'San Antonio, TX',
-  'San Diego, CA',
-  'Dallas, TX',
-  'San Jose, CA'
+// Default locations with coordinates
+const DEFAULT_PLACES: Location[] = [
+  {
+    id: 5128581,
+    name: 'New York',
+    latitude: 40.71427,
+    longitude: -74.00597,
+    admin1: 'New York',
+    country: 'United States',
+    display: 'New York, New York, United States'
+  },
+  {
+    id: 5368361,
+    name: 'Los Angeles',
+    latitude: 34.05223,
+    longitude: -118.24368,
+    admin1: 'California',
+    country: 'United States',
+    display: 'Los Angeles, California, United States'
+  },
+  {
+    id: 4887398,
+    name: 'Chicago',
+    latitude: 41.85003,
+    longitude: -87.65005,
+    admin1: 'Illinois',
+    country: 'United States',
+    display: 'Chicago, Illinois, United States'
+  }
 ]
 
 /**
@@ -32,7 +51,7 @@ export default function Search() {
   const searchHistory = useAppSelector(
     (state) => state.preferences.searchHistory
   )
-  const [searchTerm, setSearchTerm] = useState(location)
+  const [searchTerm, setSearchTerm] = useState(location.display)
   const [dropdownOpened, setDropdownOpened] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const [debounced] = useDebouncedValue(searchTerm, 400)
@@ -49,13 +68,19 @@ export default function Search() {
   }, [isTyping])
 
   // Priority: API results > Search history (only if typing) > Default places
-  let places: string[] = DEFAULT_PLACES
+  let places: Location[] = DEFAULT_PLACES
   if (!!locations && locations.length > 0) {
     places = locations
   } else if (debounced && searchHistory.length > 0 && isTyping) {
     // Only show search history if user is actively searching
     places = searchHistory
   }
+
+  // Convert locations to combobox items (display strings)
+  const comboboxData: ComboboxItem[] = places.map((loc) => ({
+    value: loc.id.toString(),
+    label: loc.display
+  }))
 
   const handleChange = (value: string) => {
     setSearchTerm(value)
@@ -67,7 +92,7 @@ export default function Search() {
       <Autocomplete
         aria-label="Enter the name of your location"
         className={classes.searchbar}
-        data={places}
+        data={comboboxData}
         dropdownOpened={dropdownOpened}
         leftSection={<IconMapPin />}
         limit={10}
@@ -76,31 +101,45 @@ export default function Search() {
           setDropdownOpened(false)
           setIsTyping(false)
         }}
-        onOptionSubmit={(item) => {
-          dispatch(setLocation(item))
+        onOptionSubmit={(selectedValue) => {
+          // Find the location object by ID
+          const selectedLocation = places.find(
+            (loc) => loc.id.toString() === selectedValue
+          )
+          if (selectedLocation) {
+            dispatch(setLocation(selectedLocation))
+            setSearchTerm(selectedLocation.display)
+          }
           setDropdownOpened(false)
           setIsTyping(false)
         }}
         placeholder="Enter the name of your location"
-        renderOption={({option}) => (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%'
-            }}
-          >
-            <span>{option.value}</span>
-            {searchHistory.includes(option.value) && (
-              <IconHeart
-                size={16}
-                style={{color: '#ff6b6b', marginLeft: '8px'}}
-                fill="#ff6b6b"
-              />
-            )}
-          </div>
-        )}
+        renderOption={({option}) => {
+          const loc = places.find((l) => l.id.toString() === option.value)
+          const isInHistory = searchHistory.some(
+            (h) => h.id.toString() === option.value
+          )
+
+          return (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                width: '100%'
+              }}
+            >
+              <span>{loc?.display || option.value}</span>
+              {isInHistory && (
+                <IconHeart
+                  size={16}
+                  style={{color: '#ff6b6b', marginLeft: '8px'}}
+                  fill="#ff6b6b"
+                />
+              )}
+            </div>
+          )
+        }}
         size="lg"
         value={searchTerm}
       />

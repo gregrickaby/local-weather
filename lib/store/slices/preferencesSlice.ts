@@ -1,13 +1,15 @@
+import {DEFAULT_LOCATION} from '@/lib/constants'
+import type {Location} from '@/lib/types'
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 
 type TempUnit = 'c' | 'f'
 type ColorScheme = 'light' | 'dark' | 'auto'
 
 interface PreferencesState {
-  location: string
+  location: Location
   tempUnit: TempUnit
   colorScheme: ColorScheme
-  searchHistory: string[]
+  searchHistory: Location[]
   mounted: boolean
 }
 
@@ -19,7 +21,7 @@ const MAX_SEARCH_HISTORY = 10
 const getInitialState = (): PreferencesState => {
   if (globalThis.window === undefined) {
     return {
-      location: 'Enterprise, AL',
+      location: DEFAULT_LOCATION,
       tempUnit: 'f',
       colorScheme: 'auto',
       searchHistory: [],
@@ -27,11 +29,34 @@ const getInitialState = (): PreferencesState => {
     }
   }
 
-  const storedHistory = localStorage.getItem('searchHistory')
-  const searchHistory = storedHistory ? JSON.parse(storedHistory) : []
+  let location = DEFAULT_LOCATION
+  let searchHistory: Location[] = []
+
+  // Safely parse localStorage with try-catch
+  try {
+    const storedLocation = localStorage.getItem('location')
+    if (storedLocation) {
+      location = JSON.parse(storedLocation)
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to parse stored location:', error)
+    }
+  }
+
+  try {
+    const storedHistory = localStorage.getItem('searchHistory')
+    if (storedHistory) {
+      searchHistory = JSON.parse(storedHistory)
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Failed to parse search history:', error)
+    }
+  }
 
   return {
-    location: localStorage.getItem('location') || 'Enterprise, AL',
+    location,
     tempUnit: (localStorage.getItem('tempUnit') as TempUnit) || 'f',
     colorScheme: (localStorage.getItem('colorScheme') as ColorScheme) || 'auto',
     searchHistory,
@@ -46,16 +71,20 @@ const preferencesSlice = createSlice({
   name: 'preferences',
   initialState: getInitialState(),
   reducers: {
-    setLocation: (state, action: PayloadAction<string>) => {
+    setLocation: (state, action: PayloadAction<Location>) => {
       state.location = action.payload
 
-      // Add to search history if not already present
+      // Add to search history if not already present (check by ID)
       const newLocation = action.payload
-      if (state.searchHistory.includes(newLocation)) {
+      const existingIndex = state.searchHistory.findIndex(
+        (loc) => loc.id === newLocation.id
+      )
+
+      if (existingIndex >= 0) {
         // Move to front if already exists
         state.searchHistory = [
           newLocation,
-          ...state.searchHistory.filter((loc) => loc !== newLocation)
+          ...state.searchHistory.filter((loc) => loc.id !== newLocation.id)
         ]
       } else {
         state.searchHistory = [newLocation, ...state.searchHistory].slice(
@@ -73,9 +102,9 @@ const preferencesSlice = createSlice({
     clearSearchHistory: (state) => {
       state.searchHistory = []
     },
-    removeFromSearchHistory: (state, action: PayloadAction<string>) => {
+    removeFromSearchHistory: (state, action: PayloadAction<number>) => {
       state.searchHistory = state.searchHistory.filter(
-        (loc) => loc !== action.payload
+        (loc) => loc.id !== action.payload
       )
     },
     setMounted: (state, action: PayloadAction<boolean>) => {

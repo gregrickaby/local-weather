@@ -1,9 +1,10 @@
 import StoreProvider from '@/components/Providers/StoreProvider'
-import config from '@/lib/config'
+import config from '@/lib/constants/config'
 import theme from '@/lib/theme'
 import {ColorSchemeScript, MantineProvider} from '@mantine/core'
 import '@mantine/core/styles.css'
 import type {Metadata} from 'next'
+import {Suspense} from 'react'
 
 export const metadata: Metadata = {
   title: {
@@ -49,22 +50,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
-        <link
-          as="fetch"
-          rel="preload"
-          href="/api/places?location=Enterprise,%20AL"
-          crossOrigin="anonymous"
-        />
-        <link
-          as="fetch"
-          rel="preload"
-          href="/api/weather?location=Enterprise,%20AL"
-          crossOrigin="anonymous"
-        />
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <StoreProvider>{children}</StoreProvider>
+          <Suspense fallback={null}>
+            <StoreProvider>{children}</StoreProvider>
+          </Suspense>
         </MantineProvider>
       </body>
     </html>

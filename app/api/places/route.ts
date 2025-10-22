@@ -1,96 +1,82 @@
-export interface PredictionResponse {
-  description: string
-}
-
-export interface Place {
-  predictions: PredictionResponse[]
-  status: string
-}
+import {CACHE_DURATION} from '@/lib/constants'
+import type {Location, OpenMeteoGeocodeResponse} from '@/lib/types'
+import {
+  createErrorResponse,
+  createSuccessResponse,
+  logError
+} from '@/lib/utils/api'
 
 /**
- * Predict the location via Google's Places Autocomplete API.
+ * Search for locations via Open-Meteo Geocoding API.
+ *
+ * Returns location objects with coordinates instead of strings.
+ *
+ * @param request - HTTP request with query param: location
+ * @returns Location[] array of matching locations
+ * @throws 400 - Missing location parameter
+ * @throws 404 - No locations found
+ * @throws 500 - API error or network failure
  *
  * @example
- * /api/places?location="enterprise, al"
+ * /api/places?location=enterprise
  *
  * @author Greg Rickaby
- * @see https://console.cloud.google.com/apis/credentials
- * @see https://developers.google.com/maps/documentation/places/web-service/autocomplete
- * @see https://nextjs.org/docs/app/building-your-application/routing/route-handlers
- * @see https://nextjs.org/docs/pages/api-reference/edge
+ * @see https://open-meteo.com/en/docs/geocoding-api
  */
 export async function GET(request: Request) {
-  // Get query params from request.
   const {searchParams} = new URL(request.url)
 
-  // Parse params.
-  const unsanitizedLocation = searchParams.get('location') || ''
+  const locationParam = searchParams.get('location')
 
-  // Sanitize the location.
-  const location = encodeURI(unsanitizedLocation)
-
-  // No location? Bail...
-  if (!location) {
-    return new Response(JSON.stringify({error: 'No location provided.'}), {
-      status: 400,
-      statusText: 'Bad Request'
-    })
+  if (!locationParam || !locationParam.trim()) {
+    return createErrorResponse('Location parameter is required', 400)
   }
 
   try {
-    // Attempt to fetch the city from Google's Places API.
-    const places = await fetch(
-      `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${location}&types=(cities)&language=en&key=${process.env.GOOGLE_MAPS_API_KEY}`
+    // Build geocoding API query parameters
+    const params = new URLSearchParams({
+      name: locationParam.trim(),
+      count: '10',
+      language: 'en',
+      format: 'json'
+    })
+
+    const geocode = await fetch(
+      `https://geocoding-api.open-meteo.com/v1/search?${params.toString()}`
     )
 
-    // Issue with the places response? Bail...
-    if (places.status !== 200) {
-      return new Response(
-        JSON.stringify({
-          error: `${places.statusText}`
-        }),
-        {
-          status: places.status,
-          statusText: places.statusText
-        }
-      )
+    if (!geocode.ok) {
+      logError('places-geocode', `Geocoding failed: ${geocode.statusText}`)
+      return createErrorResponse('Failed to search locations', geocode.status)
     }
 
-    // Parse the response.
-    const place = (await places.json()) as Place
+    const data = (await geocode.json()) as OpenMeteoGeocodeResponse
 
-    // Issue with the response? Bail...
-    if (place.status !== 'OK' || !place.predictions.length) {
-      return new Response(
-        JSON.stringify({
-          error: place.status
-        }),
-        {
-          status: 400,
-          statusText: 'Bad Request'
-        }
-      )
+    if (!data.results || data.results.length === 0) {
+      return createErrorResponse('No locations found', 404)
     }
 
-    // Build the list of locations.
-    const locations = place.predictions.map(
-      (prediction: PredictionResponse) => prediction.description
-    ) as string[]
+    // Build the list of location objects with coordinates
+    const locations: Location[] = data.results.map((result) => {
+      const parts = [result.name]
+      if (result.admin1) parts.push(result.admin1)
+      if (result.country) parts.push(result.country)
+      const display = parts.join(', ')
 
-    // Return the list of locations.
-    return new Response(JSON.stringify(locations), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=300, stale-while-revalidate'
-      },
-      status: 200,
-      statusText: 'OK'
+      return {
+        id: result.id,
+        name: result.name,
+        latitude: result.latitude,
+        longitude: result.longitude,
+        admin1: result.admin1,
+        country: result.country,
+        display
+      }
     })
+
+    return createSuccessResponse(locations, CACHE_DURATION.PLACES)
   } catch (error) {
-    console.error(error)
-    return new Response(JSON.stringify({error: `${error}`}), {
-      status: 500,
-      statusText: 'Internal Server Error'
-    })
+    logError('places-geocode', error)
+    return createErrorResponse('Location search error occurred', 500)
   }
 }

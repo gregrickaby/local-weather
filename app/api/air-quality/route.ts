@@ -1,146 +1,75 @@
-import {AirQualityResponse} from '@/lib/types'
-
-export interface GeocodeResponse {
-  status: string
-  results: [
-    {
-      geometry: {
-        location: {
-          lat: number
-          lng: number
-        }
-      }
-    }
-  ]
-}
+import {CACHE_DURATION} from '@/lib/constants'
+import type {AirQualityResponse} from '@/lib/types'
+import {
+  createErrorResponse,
+  createSuccessResponse,
+  logError,
+  validateCoordinates
+} from '@/lib/utils/api'
 
 /**
  * Fetch air quality data from the Open-Meteo Air Quality API.
  *
+ * Accepts coordinates directly for accurate air quality data.
+ *
+ * @param request - HTTP request with query params: latitude, longitude
+ * @returns AirQualityResponse with air quality data
+ * @throws 400 - Invalid or missing coordinates
+ * @throws 500 - API error or network failure
+ *
  * @example
- * /api/air-quality?location="enterprise al"
+ * /api/air-quality?latitude=31.31517&longitude=-85.85522
  *
  * @author Greg Rickaby
  * @see https://open-meteo.com/en/docs/air-quality-api
- * @see https://nextjs.org/docs/app/building-your-application/routing/route-handlers
  */
 export async function GET(request: Request) {
-  // Get query params from request.
   const {searchParams} = new URL(request.url)
 
-  // Parse params.
-  const unsanitizedLocation = searchParams.get('location') || ''
+  const latParam = searchParams.get('latitude')
+  const lonParam = searchParams.get('longitude')
 
-  // Sanitize the location.
-  const location = encodeURI(unsanitizedLocation)
-
-  // No location? Bail...
-  if (!location) {
-    return new Response(JSON.stringify({error: 'No location provided.'}), {
-      status: 400,
-      statusText: 'Bad Request'
-    })
+  // Validate and parse coordinates
+  const result = validateCoordinates(latParam, lonParam)
+  if (result instanceof Response) {
+    return result
   }
 
-  // Set default coordinates as fallback.
-  let lat = 28.3886186
-  let lon = -81.5659069
+  const {lat, lon} = result
 
   try {
-    // First, try to geocode the address.
-    const geocode = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.GOOGLE_MAPS_API_KEY}`
-    )
-
-    // Issue with the geocode request? Bail...
-    if (geocode.status !== 200) {
-      return new Response(
-        JSON.stringify({
-          error: `${geocode.statusText}`
-        }),
-        {
-          status: geocode.status,
-          statusText: geocode.statusText
-        }
-      )
-    }
-
-    // Parse the response.
-    const coordinates = (await geocode.json()) as GeocodeResponse
-
-    // Issue with the response? Bail...
-    if (coordinates.status !== 'OK' || !coordinates.results.length) {
-      return new Response(
-        JSON.stringify({
-          error: `${coordinates.status}`
-        }),
-        {
-          status: 400,
-          statusText: 'Bad Request'
-        }
-      )
-    }
-
-    // Pluck out and set the coordinates.
-    lat = coordinates?.results[0]?.geometry?.location?.lat
-    lon = coordinates?.results[0]?.geometry?.location?.lng
-  } catch (error) {
-    console.error(error)
-    return new Response(JSON.stringify({error: `${error}`}), {
-      status: 500,
-      statusText: 'Internal Server Error'
+    // Build air quality API query parameters
+    const params = new URLSearchParams({
+      latitude: lat.toString(),
+      longitude: lon.toString(),
+      current: 'us_aqi,pm2_5,pm10,european_aqi',
+      timezone: 'auto'
     })
-  }
 
-  try {
-    // Now, fetch the air quality data from Open-Meteo.
     const airQuality = await fetch(
-      `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=us_aqi,pm2_5,pm10,european_aqi&timezone=auto`
+      `https://air-quality-api.open-meteo.com/v1/air-quality?${params.toString()}`
     )
 
-    // Issue with the air quality response? Bail...
-    if (airQuality.status !== 200) {
-      return new Response(
-        JSON.stringify({
-          error: `${airQuality.statusText}`
-        }),
-        {
-          status: airQuality.status,
-          statusText: airQuality.statusText
-        }
+    if (!airQuality.ok) {
+      logError(
+        'air-quality-fetch',
+        `Air Quality API failed: ${airQuality.statusText}`
+      )
+      return createErrorResponse(
+        'Failed to fetch air quality data',
+        airQuality.status
       )
     }
 
-    // Parse the response.
     const data = (await airQuality.json()) as AirQualityResponse
 
-    // Issue with the data? Bail...
     if (!data.latitude || !data.longitude) {
-      return new Response(
-        JSON.stringify({
-          error: 'No air quality data.'
-        }),
-        {
-          status: 400,
-          statusText: 'Bad Request'
-        }
-      )
+      return createErrorResponse('Invalid air quality data received', 500)
     }
 
-    // Return the air quality data.
-    return new Response(JSON.stringify(data), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=600, stale-while-revalidate'
-      },
-      status: 200,
-      statusText: 'OK'
-    })
+    return createSuccessResponse(data, CACHE_DURATION.AIR_QUALITY)
   } catch (error) {
-    console.error(error)
-    return new Response(JSON.stringify({error: `${error}`}), {
-      status: 500,
-      statusText: 'Internal Server Error'
-    })
+    logError('air-quality-fetch', error)
+    return createErrorResponse('Air quality fetch error occurred', 500)
   }
 }

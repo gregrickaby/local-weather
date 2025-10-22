@@ -1,6 +1,6 @@
 'use client'
 
-import config from '@/lib/config'
+import config from '@/lib/constants/config'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {
   clearSearchHistory,

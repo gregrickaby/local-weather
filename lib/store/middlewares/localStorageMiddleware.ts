@@ -19,7 +19,7 @@ export const localStorageMiddleware: Middleware =
       const state = store.getState()
 
       if (setLocation.match(action)) {
-        localStorage.setItem('location', action.payload)
+        localStorage.setItem('location', JSON.stringify(action.payload))
         // Save updated search history
         localStorage.setItem(
           'searchHistory',

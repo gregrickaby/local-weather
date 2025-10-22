@@ -1,8 +1,8 @@
 'use client'
 
-import {formatTemperature} from '@/lib/helpers'
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {formatTemperature} from '@/lib/utils/helpers'
 import {Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
@@ -17,7 +17,11 @@ export default function FeelsLike() {
   const unit = useAppSelector((state) => state.preferences.tempUnit)
 
   const {data: weather} = useGetWeatherQuery(
-    {location, tempUnit: unit},
+    {
+      latitude: location.latitude,
+      longitude: location.longitude,
+      tempUnit: unit
+    },
     {
       skip: !mounted || !location
     }

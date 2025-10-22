@@ -2,7 +2,7 @@
 
 import {AppStore, makeStore} from '@/lib/store'
 import {setMounted} from '@/lib/store/slices/preferencesSlice'
-import {ChildrenProps} from '@/lib/types'
+import type {ChildrenProps} from '@/lib/types'
 import {useEffect, useRef} from 'react'
 import {Provider} from 'react-redux'
 

@@ -16,7 +16,7 @@ export default function Humidity() {
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
 
   const {data: weather} = useGetWeatherQuery(
-    {location, tempUnit},
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
     {
       skip: !mounted || !location
     }

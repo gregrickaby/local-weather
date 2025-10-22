@@ -1,8 +1,8 @@
 'use client'
 
-import {formatPressure} from '@/lib/helpers'
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {formatPressure} from '@/lib/utils/helpers'
 import {Box, Flex, Progress, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
@@ -18,7 +18,7 @@ export default function Pressure() {
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
 
   const {data: weather} = useGetWeatherQuery(
-    {location, tempUnit},
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
     {
       skip: !mounted || !location
     }

@@ -1,12 +1,12 @@
 'use client'
 
+import {useAppSelector} from '@/lib/store/hooks'
+import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {
   formatTemperature,
   generateForecastStatement,
   getWeatherInfo
-} from '@/lib/helpers'
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+} from '@/lib/utils/helpers'
 import {Stack, Text} from '@mantine/core'
 import classes from './CurrentConditions.module.css'
 
@@ -19,7 +19,7 @@ export default function CurrentConditions() {
   const mounted = useAppSelector((state) => state.preferences.mounted)
 
   const {data: weather} = useGetWeatherQuery(
-    {location, tempUnit},
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
     {
       skip: !mounted || !location
     }

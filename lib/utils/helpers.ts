@@ -158,9 +158,9 @@ function getTonightCondition(code: number): string {
   const {description} = getWeatherInfo(code)
   const simplified = description
     .toLowerCase()
-    .replace(/slight |moderate |heavy |light /gi, '')
-    .replace(/ sky$/g, '')
-  return `${simplified} tonight`.replace(/\s+/g, ' ')
+    .replaceAll(/slight |moderate |heavy |light /gi, '')
+    .replaceAll(/ sky$/g, '')
+  return `${simplified} tonight`.replaceAll(/\s+/g, ' ')
 }
 
 /**
@@ -206,7 +206,7 @@ function analyzeDayWeather(
   const getMostCommon = (hours: Array<{code: number}>) => {
     if (hours.length === 0) return null
     const codes = hours.map((h) => h.code)
-    const sorted = codes.sort(
+    const sorted = codes.toSorted(
       (a, b) =>
         codes.filter((v) => v === a).length -
         codes.filter((v) => v === b).length
@@ -251,6 +251,68 @@ function getTomorrowTrend(
 }
 
 /**
+ * Get forecast parts for evening time
+ */
+function getEveningForecastParts(
+  tomorrowCode: number,
+  todayMax: number,
+  tomorrowMax: number
+): string[] {
+  const parts: string[] = []
+  parts.push(getTonightCondition(0)) // Will be replaced with actual code
+  const tomorrowCondition = getSimpleWeather(tomorrowCode)
+  parts.push(`${tomorrowCondition} tomorrow`)
+  const tempDiff = tomorrowMax - todayMax
+  // Determine temperature trend
+  let trend = 'similar temperatures'
+  if (Math.abs(tempDiff) >= 3) {
+    trend = tempDiff > 0 ? 'warming up' : 'cooling down'
+  }
+  parts.push(trend)
+  return parts
+}
+
+/**
+ * Get forecast parts for morning time
+ */
+function getMorningForecastParts(
+  currentCondition: string,
+  periods: {
+    morning: string | null
+    afternoon: string | null
+    evening: string | null
+  }
+): string[] {
+  const parts: string[] = []
+  parts.push(`${currentCondition} this morning`)
+  if (periods.afternoon) parts.push(`${periods.afternoon} this afternoon`)
+  if (periods.evening) parts.push(`${periods.evening} this evening`)
+  return parts
+}
+
+/**
+ * Get forecast parts for afternoon time
+ */
+function getAfternoonForecastParts(
+  currentCondition: string,
+  periods: {
+    morning: string | null
+    afternoon: string | null
+    evening: string | null
+  },
+  tomorrowCode: number
+): string[] {
+  const parts: string[] = []
+  parts.push(`${currentCondition} this afternoon`)
+  if (periods.evening) parts.push(`${periods.evening} this evening`)
+  if (parts.length < 2) {
+    const tomorrowCondition = getSimpleWeather(tomorrowCode)
+    parts.push(`${tomorrowCondition} tomorrow`)
+  }
+  return parts
+}
+
+/**
  * Build forecast parts based on time of day
  */
 function buildForecastParts(
@@ -265,36 +327,13 @@ function buildForecastParts(
   todayMax: number,
   tomorrowMax: number
 ): string[] {
-  const parts: string[] = []
-
   if (currentHour >= 17) {
-    // Evening - tonight and tomorrow (always 3 parts)
-    parts.push(getTonightCondition(0)) // Will be replaced with actual code
-    const tomorrowCondition = getSimpleWeather(tomorrowCode)
-    parts.push(`${tomorrowCondition} tomorrow`)
-    const tempDiff = tomorrowMax - todayMax
-    // Always add temperature trend for evening
-    let trend = 'similar temperatures'
-    if (Math.abs(tempDiff) >= 3) {
-      trend = tempDiff > 0 ? 'warming up' : 'cooling down'
-    }
-    parts.push(trend)
-  } else if (currentHour < 12) {
-    // Morning
-    parts.push(`${currentCondition} this morning`)
-    if (periods.afternoon) parts.push(`${periods.afternoon} this afternoon`)
-    if (periods.evening) parts.push(`${periods.evening} this evening`)
-  } else {
-    // Afternoon
-    parts.push(`${currentCondition} this afternoon`)
-    if (periods.evening) parts.push(`${periods.evening} this evening`)
-    if (parts.length < 2) {
-      const tomorrowCondition = getSimpleWeather(tomorrowCode)
-      parts.push(`${tomorrowCondition} tomorrow`)
-    }
+    return getEveningForecastParts(tomorrowCode, todayMax, tomorrowMax)
   }
-
-  return parts
+  if (currentHour < 12) {
+    return getMorningForecastParts(currentCondition, periods)
+  }
+  return getAfternoonForecastParts(currentCondition, periods, tomorrowCode)
 }
 
 /**

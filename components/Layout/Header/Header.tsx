@@ -1,4 +1,4 @@
-import config from '@/lib/config'
+import config from '@/lib/constants/config'
 import {Title} from '@mantine/core'
 import classes from './Header.module.css'
 

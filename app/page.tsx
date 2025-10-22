@@ -36,7 +36,7 @@ export default function HomePage() {
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
 
   const {data: weather, isLoading} = useGetWeatherQuery(
-    {location, tempUnit},
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
     {
       skip: !mounted || !location
     }

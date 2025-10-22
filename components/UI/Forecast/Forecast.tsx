@@ -1,12 +1,12 @@
 import Icon from '@/components/UI/Icon/Icon'
+import {useAppSelector} from '@/lib/store/hooks'
+import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {
   formatDay,
   formatTemperature,
   formatTime,
   getWeatherInfo
-} from '@/lib/helpers'
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+} from '@/lib/utils/helpers'
 import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
 import classes from './Forecast.module.css'
 
@@ -19,7 +19,7 @@ export default function Forecast() {
   const mounted = useAppSelector((state) => state.preferences.mounted)
 
   const {data: weather} = useGetWeatherQuery(
-    {location, tempUnit},
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
     {
       skip: !mounted || !location
     }
@@ -36,6 +36,10 @@ export default function Forecast() {
 
   const nextFourHours = Array.from({length: 4}, (_, i) => {
     const index = currentHourIndex + i + 1
+    // Validate array bounds before accessing
+    if (index >= weather.hourly.time.length) {
+      return null
+    }
     return {
       time: weather.hourly.time[index],
       temp: weather.hourly.temperature_2m[index],
@@ -43,7 +47,7 @@ export default function Forecast() {
       weather_code: weather.hourly.weather_code[index],
       precipitation_probability: weather.hourly.precipitation_probability[index]
     }
-  })
+  }).filter((item): item is Exclude<typeof item, null> => item !== null)
 
   // Skip "Today" in daily forecast if it's after 8 PM (late evening)
   // At this point, users are more interested in tomorrow's forecast
@@ -123,7 +127,7 @@ export default function Forecast() {
             f.temp_current
           ])
           const validTemps = allTemps.filter(
-            (t): t is number => t !== undefined
+            (t): t is number => typeof t === 'number' && !Number.isNaN(t)
           )
           const minTempScale = Math.floor(Math.min(...validTemps) - 5)
           const maxTempScale = Math.ceil(Math.max(...validTemps) + 5)

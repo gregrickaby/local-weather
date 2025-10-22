@@ -5,9 +5,6 @@ Here are the ways to get involved with this project:
 - [Issues \& Discussions](#issues--discussions)
 - [Contributing Code](#contributing-code)
   - [Install Locally](#install-locally)
-  - [Generate API Keys](#generate-api-keys)
-    - [Google Maps API](#google-maps-api)
-    - [ENV Variables](#env-variables)
   - [Git Workflow](#git-workflow)
   - [NPM Scripts](#npm-scripts)
 - [Legal Stuff](#legal-stuff)
@@ -40,47 +37,11 @@ cd local-weather && npm i
 
 ---
 
-### Generate API Keys
-
-#### Google Maps API
-
-Next, you'll need to generate a [Google Maps API Key](https://developers.google.com/maps/documentation/geocoding/get-api-key).
-
-After you've generated a key, visit the [Credentials page](https://console.cloud.google.com/projectselector2/google/maps-apis/credentials) and follow the instructions below:
-
-1. Set application restrictions to "None"
-2. Select "Restrict key"
-3. Choose "Geocoding" and "Places" from the dropdown
-4. Save
-
-![screenshot of google api settings](https://dl.dropbox.com/s/2vj1qa2l1602prc/Screen%20Shot%202022-02-12%20at%2008.38.25.png?dl=0)
-
-#### ENV Variables
-
-Now add the API key to `.env.`
-
-Copy `.env.example` to `.env` in the root of the project:
-
-```bash
-cp .env.example .env
-```
-
-Open `.env` and add your Google Maps API key:
-
-```text
-// .env
-GOOGLE_MAPS_API_KEY="YOUR-KEY-HERE"
-```
-
-**Note:** This app uses [Open-Meteo](https://open-meteo.com/) for weather data, which is free and requires no API key.
-
----
-
 ### Git Workflow
 
 1. Fork the repo and create a feature/patch branch off `main`
 2. Work locally adhering to coding standards
-3. Run `npm run lint`
+3. Run `npm run lint && npm run typecheck`
 4. Make sure the app builds locally with `npm run build && npm run start`
 5. Push your code, open a PR, and fill out the PR template
 6. After peer review, the PR will be merged back into `main`
@@ -102,6 +63,10 @@ Lint code:
 
 ```bash
 npm run lint
+```
+
+```bash
+npm run typecheck
 ```
 
 Test a build prior to deployment:

@@ -38,7 +38,7 @@ export default function DetailsGrid() {
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
 
   const {data: weather, isLoading} = useGetWeatherQuery(
-    {location, tempUnit},
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
     {
       skip: !mounted || !location
     }

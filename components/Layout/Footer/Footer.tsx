@@ -1,4 +1,4 @@
-import config from '@/lib/config'
+import config from '@/lib/constants/config'
 import {IconBrandGithub} from '@tabler/icons-react'
 import classes from './Footer.module.css'
 

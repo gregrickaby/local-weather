@@ -1,154 +1,128 @@
-import {OpenMeteoResponse} from '@/lib/types'
-
-export interface GeocodeResponse {
-  status: string
-  results: [
-    {
-      geometry: {
-        location: {
-          lat: number
-          lng: number
-        }
-      }
-    }
-  ]
-}
+import {CACHE_DURATION} from '@/lib/constants'
+import type {OpenMeteoGeocodeResponse, OpenMeteoResponse} from '@/lib/types'
+import {
+  createErrorResponse,
+  createSuccessResponse,
+  logError,
+  validateCoordinates
+} from '@/lib/utils/api'
 
 /**
  * Fetch weather data from the Open-Meteo API.
  *
+ * Accepts coordinates directly for accurate weather data, with fallback to geocoding.
+ *
+ * @param request - HTTP request with query params: latitude, longitude, tempUnit
+ * @returns OpenMeteoResponse with weather data
+ * @throws 400 - Invalid or missing parameters
+ * @throws 404 - Location not found (fallback geocoding)
+ * @throws 500 - API error or network failure
+ *
  * @example
- * /api/weather?location="enterprise al"
+ * /api/weather?latitude=31.31517&longitude=-85.85522&tempUnit=f
  *
  * @author Greg Rickaby
- * @see https://console.cloud.google.com/apis/credentials
- * @see https://developers.google.com/maps/documentation/geocoding/overview
+ * @see https://open-meteo.com/en/docs/geocoding-api
  * @see https://open-meteo.com/en/docs
- * @see https://nextjs.org/docs/app/building-your-application/routing/route-handlers
- * @see https://nextjs.org/docs/pages/api-reference/edge
  */
 export async function GET(request: Request) {
-  // Get query params from request.
   const {searchParams} = new URL(request.url)
 
-  // Parse params.
-  const unsanitizedLocation = searchParams.get('location') || ''
+  // Parse params - accept coordinates directly or location name for fallback
+  const latParam = searchParams.get('latitude')
+  const lonParam = searchParams.get('longitude')
+  const locationParam = searchParams.get('location')
   const tempUnit = searchParams.get('tempUnit') || 'f'
 
-  // Sanitize the location.
-  const location = encodeURI(unsanitizedLocation)
-
-  // Determine temperature unit for API.
+  // Determine temperature unit for API
   const temperatureUnit = tempUnit === 'c' ? 'celsius' : 'fahrenheit'
   const windSpeedUnit = tempUnit === 'c' ? 'kmh' : 'mph'
 
-  // No location? Bail...
-  if (!location) {
-    return new Response(JSON.stringify({error: 'No location provided.'}), {
-      status: 400,
-      statusText: 'Bad Request'
+  let lat: number
+  let lon: number
+
+  // If coordinates are provided, use them directly (preferred method)
+  if (latParam && lonParam) {
+    const result = validateCoordinates(latParam, lonParam)
+    if (result instanceof Response) {
+      return result
+    }
+    lat = result.lat
+    lon = result.lon
+  } else if (locationParam) {
+    // Fallback: geocode the location name
+    const params = new URLSearchParams({
+      name: locationParam.trim(),
+      count: '1',
+      language: 'en',
+      format: 'json'
     })
-  }
 
-  // Set default coordinates as fallback.
-  let lat = 28.3886186
-  let lon = -81.5659069
+    try {
+      const geocode = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?${params.toString()}`
+      )
 
-  try {
-    // First, try to geocode the address.
-    const geocode = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+      if (!geocode.ok) {
+        logError('weather-geocode', `Geocoding failed: ${geocode.statusText}`)
+        return createErrorResponse('Failed to geocode location', geocode.status)
+      }
+
+      const data = (await geocode.json()) as OpenMeteoGeocodeResponse
+
+      if (!data.results || data.results.length === 0) {
+        return createErrorResponse('Location not found', 404)
+      }
+
+      lat = data.results[0].latitude
+      lon = data.results[0].longitude
+    } catch (error) {
+      logError('weather-geocode', error)
+      return createErrorResponse('Geocoding error occurred', 500)
+    }
+  } else {
+    return createErrorResponse(
+      'Either coordinates (latitude, longitude) or location name is required',
+      400
     )
-
-    // Issue with the geocode request? Bail...
-    if (geocode.status !== 200) {
-      return new Response(
-        JSON.stringify({
-          error: `${geocode.statusText}`
-        }),
-        {
-          status: geocode.status,
-          statusText: geocode.statusText
-        }
-      )
-    }
-
-    // Parse the response.
-    const coordinates = (await geocode.json()) as GeocodeResponse
-
-    // Issue with the response? Bail...
-    if (coordinates.status !== 'OK' || !coordinates.results.length) {
-      return new Response(
-        JSON.stringify({
-          error: `${coordinates.status}`
-        }),
-        {
-          status: 400,
-          statusText: 'Bad Request'
-        }
-      )
-    }
-
-    // Pluck out and set the coordinates.
-    lat = coordinates?.results[0]?.geometry?.location?.lat
-    lon = coordinates?.results[0]?.geometry?.location?.lng
-  } catch (error) {
-    console.error(error)
-    return new Response(JSON.stringify({error: `${error}`}), {
-      status: 500,
-      statusText: 'Internal Server Error'
-    })
   }
 
   try {
-    // Now, fetch the weather data from Open-Meteo.
+    // Build weather API query parameters
+    const weatherParams = new URLSearchParams({
+      latitude: lat.toString(),
+      longitude: lon.toString(),
+      current:
+        'temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,visibility,pressure_msl,dew_point_2m',
+      hourly:
+        'temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m',
+      daily:
+        'weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max,sunrise,sunset,uv_index_max',
+      temperature_unit: temperatureUnit,
+      wind_speed_unit: windSpeedUnit,
+      precipitation_unit: 'inch',
+      forecast_days: '10',
+      timezone: 'auto'
+    })
+
     const weather = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,wind_gusts_10m,uv_index,visibility,pressure_msl,dew_point_2m&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,precipitation_probability_max,sunrise,sunset,uv_index_max&temperature_unit=${temperatureUnit}&wind_speed_unit=${windSpeedUnit}&precipitation_unit=inch&forecast_days=10&timezone=auto`
+      `https://api.open-meteo.com/v1/forecast?${weatherParams.toString()}`
     )
 
-    // Issue with the weather response? Bail...
-    if (weather.status !== 200) {
-      return new Response(
-        JSON.stringify({
-          error: `${weather.statusText}`
-        }),
-        {
-          status: weather.status,
-          statusText: weather.statusText
-        }
-      )
+    if (!weather.ok) {
+      logError('weather-fetch', `Weather API failed: ${weather.statusText}`)
+      return createErrorResponse('Failed to fetch weather data', weather.status)
     }
 
-    // Parse the response.
     const forecast = (await weather.json()) as OpenMeteoResponse
 
-    // Issue with the forecast? Bail...
     if (!forecast.latitude || !forecast.longitude) {
-      return new Response(
-        JSON.stringify({
-          error: 'No forecast data.'
-        }),
-        {
-          status: 400,
-          statusText: 'Bad Request'
-        }
-      )
+      return createErrorResponse('Invalid weather data received', 500)
     }
 
-    // Return the weather data.
-    return new Response(JSON.stringify(forecast), {
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 's-maxage=300, stale-while-revalidate'
-      },
-      status: 200,
-      statusText: 'OK'
-    })
+    return createSuccessResponse(forecast, CACHE_DURATION.WEATHER)
   } catch (error) {
-    console.error(error)
-    return new Response(JSON.stringify({error: `${error}`}), {
-      status: 500,
-      statusText: 'Internal Server Error'
-    })
+    logError('weather-fetch', error)
+    return createErrorResponse('Weather fetch error occurred', 500)
   }
 }

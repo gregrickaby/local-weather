@@ -1,6 +1,6 @@
 {
   "name": "@gregrickaby/local-weather",
-  "description": "A weather app using Next.js, Mantine, Redux Toolkit, Open-Meteo, and Google Maps API.",
+  "description": "A weather app using Next.js, Mantine, Redux Toolkit, and Open-Meteo API.",
   "private": true,
   "version": "1.0.0",
   "homepage": "https://weather.gregrickaby.com/",
