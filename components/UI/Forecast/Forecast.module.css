@@ -18,7 +18,7 @@
 
 .forecastItem {
   display: grid;
-  grid-template-columns: 60px 50px 1fr;
+  grid-template-columns: 80px 45px 1fr;
   align-items: center;
   gap: 12px;
   padding: 12px 0;
@@ -28,6 +28,11 @@
     border-bottom-color: var(--mantine-color-dark-6);
   }
 
+  @media (min-width: 768px) {
+    grid-template-columns: 110px 50px 1fr;
+    gap: 16px;
+  }
+
   &:last-child {
     border-bottom: none;
   }
@@ -35,7 +40,14 @@
 
 .dayLabel {
   text-align: left;
-  min-width: 60px;
+  min-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  @media (min-width: 768px) {
+    min-width: 110px;
+  }
 }
 
 .weatherIcon {

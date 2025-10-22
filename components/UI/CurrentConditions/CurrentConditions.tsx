@@ -1,6 +1,10 @@
 'use client'
 
-import {formatTemperature, getWeatherInfo} from '@/lib/helpers'
+import {
+  formatTemperature,
+  generateForecastStatement,
+  getWeatherInfo
+} from '@/lib/helpers'
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {Stack, Text} from '@mantine/core'
@@ -39,6 +43,9 @@ export default function CurrentConditions() {
     sunset[0]
   )
 
+  // Generate forecast statement
+  const forecastStatement = generateForecastStatement(weather)
+
   return (
     <Stack align="center">
       <Text
@@ -56,6 +63,9 @@ export default function CurrentConditions() {
         variant="gradient"
       >
         {formatTemperature(tempUnit, temperature_2m)}
+      </Text>
+      <Text size="sm" c="dimmed" ta="center" mt="xs">
+        {forecastStatement}
       </Text>
       {apparent_temperature > temperature_2m && (
         <Text

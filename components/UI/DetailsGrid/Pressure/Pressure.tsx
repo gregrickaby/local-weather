@@ -3,7 +3,7 @@
 import {formatPressure} from '@/lib/helpers'
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {Center, RingProgress, Stack, Text} from '@mantine/core'
+import {Box, Flex, Progress, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
 /**
@@ -30,13 +30,19 @@ export default function Pressure() {
     pressureHpa
   )
 
-  // Normalize pressure to 0-100 scale
-  // For hPa: typical range 980-1040
-  // For inHg: typical range 28.94-30.71 (converted from same hPa range)
+  // Normalize pressure to 0-100 scale matching description thresholds
+  // For hPa: range 1000-1040 (Very low < 1000, Low 1000-1010, Normal 1010-1020, High >= 1020)
+  // For inHg: range 29.53-30.71 (converted from hPa range)
   const normalizedValue =
     tempUnit === 'f'
-      ? ((Number.parseFloat(pressureValue) - 28.94) / 1.77) * 100
-      : ((pressureHpa - 980) / 60) * 100
+      ? Math.max(
+          0,
+          Math.min(
+            100,
+            ((Number.parseFloat(pressureValue) - 29.53) / 1.18) * 100
+          )
+        )
+      : Math.max(0, Math.min(100, ((pressureHpa - 1000) / 40) * 100))
 
   return (
     <DetailCard delay={300}>
@@ -45,26 +51,32 @@ export default function Pressure() {
           Pressure
         </Text>
 
-        <Center>
-          <RingProgress
-            size={120}
-            thickness={12}
-            roundCaps
-            sections={[{value: normalizedValue, color: 'indigo'}]}
-            label={
-              <Center>
-                <Stack gap={0} align="center">
-                  <Text size="xl" fw={600}>
-                    {pressureValue}
-                  </Text>
-                  <Text size="xs" c="dimmed">
-                    {pressureUnit}
-                  </Text>
-                </Stack>
-              </Center>
-            }
-          />
-        </Center>
+        <Box px="md">
+          <Stack gap="xs">
+            <Text size="xl" fw={600} ta="center">
+              {pressureValue}
+              <Text component="span" size="sm" c="dimmed" ml={4}>
+                {pressureUnit}
+              </Text>
+            </Text>
+
+            <Progress
+              value={normalizedValue}
+              color="indigo"
+              size="lg"
+              radius="xl"
+            />
+
+            <Flex justify="space-between">
+              <Text size="xs" c="dimmed">
+                Low
+              </Text>
+              <Text size="xs" c="dimmed">
+                High
+              </Text>
+            </Flex>
+          </Stack>
+        </Box>
 
         <Text size="sm" c="dimmed" ta="center">
           {getPressureDescription(pressureHpa)}

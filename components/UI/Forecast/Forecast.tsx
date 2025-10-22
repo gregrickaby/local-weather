@@ -29,8 +29,11 @@ export default function Forecast() {
     return null
   }
 
-  // Get the current hour index to start from next hour
-  const currentHourIndex = new Date().getHours()
+  // Use the location's current time from the API (not browser time)
+  // This ensures correct time display for any timezone
+  const currentTime = new Date(weather.current.time)
+  const currentHourIndex = currentTime.getHours()
+
   const nextFourHours = Array.from({length: 4}, (_, i) => {
     const index = currentHourIndex + i + 1
     return {

@@ -144,3 +144,243 @@ export function formatPressure(
     unit: 'hPa'
   }
 }
+
+/**
+ * Get tonight's weather condition as a simple phrase
+ */
+function getTonightCondition(code: number): string {
+  if (code <= 1) return 'Clear tonight'
+  if (code === 2) return 'Partly cloudy tonight'
+  if (code === 3) return 'Cloudy tonight'
+  if (code >= 51 && code <= 67) return 'Rain tonight'
+  if (code >= 71 && code <= 77) return 'Snow tonight'
+
+  const {description} = getWeatherInfo(code)
+  const simplified = description
+    .toLowerCase()
+    .replace(/slight |moderate |heavy |light /gi, '')
+    .replace(/ sky$/g, '')
+  return `${simplified} tonight`.replace(/\s+/g, ' ')
+}
+
+/**
+ * Get simple weather description from code
+ */
+function getSimpleWeather(code: number): string {
+  if (code >= 51 && code <= 67) return 'rain'
+  if (code >= 71 && code <= 77) return 'snow'
+  if (code <= 1) return 'clear'
+  if (code === 2) return 'partly cloudy'
+  if (code === 3) return 'overcast'
+  if (code >= 45 && code <= 48) return 'foggy'
+  if (code >= 80 && code <= 99) return 'storms'
+  return 'cloudy'
+}
+
+/**
+ * Analyze weather throughout the day
+ */
+function analyzeDayWeather(
+  currentHour: number,
+  hourlyData: Array<{time: Date; code: number; precip: number}>
+): {
+  morning: string | null
+  afternoon: string | null
+  evening: string | null
+} {
+  // Define time periods (using location's time)
+  const morningHours = hourlyData.filter((h) => {
+    const hour = h.time.getHours()
+    return hour >= 6 && hour < 12
+  })
+  const afternoonHours = hourlyData.filter((h) => {
+    const hour = h.time.getHours()
+    return hour >= 12 && hour < 17
+  })
+  const eveningHours = hourlyData.filter((h) => {
+    const hour = h.time.getHours()
+    return hour >= 17 && hour < 22
+  })
+
+  // Get dominant weather for each period
+  const getMostCommon = (hours: Array<{code: number}>) => {
+    if (hours.length === 0) return null
+    const codes = hours.map((h) => h.code)
+    const sorted = codes.sort(
+      (a, b) =>
+        codes.filter((v) => v === a).length -
+        codes.filter((v) => v === b).length
+    )
+    const mode = sorted.pop()
+    return mode ? getSimpleWeather(mode) : null
+  }
+
+  return {
+    morning: currentHour < 12 ? getMostCommon(morningHours) : null,
+    afternoon: currentHour < 17 ? getMostCommon(afternoonHours) : null,
+    evening: currentHour < 22 ? getMostCommon(eveningHours) : null
+  }
+}
+
+/**
+ * Get tomorrow's weather trend
+ */
+function getTomorrowTrend(
+  todayMax: number,
+  tomorrowMax: number,
+  tomorrowCode: number,
+  currentHour: number
+): string | null {
+  const tempDiff = tomorrowMax - todayMax
+  const isEarlyMorning = currentHour < 6
+
+  // Check temperature change
+  if (Math.abs(tempDiff) >= 5) {
+    const warmer = tempDiff > 0
+    if (isEarlyMorning) {
+      return warmer ? 'warming up tomorrow' : 'cooling down tomorrow'
+    }
+    return warmer ? 'warmer tomorrow' : 'cooler tomorrow'
+  }
+
+  // Check precipitation tomorrow
+  if (tomorrowCode >= 51 && tomorrowCode <= 67) return 'rain tomorrow'
+  if (tomorrowCode >= 71 && tomorrowCode <= 77) return 'snow tomorrow'
+
+  return null
+}
+
+/**
+ * Build forecast parts based on time of day
+ */
+function buildForecastParts(
+  currentHour: number,
+  currentCondition: string,
+  periods: {
+    morning: string | null
+    afternoon: string | null
+    evening: string | null
+  },
+  tomorrowCode: number,
+  todayMax: number,
+  tomorrowMax: number
+): string[] {
+  const parts: string[] = []
+
+  if (currentHour >= 17) {
+    // Evening - tonight and tomorrow (always 3 parts)
+    parts.push(getTonightCondition(0)) // Will be replaced with actual code
+    const tomorrowCondition = getSimpleWeather(tomorrowCode)
+    parts.push(`${tomorrowCondition} tomorrow`)
+    const tempDiff = tomorrowMax - todayMax
+    // Always add temperature trend for evening
+    let trend = 'similar temperatures'
+    if (Math.abs(tempDiff) >= 3) {
+      trend = tempDiff > 0 ? 'warming up' : 'cooling down'
+    }
+    parts.push(trend)
+  } else if (currentHour < 12) {
+    // Morning
+    parts.push(`${currentCondition} this morning`)
+    if (periods.afternoon) parts.push(`${periods.afternoon} this afternoon`)
+    if (periods.evening) parts.push(`${periods.evening} this evening`)
+  } else {
+    // Afternoon
+    parts.push(`${currentCondition} this afternoon`)
+    if (periods.evening) parts.push(`${periods.evening} this evening`)
+    if (parts.length < 2) {
+      const tomorrowCondition = getSimpleWeather(tomorrowCode)
+      parts.push(`${tomorrowCondition} tomorrow`)
+    }
+  }
+
+  return parts
+}
+
+/**
+ * Generate a short forecast statement based on weather data.
+ * Examples: "Clear tonight, cooler tomorrow", "Rain expected this evening"
+ */
+export function generateForecastStatement(weather: {
+  current: {
+    time: string
+    temperature_2m: number
+    weather_code: number
+  }
+  hourly: {
+    time: string[]
+    temperature_2m: number[]
+    weather_code: number[]
+    precipitation_probability: number[]
+  }
+  daily: {
+    time: string[]
+    temperature_2m_max: number[]
+    temperature_2m_min: number[]
+    weather_code: number[]
+    sunset: string[]
+  }
+}): string {
+  const currentTime = new Date(weather.current.time)
+  const currentHour = currentTime.getHours()
+
+  // Get today's and tomorrow's data
+  const todayMax = weather.daily.temperature_2m_max[0]
+  const tomorrowMax = weather.daily.temperature_2m_max[1]
+  const tomorrowCode = weather.daily.weather_code[1]
+
+  // Prepare hourly data for analysis (next 24 hours)
+  const hourlyDataToday = weather.hourly.time
+    .map((time, index) => ({
+      time: new Date(time),
+      code: weather.hourly.weather_code[index],
+      precip: weather.hourly.precipitation_probability[index]
+    }))
+    .filter((hour) => {
+      const isToday = hour.time.getDate() === currentTime.getDate()
+      const isFuture = hour.time > currentTime
+      return isToday && isFuture
+    })
+    .slice(0, 18) // Next ~18 hours
+
+  // Analyze different time periods today
+  const periods = analyzeDayWeather(currentHour, hourlyDataToday)
+
+  // Current condition
+  const currentCondition = getSimpleWeather(weather.current.weather_code)
+
+  // Build forecast parts
+  const parts = buildForecastParts(
+    currentHour,
+    currentCondition,
+    periods,
+    tomorrowCode,
+    todayMax,
+    tomorrowMax
+  )
+
+  // Fix evening forecast to use actual condition
+  if (currentHour >= 17) {
+    parts[0] = getTonightCondition(weather.current.weather_code)
+  }
+
+  // Add more tomorrow info if needed
+  if (parts.length < 3 && currentHour < 17) {
+    const tomorrowTrend = getTomorrowTrend(
+      todayMax,
+      tomorrowMax,
+      tomorrowCode,
+      currentHour
+    )
+    if (tomorrowTrend) parts.push(tomorrowTrend)
+  }
+
+  // Fallback if no parts
+  if (parts.length === 0) {
+    return 'Conditions expected to remain steady'
+  }
+
+  // Join parts with proper capitalization
+  const statement = parts.join(', ')
+  return statement.charAt(0).toUpperCase() + statement.slice(1)
+}
