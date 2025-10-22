@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
     optimizePackageImports: [
       '@mantine/core',
       '@mantine/hooks',
-      '@mantine/notifications'
+      '@mantine/notifications',
+      '@tabler/icons-react'
     ]
   },
   logging: {
