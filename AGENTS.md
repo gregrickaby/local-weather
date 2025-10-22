@@ -74,11 +74,11 @@ If visual changes, you must verify using Playwright MCP at http://localhost:3000
 - Default location: "Enterprise, AL"
 - Search dropdown shows: API results > Search history > Default cities
 
-**Component Structure**
+- **Component Structure**
 
 - `app/layout.tsx` - Root layout with Mantine provider and StoreProvider
 - `app/page.tsx` - Client component assembling all UI components
-- `components/` - Presentational components (Header, Search, CurrentConditions, Forecast, Alerts, etc.)
+- `components/` - Presentational components (Header, Search, CurrentConditions, Forecast, DetailsGrid, etc.)
 - `components/Providers/StoreProvider.tsx` - Redux store provider
 - All components consume state via Redux hooks (`useAppSelector`, `useAppDispatch`)
 

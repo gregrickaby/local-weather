@@ -2,7 +2,7 @@ const config = {
   siteName: 'Local Weather',
   siteDescription: 'View the current weather conditions',
   metaDescription:
-    'View the current weather conditions, long-range forecast, and get weather alerts for your local area.',
+    'View the current weather conditions and long-range forecast for your local area.',
   siteUrl: 'https://weather.gregrickaby.com/',
   siteAuthor: 'Greg Rickaby',
   authorUrl: 'https://gregrickaby.com',

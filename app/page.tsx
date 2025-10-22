@@ -3,7 +3,6 @@
 import classes from '@/app/Page.module.css'
 import Footer from '@/components/Layout/Footer/Footer'
 import Header from '@/components/Layout/Header/Header'
-import Alerts from '@/components/UI/Alerts/Alerts'
 import BackToTop from '@/components/UI/BackToTop/BackToTop'
 import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditions'
 import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
@@ -58,7 +57,6 @@ export default function HomePage() {
               <Stack gap="md">
                 <CurrentConditions />
                 <Forecast />
-                <Alerts />
               </Stack>
             </Grid.Col>
 
