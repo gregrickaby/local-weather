@@ -1,4 +1,12 @@
 /**
+ * Helper function to create time ranges for SDK responses.
+ * Generates an array of numbers from start to stop with a given step.
+ */
+export function range(start: number, stop: number, step: number): number[] {
+  return Array.from({length: (stop - start) / step}, (_, i) => start + i * step)
+}
+
+/**
  * Map WMO weather codes to descriptions and icon codes.
  * Automatically determines day (d) vs night (n) icon variant based on time.
  *

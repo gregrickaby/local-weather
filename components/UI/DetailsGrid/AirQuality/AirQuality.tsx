@@ -35,7 +35,7 @@ export default function AirQuality() {
               <Center>
                 <Stack gap={0} align="center">
                   <Text size="xl" fw={600}>
-                    {aqi}
+                    {Math.round(aqi)}
                   </Text>
                   <Text size="xs" c="dimmed">
                     AQI
