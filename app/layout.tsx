@@ -1,4 +1,5 @@
 import StoreProvider from '@/components/Providers/StoreProvider'
+import {Analytics} from '@/components/UI/Analytics/Analytics'
 import config from '@/lib/constants/config'
 import theme from '@/lib/theme'
 import {ColorSchemeScript, MantineProvider} from '@mantine/core'
@@ -12,14 +13,6 @@ export const metadata: Metadata = {
     template: `%s | ${config.siteName}`
   },
   description: config.metaDescription,
-  keywords: ['weather', 'forecast', 'local weather', 'weather app'],
-  authors: [
-    {
-      name: config.siteAuthor,
-      url: config.authorUrl
-    }
-  ],
-  creator: config.siteAuthor,
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -27,12 +20,6 @@ export const metadata: Metadata = {
     title: config.siteName,
     description: config.metaDescription,
     siteName: config.siteName
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: config.siteName,
-    description: config.metaDescription,
-    creator: '@gregrickaby'
   },
   metadataBase: new URL(config.siteUrl),
   icons: {
@@ -50,6 +37,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
+        <Analytics />
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="auto">
