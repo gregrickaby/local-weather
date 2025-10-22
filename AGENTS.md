@@ -4,7 +4,7 @@ This file provides guidance to agents when working with code in this repository.
 
 ## Project Overview
 
-A weather application built with Next.js 15 (App Router), Mantine UI, and integrates with Open-Meteo and Google Maps APIs. The app is deployed to Coolify (using Nixpacks) at <https://weather.gregrickaby.com>.
+A weather application built with Next.js 16 (App Router), Mantine 8, Redux Toolkit 2, and integrates with Open-Meteo and Google Maps APIs. The app is deployed to Coolify (using Nixpacks) at <https://weather.gregrickaby.com>.
 
 ## Common Commands
 
@@ -19,18 +19,14 @@ npm run format       # Format code with Prettier
 
 ### Validation
 
-Run these before committing or creating PRs:
+Run these before committing or creating PRs. Both commands must pass without errors.
 
 ```bash
 npm run lint         # Run ESLint
 npm run typecheck    # Run TypeScript type checking
 ```
 
-Both commands must pass without errors.
-
-### Local Testing
-
-The app uses standard Next.js dev server. Edge Functions can be tested locally with `npm run dev`.
+If visual changes, you must verify using Playwright MCP at http://localhost:3000 (assume the dev server is already running)
 
 ## Required Environment Variables
 
@@ -44,9 +40,14 @@ Create `.env` from `.env.example`:
 
 ### Tech Stack
 
-- **Framework**: Next.js 15 (App Router, React Server Components)
-- **UI**: Mantine v8 component library. Use Mantine primitives. Fetch official docs: <https://mantine.dev/llms.txt>
-- **SWR**: For data fetching
+- **Framework**: Next.js 16 (App Router). Use Next.js Devtools MCP.
+- **UI**: Mantine 8 UI library. Use Mantine primitives. Fetch official docs: <https://mantine.dev/llms.txt>
+- **State Management**: Redux Toolkit 2. Use Context7 "Redux Toolkit"
+- **Data Fetching**: RTK Query 2. Use Context7 "Redux Toolkit"
+- **Cache Components**: Enabled for optimized server-side rendering and component caching
+- **Experimental Features**:
+  - Turbopack filesystem caching for faster dev builds (`turbopackFileSystemCacheForDev`)
+  - Optimized package imports for Mantine and Tabler Icons
 
 ### Data Flow
 
@@ -85,7 +86,7 @@ Create `.env` from `.env.example`:
 ### TypeScript Configuration
 
 - Uses path alias `@/*` mapping to project root
-- `strict: false` in tsconfig.json
+- `strict: true` in tsconfig.json (strict mode enabled for type safety)
 - Type definitions in `lib/types.d.ts` for API responses (OpenMeteoResponse, etc.)
 - Redux types auto-generated from RTK Query
 
@@ -103,8 +104,9 @@ Create `.env` from `.env.example`:
   - `npm run lint` - ESLint validation
   - `npm run typecheck` - TypeScript type checking
   - `npm run build && npm start` - Build verification
+  - Verify visual changes with Playwright MCP against http://localhost:3000
   - Peer review
-- Uses Lefthook for git hooks (see `.lefthook.yml` if present)
+- Uses Lefthook for git hooks (see `lefthook.yml` if present)
 
 ## Deployment
 
