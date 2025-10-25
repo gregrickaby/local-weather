@@ -33,7 +33,7 @@
     "react-redux": "^9.2.0"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^2.0.0",
+    "@evilmartians/lefthook": "^2.0.1",
     "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
     "eslint": "^9.38.0",
