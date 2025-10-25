@@ -1,3 +1,4 @@
+import {ErrorBoundary} from '@/components/ErrorBoundary'
 import StoreProvider from '@/components/Providers/StoreProvider'
 import {Analytics} from '@/components/UI/Analytics/Analytics'
 import config from '@/lib/constants/config'
@@ -41,9 +42,11 @@ export default function RootLayout({
       </head>
       <body>
         <MantineProvider theme={theme} defaultColorScheme="auto">
-          <Suspense fallback={null}>
-            <StoreProvider>{children}</StoreProvider>
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={null}>
+              <StoreProvider>{children}</StoreProvider>
+            </Suspense>
+          </ErrorBoundary>
         </MantineProvider>
       </body>
     </html>

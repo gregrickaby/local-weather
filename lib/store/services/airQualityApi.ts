@@ -38,7 +38,16 @@ export const airQualityApi = createApi({
 
           const utcOffsetSeconds = response.utcOffsetSeconds()
           const timezone = response.timezone()
-          const current = response.current()!
+          const current = response.current()
+
+          if (!current) {
+            return {
+              error: {
+                status: 'CUSTOM_ERROR',
+                error: 'Missing current data in air quality response'
+              }
+            }
+          }
 
           const data: AirQualityResponse = {
             latitude: response.latitude(),
@@ -48,10 +57,10 @@ export const airQualityApi = createApi({
               time: new Date(
                 (Number(current.time()) + utcOffsetSeconds) * 1000
               ).toISOString(),
-              us_aqi: current.variables(0)!.value(),
-              pm2_5: current.variables(1)!.value(),
-              pm10: current.variables(2)!.value(),
-              european_aqi: current.variables(3)!.value()
+              us_aqi: current.variables(0)?.value() ?? 0,
+              pm2_5: current.variables(1)?.value() ?? 0,
+              pm10: current.variables(2)?.value() ?? 0,
+              european_aqi: current.variables(3)?.value() ?? 0
             }
           }
 
