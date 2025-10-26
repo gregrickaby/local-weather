@@ -19,7 +19,11 @@
     "format": "prettier  '**/*.{mjs,cjs,js,jsx,ts,tsx,md,css,json,yml,yaml}' --ignore-path .prettierignore --cache --write",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@mantine/core": "8.3.5",
@@ -34,8 +38,14 @@
   },
   "devDependencies": {
     "@evilmartians/lefthook": "^2.0.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.0",
+    "@vitest/coverage-v8": "^4.0.3",
+    "@vitest/ui": "^4.0.3",
     "eslint": "^9.38.0",
     "eslint-config-mantine": "^4.0.3",
     "eslint-config-next": "^16.0.0",
@@ -44,11 +54,14 @@
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-testing-library": "^7.13.3",
+    "jsdom": "^27.0.1",
+    "msw": "^2.11.6",
     "postcss": "^8.5.6",
     "postcss-preset-mantine": "1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.3"
   }
 }

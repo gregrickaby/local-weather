@@ -28,6 +28,188 @@ npm run typecheck    # Run TypeScript type checking
 
 If visual changes, you must verify using Playwright MCP at http://localhost:3000 (assume the dev server is already running)
 
+### Testing
+
+```bash
+npm run test           # Run all tests once
+npm run test:watch     # Run tests in watch mode
+npm run test:ui        # Run tests with UI (browser interface)
+npm run test:coverage  # Generate coverage report
+```
+
+**Testing Stack:**
+
+- **Vitest 4**: Fast test runner with native ESM support
+- **React Testing Library**: Component testing utilities
+- **MSW 2**: API mocking for Open-Meteo endpoints
+- **@testing-library/user-event**: User interaction simulation
+
+**Test Structure:**
+Tests are located next to the files they test in `__tests__` directories:
+
+```
+components/UI/Icon/
+  ├── Icon.tsx
+  └── __tests__/
+      └── Icon.test.tsx
+
+lib/utils/
+  ├── helpers.ts
+  └── __tests__/
+      └── helpers.test.ts
+```
+
+**Importing Test Utilities:**
+
+```typescript
+// Import custom render function and utilities
+import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import userEvent from '@testing-library/user-event'
+
+// Available mock data
+import {
+  mockWeatherResponse,
+  mockLocation,
+  mockGeocodeResponse,
+  mockAirQualityResponse,
+  server // MSW server for custom handlers
+} from '@/test-utils'
+```
+
+**Writing Tests:**
+
+Unit test (pure functions):
+
+```typescript
+import {describe, it, expect} from 'vitest'
+import {formatTemperature} from '../helpers'
+
+describe('formatTemperature', () => {
+  it('should format temperature in Celsius', () => {
+    const result = formatTemperature('c', 25.5)
+    expect(result).toBe('26°C')
+  })
+})
+```
+
+Component test (simple):
+
+```typescript
+import {describe, it, expect} from 'vitest'
+import {render, screen} from '@/test-utils'
+import Icon from '../Icon'
+
+describe('Icon', () => {
+  it('should render with default alt text', () => {
+    render(<Icon icon="01d" />)
+    const image = screen.getByAltText('weather icon: 01d')
+    expect(image).toBeInTheDocument()
+  })
+})
+```
+
+Integration test (Redux-connected):
+
+```typescript
+import {describe, it, expect} from 'vitest'
+import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import userEvent from '@testing-library/user-event'
+import Settings from '../Settings'
+
+describe('Settings', () => {
+  it('should show search history when present', async () => {
+    const user = userEvent.setup()
+
+    render(<Settings />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'f',
+          colorScheme: 'light',
+          searchHistory: [mockLocation],
+          mounted: true
+        }
+      }
+    })
+
+    const button = screen.getByLabelText('open settings')
+    await user.click(button)
+
+    await waitFor(() => {
+      expect(screen.getByText('Search History (1)')).toBeInTheDocument()
+    })
+  })
+})
+```
+
+**Testing User Interactions:**
+
+```typescript
+import userEvent from '@testing-library/user-event'
+
+it('should handle click', async () => {
+  const user = userEvent.setup()
+  render(<Button />)
+  await user.click(screen.getByRole('button'))
+  expect(screen.getByText('Clicked!')).toBeInTheDocument()
+})
+```
+
+**Testing Async Operations:**
+
+```typescript
+it('should load data', async () => {
+  render(<WeatherComponent />)
+  await waitFor(() => {
+    expect(screen.getByText('Temperature: 72°F')).toBeInTheDocument()
+  })
+})
+```
+
+**Overriding MSW Handlers:**
+
+```typescript
+import {server} from '@/test-utils'
+import {http, HttpResponse} from 'msw'
+
+it('should handle API error', async () => {
+  server.use(
+    http.get('https://api.open-meteo.com/v1/forecast', () => {
+      return HttpResponse.json({error: 'Server error'}, {status: 500})
+    })
+  )
+  // Your test code...
+})
+```
+
+**Best Practices:**
+
+1. Test behavior, not implementation (test what users see/do)
+2. Use semantic queries: `getByRole`, `getByLabelText` over `getByTestId`
+3. Wait for async updates: Use `waitFor`, `findBy*` for async operations
+4. Always use `userEvent.setup()` for interactions
+5. MSW automatically resets handlers between tests
+6. Test accessibility using ARIA roles and labels in queries
+7. Avoid `container.querySelector()` - use Testing Library queries instead
+
+**Important Implementation Details:**
+
+- **OpenMeteo SDK Mocking**: The `openmeteo` npm package uses FlatBuffers, not JSON. MSW cannot intercept these requests, so we use `vi.mock('openmeteo')` in `vitest.setup.ts` to mock the entire module with a FlatBuffer-like structure
+- **Environment Variables in Tests**: Use `vi.stubEnv()` and `vi.unstubAllEnvs()` instead of directly modifying `process.env` (TypeScript prevents direct assignment)
+- **Mantine Components**: Require `ResizeObserver` polyfill (included in `vitest.setup.ts`)
+- **Error Boundary Testing**: Test by creating a component that throws errors conditionally, then wrapping it in the ErrorBoundary
+
+**Debugging:**
+
+```typescript
+// View DOM
+screen.debug()  // entire document
+screen.debug(screen.getByRole('button'))  // specific element
+
+// Or use test UI
+npm run test:ui  // Opens browser interface
+```
+
 ## Required Environment Variables
 
 **No environment variables required!** All APIs used in this project are free and require no authentication:
