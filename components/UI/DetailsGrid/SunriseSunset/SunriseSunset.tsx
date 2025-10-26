@@ -2,6 +2,7 @@
 
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {formatTimeWithMinutes} from '@/lib/utils/helpers'
 import {Box, Group, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
@@ -22,9 +23,13 @@ export default function SunriseSunset() {
     }
   )
 
-  const sunrise = formatTime(weather?.daily?.sunrise?.[0])
-  const sunset = formatTime(weather?.daily?.sunset?.[0])
+  const sunriseISO = weather?.daily?.sunrise?.[0]
+  const sunsetISO = weather?.daily?.sunset?.[0]
+
+  const sunrise = sunriseISO ? formatTimeWithMinutes(sunriseISO) : '--:--'
+  const sunset = sunsetISO ? formatTimeWithMinutes(sunsetISO) : '--:--'
   const sunPosition = calculateSunPosition(
+    weather?.current?.time,
     weather?.daily?.sunrise?.[0],
     weather?.daily?.sunset?.[0]
   )
@@ -106,23 +111,17 @@ export default function SunriseSunset() {
 }
 
 /**
- * Format ISO time string to local time.
- */
-function formatTime(isoString?: string): string {
-  if (!isoString) return '--:--'
-  return new Date(isoString).toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit'
-  })
-}
-
-/**
  * Calculate sun position as percentage of day (0-100).
+ * Uses location's current time from API, not browser time.
  */
-function calculateSunPosition(sunriseISO?: string, sunsetISO?: string): number {
-  if (!sunriseISO || !sunsetISO) return 50
+function calculateSunPosition(
+  currentTimeISO?: string,
+  sunriseISO?: string,
+  sunsetISO?: string
+): number {
+  if (!currentTimeISO || !sunriseISO || !sunsetISO) return 50
 
-  const now = new Date()
+  const now = new Date(currentTimeISO)
   const sunrise = new Date(sunriseISO)
   const sunset = new Date(sunsetISO)
 

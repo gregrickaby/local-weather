@@ -35,28 +35,28 @@ export const mockWeatherResponse = {
     wind_speed_10m: Array.from({length: 24}, () => 8)
   },
   daily: {
-    time: Array.from({length: 7}, (_, i) => {
+    time: Array.from({length: 10}, (_, i) => {
       const date = new Date('2025-01-15')
       date.setDate(date.getDate() + i)
       return date.toISOString().split('T')[0]
     }),
-    weather_code: Array.from({length: 7}, () => 0),
-    temperature_2m_max: Array.from({length: 7}, () => 75),
-    temperature_2m_min: Array.from({length: 7}, () => 55),
-    apparent_temperature_max: Array.from({length: 7}, () => 77),
-    apparent_temperature_min: Array.from({length: 7}, () => 53),
-    precipitation_probability_max: Array.from({length: 7}, () => 10),
-    sunrise: Array.from({length: 7}, (_, i) => {
+    weather_code: Array.from({length: 10}, () => 0),
+    temperature_2m_max: Array.from({length: 10}, () => 75),
+    temperature_2m_min: Array.from({length: 10}, () => 55),
+    apparent_temperature_max: Array.from({length: 10}, () => 77),
+    apparent_temperature_min: Array.from({length: 10}, () => 53),
+    precipitation_probability_max: Array.from({length: 10}, () => 10),
+    sunrise: Array.from({length: 10}, (_, i) => {
       const date = new Date('2025-01-15T07:00:00.000Z')
       date.setDate(date.getDate() + i)
       return date.toISOString()
     }),
-    sunset: Array.from({length: 7}, (_, i) => {
+    sunset: Array.from({length: 10}, (_, i) => {
       const date = new Date('2025-01-15T17:30:00.000Z')
       date.setDate(date.getDate() + i)
       return date.toISOString()
     }),
-    uv_index_max: Array.from({length: 7}, () => 5)
+    uv_index_max: Array.from({length: 10}, () => 5)
   }
 }
 

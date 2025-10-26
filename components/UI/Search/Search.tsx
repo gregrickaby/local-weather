@@ -1,6 +1,5 @@
 'use client'
 
-import Settings from '@/components/UI/Settings/Settings'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
 import {
@@ -92,82 +91,79 @@ export default function Search() {
   }
 
   return (
-    <>
-      <Autocomplete
-        aria-label="Enter the name of your location"
-        className={classes.searchbar}
-        data={comboboxData}
-        dropdownOpened={dropdownOpened}
-        leftSection={<IconMapPin />}
-        limit={10}
-        onChange={handleChange}
-        onDropdownClose={() => {
-          setDropdownOpened(false)
-          setIsTyping(false)
-        }}
-        onOptionSubmit={(selectedValue) => {
-          // Find the location object by ID
-          const selectedLocation = places.find(
-            (loc) => loc.id.toString() === selectedValue
-          )
-          if (selectedLocation) {
-            dispatch(setLocation(selectedLocation))
-            setSearchTerm(selectedLocation.display)
-          }
-          setDropdownOpened(false)
-          setIsTyping(false)
-        }}
-        placeholder="Enter the name of your location"
-        renderOption={({option}) => {
-          const loc = places.find((l) => l?.id?.toString() === option.value)
-          const isFavorited = favorites.some(
-            (f) => f?.id?.toString() === option.value
-          )
+    <Autocomplete
+      aria-label="Enter the name of your location"
+      className={classes.searchbar}
+      data={comboboxData}
+      dropdownOpened={dropdownOpened}
+      leftSection={<IconMapPin />}
+      limit={10}
+      onChange={handleChange}
+      onDropdownClose={() => {
+        setDropdownOpened(false)
+        setIsTyping(false)
+      }}
+      onOptionSubmit={(selectedValue) => {
+        // Find the location object by ID
+        const selectedLocation = places.find(
+          (loc) => loc.id.toString() === selectedValue
+        )
+        if (selectedLocation) {
+          dispatch(setLocation(selectedLocation))
+          setSearchTerm(selectedLocation.display)
+        }
+        setDropdownOpened(false)
+        setIsTyping(false)
+      }}
+      placeholder="Enter the name of your location"
+      renderOption={({option}) => {
+        const loc = places.find((l) => l?.id?.toString() === option.value)
+        const isFavorited = favorites.some(
+          (f) => f?.id?.toString() === option.value
+        )
 
-          // Safety check: if location not found, just show the option value
-          if (!loc) {
-            return <span>{option.value}</span>
-          }
+        // Safety check: if location not found, just show the option value
+        if (!loc) {
+          return <span>{option.value}</span>
+        }
 
-          return (
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                width: '100%',
-                gap: '8px'
+        return (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              width: '100%',
+              gap: '8px'
+            }}
+          >
+            <span style={{flex: 1}}>{loc.display}</span>
+            <ActionIcon
+              size="sm"
+              variant="subtle"
+              aria-label={
+                isFavorited ? 'Remove from favorites' : 'Add to favorites'
+              }
+              onClick={(e) => {
+                e.stopPropagation()
+                if (isFavorited) {
+                  dispatch(removeFromFavorites(loc.id))
+                } else {
+                  dispatch(addToFavorites(loc))
+                }
               }}
             >
-              <span style={{flex: 1}}>{loc.display}</span>
-              <ActionIcon
-                size="sm"
-                variant="subtle"
-                aria-label={
-                  isFavorited ? 'Remove from favorites' : 'Add to favorites'
-                }
-                onClick={(e) => {
-                  e.stopPropagation()
-                  if (isFavorited) {
-                    dispatch(removeFromFavorites(loc.id))
-                  } else {
-                    dispatch(addToFavorites(loc))
-                  }
-                }}
-              >
-                <IconHeart
-                  size={16}
-                  fill={isFavorited ? '#ff6b6b' : 'none'}
-                  style={{color: isFavorited ? '#ff6b6b' : 'currentColor'}}
-                />
-              </ActionIcon>
-            </div>
-          )
-        }}
-        size="lg"
-        value={searchTerm}
-      />
-      <Settings />
-    </>
+              <IconHeart
+                size={16}
+                fill={isFavorited ? '#ff6b6b' : 'none'}
+                style={{color: isFavorited ? '#ff6b6b' : 'currentColor'}}
+              />
+            </ActionIcon>
+          </div>
+        )
+      }}
+      size="lg"
+      value={searchTerm}
+    />
   )
 }

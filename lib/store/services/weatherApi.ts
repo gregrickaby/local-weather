@@ -63,11 +63,25 @@ export const weatherApi = createApi({
             temperature_unit: tempUnit === 'c' ? 'celsius' : 'fahrenheit',
             wind_speed_unit: 'mph',
             precipitation_unit: 'inch',
-            timezone: 'auto'
+            timezone: 'auto',
+            forecast_days: 10
           }
 
           const url = 'https://api.open-meteo.com/v1/forecast'
           const responses = await fetchWeatherApi(url, params)
+
+          // Fetch sunrise/sunset separately using JSON API (SDK doesn't support it)
+          const sunriseSunsetParams = new URLSearchParams({
+            latitude: latitude.toString(),
+            longitude: longitude.toString(),
+            daily: 'sunrise,sunset',
+            timezone: 'auto',
+            forecast_days: '10'
+          })
+          const sunriseSunsetResponse = await fetch(
+            `${url}?${sunriseSunsetParams}`
+          )
+          const sunriseSunsetData = await sunriseSunsetResponse.json()
 
           if (!responses || responses.length === 0) {
             throw new Error('No response from Open-Meteo API')
@@ -159,28 +173,18 @@ export const weatherApi = createApi({
               precipitation_probability_max: Array.from(
                 daily.variables(5)?.valuesArray() ?? []
               ),
-              sunrise: range(
-                Number(daily.time()),
-                Number(daily.timeEnd()),
-                daily.interval()
-              ).map((_, i) => {
-                const sunriseArray = daily.variables(6)?.valuesArray()
-                const sunriseValue = sunriseArray ? sunriseArray[i] : 0
-                return new Date(
-                  (sunriseValue + utcOffsetSeconds) * 1000
-                ).toISOString()
-              }),
-              sunset: range(
-                Number(daily.time()),
-                Number(daily.timeEnd()),
-                daily.interval()
-              ).map((_, i) => {
-                const sunsetArray = daily.variables(7)?.valuesArray()
-                const sunsetValue = sunsetArray ? sunsetArray[i] : 0
-                return new Date(
-                  (sunsetValue + utcOffsetSeconds) * 1000
-                ).toISOString()
-              }),
+              sunrise:
+                sunriseSunsetData?.daily?.sunrise?.map((time: string) => {
+                  // API returns ISO strings like "2025-10-26T07:28"
+                  // Add seconds and Z to make them full ISO strings
+                  return `${time}:00.000Z`
+                }) ?? [],
+              sunset:
+                sunriseSunsetData?.daily?.sunset?.map((time: string) => {
+                  // API returns ISO strings like "2025-10-26T17:40"
+                  // Add seconds and Z to make them full ISO strings
+                  return `${time}:00.000Z`
+                }) ?? [],
               uv_index_max: Array.from(daily.variables(8)?.valuesArray() ?? [])
             }
           }

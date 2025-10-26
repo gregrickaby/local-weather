@@ -23,10 +23,20 @@ export function range(start: number, stop: number, step: number): number[] {
  * Extract hour from ISO string without timezone conversion.
  * The API provides times in the location's timezone, so we parse directly.
  */
-function getHourFromISO(isoString: string): number {
+export function getHourFromISO(isoString: string): number {
   // ISO format: "2025-01-15T14:30:00..." - extract the hour part
   const timePart = isoString.split('T')[1]
   return Number.parseInt(timePart.split(':')[0], 10)
+}
+
+/**
+ * Extract minute from ISO string without timezone conversion.
+ * The API provides times in the location's timezone, so we parse directly.
+ */
+export function getMinuteFromISO(isoString: string): number {
+  // ISO format: "2025-01-15T14:30:00..." - extract the minute part
+  const timePart = isoString.split('T')[1]
+  return Number.parseInt(timePart.split(':')[1], 10)
 }
 
 /**
@@ -149,44 +159,23 @@ export function formatTemperature(tempUnit: string, temp: number): string {
  * Uses the current date from API response (location's timezone) for "Today"/"Tomorrow".
  *
  * @param isoDate - Date string in YYYY-MM-DD format from the API (location's timezone)
- * @param currentDate - Optional current date string from weather.current.time (location's timezone)
+ * @param currentDate - Current date string from weather.current.time (location's timezone) - REQUIRED
  */
-export function formatDay(isoDate: string, currentDate?: string): string {
+export function formatDay(isoDate: string, currentDate: string): string {
   // Parse the ISO date (YYYY-MM-DD format)
   const {year, month, day, dateString} = getDateFromISO(isoDate)
   const date = new Date(year, month - 1, day)
 
-  // If currentDate provided, use it (location's timezone)
-  // Otherwise fall back to browser's date (for backward compatibility)
-  if (currentDate) {
-    const todayString = getDateFromISO(currentDate).dateString
-    const tomorrowString = getTomorrowDateString(todayString)
+  // Use location's current date from API (never browser time)
+  const todayString = getDateFromISO(currentDate).dateString
+  const tomorrowString = getTomorrowDateString(todayString)
 
-    if (isSameDate(dateString, todayString)) {
-      return 'Today'
-    }
+  if (isSameDate(dateString, todayString)) {
+    return 'Today'
+  }
 
-    if (isSameDate(dateString, tomorrowString)) {
-      return 'Tomorrow'
-    }
-  } else {
-    // Backward compatibility: use browser time
-    const now = new Date()
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    const tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-
-    const dateTime = date.getTime()
-    const todayTime = today.getTime()
-    const tomorrowTime = tomorrow.getTime()
-
-    if (dateTime === todayTime) {
-      return 'Today'
-    }
-
-    if (dateTime === tomorrowTime) {
-      return 'Tomorrow'
-    }
+  if (isSameDate(dateString, tomorrowString)) {
+    return 'Tomorrow'
   }
 
   // Format the day of the week from the ISO date
@@ -195,13 +184,53 @@ export function formatDay(isoDate: string, currentDate?: string): string {
 
 /**
  * Convert ISO time string into human readable format.
+ * Parses the hour directly from the ISO string to avoid timezone conversion.
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
  */
 export function formatTime(isoTime: string): string {
-  return new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric'
-  }).format(new Date(isoTime))
+  const hour = getHourFromISO(isoTime)
+
+  // Convert 24-hour format to 12-hour format
+  if (hour === 0) {
+    return '12 AM'
+  }
+
+  if (hour < 12) {
+    return `${hour} AM`
+  }
+
+  if (hour === 12) {
+    return '12 PM'
+  }
+
+  return `${hour - 12} PM`
+}
+
+/**
+ * Convert ISO time string into human readable format with minutes.
+ * Parses the hour and minute directly from the ISO string to avoid timezone conversion.
+ * Used for sunrise/sunset times where minutes matter.
+ */
+export function formatTimeWithMinutes(isoTime: string): string {
+  const hour = getHourFromISO(isoTime)
+  const minute = getMinuteFromISO(isoTime)
+  const minuteStr = minute.toString().padStart(2, '0')
+
+  // Convert 24-hour format to 12-hour format
+  if (hour === 0) {
+    return `12:${minuteStr} AM`
+  }
+
+  if (hour < 12) {
+    return `${hour}:${minuteStr} AM`
+  }
+
+  if (hour === 12) {
+    return `12:${minuteStr} PM`
+  }
+
+  return `${hour - 12}:${minuteStr} PM`
 }
 
 /**

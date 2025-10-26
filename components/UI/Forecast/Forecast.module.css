@@ -1,40 +1,93 @@
 .title {
-  text-align: center;
+  font-size: clamp(1.3rem, 3vw, 1.5rem);
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.hourlyScroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 0 12px 0;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    gap: 16px;
+  }
 }
 
 .card {
+  background: light-dark(
+    color-mix(in srgb, var(--mantine-color-gray-0) 50%, transparent),
+    color-mix(in srgb, var(--mantine-color-dark-6) 80%, transparent)
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid
+    light-dark(
+      color-mix(in srgb, var(--mantine-color-gray-3) 30%, transparent),
+      color-mix(in srgb, var(--mantine-color-dark-4) 40%, transparent)
+    );
+  border-radius: 16px;
+  min-width: 100px;
+  padding: 20px 16px;
   text-align: center;
 
   img {
-    margin: 0 auto;
+    margin: 8px auto;
+    width: 48px;
+    height: 48px;
   }
 }
 
 .forecastList {
+  background: light-dark(
+    color-mix(in srgb, var(--mantine-color-gray-0) 50%, transparent),
+    color-mix(in srgb, var(--mantine-color-dark-6) 80%, transparent)
+  );
+  backdrop-filter: blur(10px);
+  border: 1px solid
+    light-dark(
+      color-mix(in srgb, var(--mantine-color-gray-3) 30%, transparent),
+      color-mix(in srgb, var(--mantine-color-dark-4) 40%, transparent)
+    );
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
   gap: 0;
+  overflow: hidden;
+  padding: 8px 16px;
 }
 
 .forecastItem {
-  display: grid;
-  grid-template-columns: 80px 45px 1fr;
   align-items: center;
+  display: grid;
   gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--mantine-color-gray-2);
-
-  @media (prefers-color-scheme: dark) {
-    border-bottom-color: var(--mantine-color-dark-6);
-  }
+  grid-template-columns: 80px 45px 1fr;
+  padding: 10px 0;
 
   @media (min-width: 768px) {
-    grid-template-columns: 110px 50px 1fr;
     gap: 16px;
+    grid-template-columns: 110px 50px 1fr;
+    padding: 12px 0;
   }
 
-  &:last-child {
-    border-bottom: none;
+  &:not(:last-child) {
+    border-bottom: 1px solid
+      light-dark(
+        color-mix(in srgb, var(--mantine-color-gray-3) 30%, transparent),
+        color-mix(in srgb, var(--mantine-color-dark-5) 50%, transparent)
+      );
   }
 }
 

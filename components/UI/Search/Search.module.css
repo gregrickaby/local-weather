@@ -1,3 +1,4 @@
 .searchbar {
-  flex-basis: 100%;
+  flex: 1;
+  min-width: 0;
 }

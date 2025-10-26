@@ -5,9 +5,10 @@ import {
   formatDay,
   formatTemperature,
   formatTime,
+  getHourFromISO,
   getWeatherInfo
 } from '@/lib/utils/helpers'
-import {Card, SimpleGrid, Space, Text, Title} from '@mantine/core'
+import {Card, Text, Title} from '@mantine/core'
 import classes from './Forecast.module.css'
 
 /**
@@ -31,11 +32,12 @@ export default function Forecast() {
 
   // Use the location's current time from the API (not browser time)
   // This ensures correct time display for any timezone
-  const currentTime = new Date(weather.current.time)
-  const currentHourIndex = currentTime.getHours()
+  // Parse the hour directly from the ISO string to avoid timezone conversion
+  const currentHourIndex = getHourFromISO(weather.current.time)
 
-  const nextFourHours = Array.from({length: 4}, (_, i) => {
-    const index = currentHourIndex + i + 1
+  // Generate hourly forecast starting from current hour
+  const hourlyForecasts = Array.from({length: 24}, (_, i) => {
+    const index = currentHourIndex + i
     // Validate array bounds before accessing
     if (index >= weather.hourly.time.length) {
       return null
@@ -73,12 +75,11 @@ export default function Forecast() {
 
   return (
     <section>
-      <Space h="lg" />
-      <Title className={classes.title} order={2} my="lg">
-        The Next 4 Hours
+      <Title className={classes.title} order={2}>
+        Hourly Forecast
       </Title>
-      <SimpleGrid cols={{base: 1, sm: 2, lg: 4}}>
-        {nextFourHours.map((forecast) => {
+      <div className={classes.hourlyScroll}>
+        {hourlyForecasts.map((forecast) => {
           const sunrise = weather.daily.sunrise[0]
           const sunset = weather.daily.sunset[0]
           const {description, icon} = getWeatherInfo(
@@ -90,32 +91,27 @@ export default function Forecast() {
           return (
             <Card
               className={classes.card}
-              shadow="sm"
-              p="xl"
+              shadow="none"
+              p="md"
               key={forecast.time}
             >
-              <Text size="xl">{formatTime(forecast.time)}</Text>
-              <Text size="xl">
-                {formatTemperature(tempUnit, forecast.temp)}
+              <Text size="sm" fw={500}>
+                {formatTime(forecast.time)}
               </Text>
               <Icon icon={icon} />
-              <Text size="lg">{description}</Text>
-              {forecast.feels_like > forecast.temp && (
-                <Text
-                  gradient={{from: 'yellow', to: 'orange', deg: 45}}
-                  size="lg"
-                  variant="gradient"
-                >
-                  Feels Like: {formatTemperature(tempUnit, forecast.feels_like)}
-                </Text>
-              )}
+              <Text size="xl" fw={700}>
+                {formatTemperature(tempUnit, forecast.temp)}
+              </Text>
+              <Text size="xs" c="dimmed">
+                {description}
+              </Text>
             </Card>
           )
         })}
-      </SimpleGrid>
+      </div>
 
-      <Title className={classes.title} order={2} my="lg">
-        Extended Forecast
+      <Title className={classes.title} order={2} mt="xl" mb="md">
+        10-Day Forecast
       </Title>
 
       <div className={classes.forecastList}>

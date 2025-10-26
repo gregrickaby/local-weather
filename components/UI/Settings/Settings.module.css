@@ -1,7 +1,3 @@
 .settings {
-  @media screen and (width <= 768px) {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-  }
+  /* Removed fixed positioning - now inline with controls */
 }

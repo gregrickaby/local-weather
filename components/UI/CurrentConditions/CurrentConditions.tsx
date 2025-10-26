@@ -47,36 +47,23 @@ export default function CurrentConditions() {
   const forecastStatement = generateForecastStatement(weather)
 
   return (
-    <Stack align="center">
-      <Text
-        className={classes.description}
-        component="p"
-        gradient={{from: 'indigo', to: 'cyan', deg: 45}}
-        variant="gradient"
-      >
-        {description}
-      </Text>
-      <Text
-        className={classes.bigtemp}
-        component="p"
-        gradient={{from: 'indigo', to: 'cyan', deg: 45}}
-        variant="gradient"
-      >
-        {formatTemperature(tempUnit, temperature_2m)}
-      </Text>
-      <Text size="sm" c="dimmed" ta="center" mt="xs">
-        {forecastStatement}
-      </Text>
-      {apparent_temperature > temperature_2m && (
-        <Text
-          className={classes.feelslike}
-          component="p"
-          gradient={{from: 'yellow', to: 'orange', deg: 45}}
-          variant="gradient"
-        >
-          Feels Like: {formatTemperature(tempUnit, apparent_temperature)}
+    <div className={classes.hero}>
+      <Stack align="center" gap="xs">
+        <Text className={classes.description} component="p">
+          {description}
         </Text>
-      )}
-    </Stack>
+        <Text className={classes.bigtemp} component="p">
+          {formatTemperature(tempUnit, temperature_2m)}
+        </Text>
+        <Text className={classes.forecastStatement} ta="center">
+          {forecastStatement}
+        </Text>
+        {apparent_temperature > temperature_2m && (
+          <Text className={classes.feelslike} component="p">
+            Feels Like: {formatTemperature(tempUnit, apparent_temperature)}
+          </Text>
+        )}
+      </Stack>
+    </div>
   )
 }

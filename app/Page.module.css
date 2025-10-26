@@ -12,10 +12,22 @@
 .search {
   align-items: center;
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  justify-content: space-between;
   margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+  }
 }
 
 .main {
   min-height: 100vh;
+}
+
+.content {
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
 }

@@ -99,24 +99,6 @@ describe('Search', () => {
     expect(input).toHaveValue('New York')
   })
 
-  it('should render Settings component', () => {
-    render(<Search />, {
-      preloadedState: {
-        preferences: {
-          location: mockLocation,
-          tempUnit: 'f',
-          colorScheme: 'light',
-          favorites: [],
-          mounted: true
-        }
-      }
-    })
-
-    // Settings button should be present
-    const settingsButton = screen.getByLabelText('open settings')
-    expect(settingsButton).toBeInTheDocument()
-  })
-
   it('should handle empty search term', () => {
     render(<Search />, {
       preloadedState: {

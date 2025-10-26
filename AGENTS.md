@@ -244,15 +244,15 @@ npm run test:ui  // Opens browser interface
 - RTK Query APIs: `weatherApi` and `placesApi` for data fetching with automatic caching
 - Preferences slice manages:
   - Current location
-  - Temperature unit (Celsius/Fahrenheit)
+  - Temperature unit (Celsius/Fahrenheit) - **Note: Unit selector removed from Settings UI; units auto-detected from user's location**
   - Color scheme (Light/Dark/Auto)
-  - Search history (last 10 searches)
+  - Favorites (user-saved locations with heart icon in search dropdown)
 - localStorage middleware persists all user preferences automatically
 - `StoreProvider` wraps the app in `app/layout.tsx`
 - Components use typed hooks: `useAppSelector`, `useAppDispatch`
 - Data fetching: `useGetWeatherQuery`, `useGetPlacesQuery`
 - Default location: "Enterprise, AL"
-- Search dropdown shows: API results > Search history > Default cities
+- Search dropdown shows: API results > Favorites (when typing) > Default cities
 
 - **Component Structure**
 

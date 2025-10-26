@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import {mockLocation, render, screen, waitFor} from '@/test-utils'
+import {describe, expect, it} from 'vitest'
 import Forecast from './Forecast'
 
 describe('Forecast', () => {
@@ -17,7 +17,7 @@ describe('Forecast', () => {
     })
 
     // Component returns null, so section should not be present
-    expect(screen.queryByText('The Next 4 Hours')).not.toBeInTheDocument()
+    expect(screen.queryByText('Hourly Forecast')).not.toBeInTheDocument()
   })
 
   it('should render section element', async () => {
@@ -39,7 +39,7 @@ describe('Forecast', () => {
     })
   })
 
-  it('should display "The Next 4 Hours" heading', async () => {
+  it('should display "Hourly Forecast" heading', async () => {
     render(<Forecast />, {
       preloadedState: {
         preferences: {
@@ -53,11 +53,11 @@ describe('Forecast', () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText('The Next 4 Hours')).toBeInTheDocument()
+      expect(screen.getByText('Hourly Forecast')).toBeInTheDocument()
     })
   })
 
-  it('should display "Extended Forecast" heading', async () => {
+  it('should display "10-Day Forecast" heading', async () => {
     render(<Forecast />, {
       preloadedState: {
         preferences: {
@@ -71,7 +71,7 @@ describe('Forecast', () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText('Extended Forecast')).toBeInTheDocument()
+      expect(screen.getByText('10-Day Forecast')).toBeInTheDocument()
     })
   })
 

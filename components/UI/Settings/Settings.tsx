@@ -6,25 +6,22 @@ import {
   clearFavorites,
   removeFromFavorites,
   setColorScheme,
-  setLocation,
-  setTempUnit
+  setLocation
 } from '@/lib/store/slices/preferencesSlice'
 import type {Location} from '@/lib/types'
 import {
   ActionIcon,
   Button,
-  Divider,
-  Flex,
+  Card,
   Group,
   Modal,
-  Select,
   Stack,
   Switch,
   Text,
   useMantineColorScheme
 } from '@mantine/core'
 import {useDisclosure} from '@mantine/hooks'
-import {IconSettings, IconTrash} from '@tabler/icons-react'
+import {IconHeart, IconSettings, IconTrash} from '@tabler/icons-react'
 import classes from './Settings.module.css'
 
 /**
@@ -37,15 +34,7 @@ export default function Settings() {
     setColorScheme: setMantineColorScheme
   } = useMantineColorScheme()
   const dispatch = useAppDispatch()
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
   const favorites = useAppSelector((state) => state.preferences.favorites)
-
-  function handleUnitChange(value: string | null) {
-    if (value === 'imperial' || value === 'metric') {
-      const newUnit = value === 'imperial' ? 'f' : 'c'
-      dispatch(setTempUnit(newUnit))
-    }
-  }
 
   function toggleColorScheme() {
     const newScheme = mantineColorScheme === 'dark' ? 'light' : 'dark'
@@ -72,10 +61,10 @@ export default function Settings() {
         aria-label="open settings"
         className={classes.settings}
         onClick={open}
-        size={48}
+        size={36}
         variant="transparent"
       >
-        <IconSettings size={48} />
+        <IconSettings size={24} />
       </ActionIcon>
       <Modal
         closeButtonProps={{'aria-label': 'close settings'}}
@@ -83,93 +72,86 @@ export default function Settings() {
         opened={opened}
         padding="xl"
         title="Settings"
+        size="md"
+        centered
       >
-        <Stack justify="space-between">
-          <Select
-            label="Select Units"
-            description="Choose your preferred measurement system"
-            value={tempUnit === 'f' ? 'imperial' : 'metric'}
-            onChange={handleUnitChange}
-            data={[
-              {
-                value: 'imperial',
-                label: 'Imperial (°F, mph, inHg)'
-              },
-              {
-                value: 'metric',
-                label: 'Metric (°C, km/h, hPa)'
-              }
-            ]}
-            size="md"
-          />
-          <Switch
-            aria-label="Toggle between light and theme."
-            label="Toggle Dark Theme (⌘+J)"
-            checked={mantineColorScheme === 'dark'}
-            offLabel="OFF"
-            onChange={() => toggleColorScheme()}
-            onLabel="ON"
-            size="lg"
-          />
-          {favorites.length > 0 && (
-            <>
-              <Divider />
-              <div>
-                <Text size="sm" fw={500} mb="xs">
-                  Favorites ({favorites.length})
-                </Text>
-                <Stack gap="xs">
-                  {favorites.map((fav) => (
-                    <Group key={fav.id} justify="space-between" wrap="nowrap">
-                      <Button
-                        variant="light"
-                        fullWidth
-                        onClick={() => handleSelectFavorite(fav)}
-                        style={{flex: 1}}
-                      >
-                        {fav.display}
-                      </Button>
-                      <ActionIcon
-                        color="red"
-                        variant="subtle"
-                        aria-label={`Remove ${fav.display} from favorites`}
-                        onClick={() => handleRemoveFavorite(fav.id)}
-                      >
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
-                  ))}
-                  <Button
-                    leftSection={<IconTrash size={16} />}
-                    variant="light"
-                    color="red"
-                    fullWidth
-                    onClick={handleClearFavorites}
-                    size="sm"
-                  >
-                    Clear All Favorites
-                  </Button>
-                </Stack>
-              </div>
-            </>
-          )}
-          <Flex
-            gap="md"
-            justify="center"
-            align="center"
-            direction="column"
-            wrap="wrap"
-          >
-            Thank you for using {config.siteName}! Would you consider sponsoring
-            further development for just $5?
-            <iframe
-              src="https://github.com/sponsors/gregrickaby/button"
-              title="Sponsor gregrickaby"
-              height="32"
-              width="114"
-              style={{border: '0', borderRadius: '6px'}}
+        <Stack gap="lg">
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Text size="sm" fw={500} mb="sm">
+              Appearance
+            </Text>
+            <Switch
+              aria-label="Toggle between light and dark theme."
+              label="Dark Mode"
+              checked={mantineColorScheme === 'dark'}
+              onChange={() => toggleColorScheme()}
+              size="md"
             />
-          </Flex>
+          </Card>
+
+          {favorites.length > 0 && (
+            <Card shadow="sm" padding="lg" radius="md" withBorder>
+              <Group justify="space-between" mb="sm">
+                <Text size="sm" fw={500}>
+                  Favorites
+                </Text>
+                <Button
+                  leftSection={<IconTrash size={16} />}
+                  variant="subtle"
+                  color="red"
+                  onClick={handleClearFavorites}
+                  size="xs"
+                >
+                  Clear All
+                </Button>
+              </Group>
+              <Stack gap="xs">
+                {favorites.map((fav) => (
+                  <Group key={fav.id} justify="space-between" wrap="nowrap">
+                    <Button
+                      variant="light"
+                      fullWidth
+                      onClick={() => handleSelectFavorite(fav)}
+                      style={{flex: 1}}
+                      size="sm"
+                    >
+                      {fav.display}
+                    </Button>
+                    <ActionIcon
+                      color="red"
+                      variant="subtle"
+                      aria-label={`Remove ${fav.display} from favorites`}
+                      onClick={() => handleRemoveFavorite(fav.id)}
+                      size="md"
+                    >
+                      <IconTrash size={16} />
+                    </ActionIcon>
+                  </Group>
+                ))}
+              </Stack>
+            </Card>
+          )}
+
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Stack gap="sm" align="center">
+              <Text size="sm" ta="center">
+                Thank you for using {config.siteName}! Would you consider
+                sponsoring further development?
+              </Text>
+              <Button
+                component="a"
+                href="https://github.com/sponsors/gregrickaby"
+                target="_blank"
+                rel="noopener noreferrer"
+                leftSection={<IconHeart size={16} />}
+                variant="light"
+                color="pink"
+                size="sm"
+              >
+                Sponsor on GitHub
+              </Button>
+            </Stack>
+          </Card>
         </Stack>
       </Modal>
     </>

@@ -8,9 +8,11 @@ import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditio
 import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
 import Forecast from '@/components/UI/Forecast/Forecast'
 import Search from '@/components/UI/Search/Search'
-import {useAppSelector} from '@/lib/store/hooks'
+import Settings from '@/components/UI/Settings/Settings'
+import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {Grid, Skeleton, Stack} from '@mantine/core'
+import {setTempUnit} from '@/lib/store/slices/preferencesSlice'
+import {SegmentedControl, Skeleton, Stack} from '@mantine/core'
 
 /**
  * Loading skeleton component.
@@ -30,6 +32,7 @@ function WeatherSkeleton() {
  * Home page component.
  */
 export default function HomePage() {
+  const dispatch = useAppDispatch()
   const location = useAppSelector((state) => state.preferences.location)
   const mounted = useAppSelector((state) => state.preferences.mounted)
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
@@ -47,24 +50,27 @@ export default function HomePage() {
       <main className={classes.main}>
         <div className={classes.search}>
           <Search />
+          <SegmentedControl
+            value={tempUnit}
+            onChange={(value) => dispatch(setTempUnit(value as 'c' | 'f'))}
+            data={[
+              {label: '°C', value: 'c'},
+              {label: '°F', value: 'f'}
+            ]}
+            color="blue"
+            size="md"
+            radius="md"
+          />
+          <Settings />
         </div>
         {isLoading || !weather ? (
           <WeatherSkeleton />
         ) : (
-          <Grid gutter="md">
-            {/* Main content column */}
-            <Grid.Col span={{base: 12, md: 8}}>
-              <Stack gap="md">
-                <CurrentConditions />
-                <Forecast />
-              </Stack>
-            </Grid.Col>
-
-            {/* Details sidebar */}
-            <Grid.Col span={{base: 12, md: 4}}>
-              <DetailsGrid />
-            </Grid.Col>
-          </Grid>
+          <Stack gap="xl" className={classes.content}>
+            <CurrentConditions />
+            <DetailsGrid />
+            <Forecast />
+          </Stack>
         )}
       </main>
       <Footer />

@@ -141,42 +141,32 @@ describe('getWeatherInfo', () => {
 
 describe('formatDay', () => {
   it('should return "Today" for today\'s date', () => {
-    const today = new Date()
-    // Use local date string (YYYY-MM-DD) instead of UTC to avoid timezone issues
-    const isoDate = today.toLocaleDateString('en-CA')
-    expect(formatDay(isoDate)).toBe('Today')
+    const currentDate = '2025-01-15T12:00:00.000Z'
+    const isoDate = '2025-01-15'
+    expect(formatDay(isoDate, currentDate)).toBe('Today')
   })
 
   it('should return "Tomorrow" for tomorrow\'s date', () => {
-    const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    // Use local date string (YYYY-MM-DD) instead of UTC to avoid timezone issues
-    const isoDate = tomorrow.toLocaleDateString('en-CA')
-    expect(formatDay(isoDate)).toBe('Tomorrow')
+    const currentDate = '2025-01-15T12:00:00.000Z'
+    const isoDate = '2025-01-16'
+    expect(formatDay(isoDate, currentDate)).toBe('Tomorrow')
   })
 
   it('should return day of week for future dates', () => {
-    const future = new Date()
-    future.setDate(future.getDate() + 3)
-    const isoDate = future.toISOString().split('T')[0]
-    const result = formatDay(isoDate)
-    expect([
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ]).toContain(result)
+    const currentDate = '2025-01-15T12:00:00.000Z'
+    const isoDate = '2025-01-18' // 3 days later (Saturday)
+    const result = formatDay(isoDate, currentDate)
+    expect(result).toBe('Saturday')
   })
 })
 
 describe('formatTime', () => {
   it('should format ISO time to human readable format', () => {
-    const result = formatTime('2025-01-15T14:30:00Z')
-    // The result will vary based on timezone, but should include a number
-    expect(result).toMatch(/\d+/)
+    expect(formatTime('2025-01-15T14:30:00Z')).toBe('2 PM')
+    expect(formatTime('2025-01-15T00:00:00Z')).toBe('12 AM')
+    expect(formatTime('2025-01-15T09:00:00Z')).toBe('9 AM')
+    expect(formatTime('2025-01-15T12:00:00Z')).toBe('12 PM')
+    expect(formatTime('2025-01-15T23:00:00Z')).toBe('11 PM')
   })
 })
 

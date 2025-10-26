@@ -57,7 +57,7 @@ export default function DetailsGrid() {
 
   return (
     <SimpleGrid
-      cols={{base: 2, sm: 2, md: 1}}
+      cols={{base: 2, sm: 2, md: 3, lg: 4}}
       spacing="md"
       verticalSpacing="md"
     >

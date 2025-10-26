@@ -28,13 +28,16 @@ export default function DetailCard({children, delay = 0}: DetailCardProps) {
         <Card
           shadow="sm"
           padding="lg"
-          radius="md"
+          radius="lg"
           withBorder
           style={{
             ...styles,
             backdropFilter: 'blur(10px)',
             backgroundColor: 'var(--mantine-color-body)',
-            borderColor: 'var(--mantine-color-default-border)'
+            borderColor: 'var(--mantine-color-default-border)',
+            minHeight: '180px',
+            display: 'flex',
+            flexDirection: 'column'
           }}
         >
           {children}
