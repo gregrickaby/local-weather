@@ -17,6 +17,19 @@
   }
 }
 
+.descriptionContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.descriptionContainer img {
+  width: clamp(48px, 8vw, 64px);
+  height: clamp(48px, 8vw, 64px);
+  filter: drop-shadow(0 2px 8px rgb(0 0 0 / 20%));
+}
+
 .description {
   color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-0));
   font-size: clamp(1.5rem, 4vw, 2rem);

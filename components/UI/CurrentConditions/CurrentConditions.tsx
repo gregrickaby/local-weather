@@ -1,5 +1,6 @@
 'use client'
 
+import Icon from '@/components/UI/Icon/Icon'
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
 import {
@@ -36,7 +37,7 @@ export default function CurrentConditions() {
   } = weather
 
   // Get current conditions with day/night icon
-  const {description} = getWeatherInfo(
+  const {description, icon} = getWeatherInfo(
     weather_code,
     time,
     sunrise[0],
@@ -49,9 +50,12 @@ export default function CurrentConditions() {
   return (
     <div className={classes.hero}>
       <Stack align="center" gap="xs">
-        <Text className={classes.description} component="p">
-          {description}
-        </Text>
+        <div className={classes.descriptionContainer}>
+          <Icon icon={icon} alt="" />
+          <Text className={classes.description} component="p">
+            {description}
+          </Text>
+        </div>
         <Text className={classes.bigtemp} component="p">
           {formatTemperature(tempUnit, temperature_2m)}
         </Text>
