@@ -104,6 +104,10 @@ export default function Search() {
   return (
     <Autocomplete
       aria-label="Enter the name of your location"
+      autoComplete="off"
+      autoCorrect="off"
+      autoCapitalize="off"
+      spellCheck={false}
       className={classes.searchbar}
       data={comboboxData}
       dropdownOpened={dropdownOpened}
