@@ -10,7 +10,7 @@ describe('SunriseSunset', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -28,7 +28,7 @@ describe('SunriseSunset', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -50,7 +50,7 @@ describe('SunriseSunset', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -72,7 +72,7 @@ describe('SunriseSunset', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }

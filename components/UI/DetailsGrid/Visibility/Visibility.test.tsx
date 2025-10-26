@@ -10,7 +10,7 @@ describe('Visibility', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -28,7 +28,7 @@ describe('Visibility', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -47,7 +47,7 @@ describe('Visibility', () => {
           location: mockLocation,
           tempUnit: 'c',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -66,7 +66,7 @@ describe('Visibility', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }

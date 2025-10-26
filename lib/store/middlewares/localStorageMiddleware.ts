@@ -1,7 +1,8 @@
 import {Middleware} from '@reduxjs/toolkit'
 import {
-  clearSearchHistory,
-  removeFromSearchHistory,
+  addToFavorites,
+  clearFavorites,
+  removeFromFavorites,
   setColorScheme,
   setLocation,
   setTempUnit
@@ -20,11 +21,6 @@ export const localStorageMiddleware: Middleware =
 
       if (setLocation.match(action)) {
         localStorage.setItem('location', JSON.stringify(action.payload))
-        // Save updated search history
-        localStorage.setItem(
-          'searchHistory',
-          JSON.stringify(state.preferences.searchHistory)
-        )
       }
 
       if (setTempUnit.match(action)) {
@@ -36,12 +32,13 @@ export const localStorageMiddleware: Middleware =
       }
 
       if (
-        clearSearchHistory.match(action) ||
-        removeFromSearchHistory.match(action)
+        addToFavorites.match(action) ||
+        removeFromFavorites.match(action) ||
+        clearFavorites.match(action)
       ) {
         localStorage.setItem(
-          'searchHistory',
-          JSON.stringify(state.preferences.searchHistory)
+          'favorites',
+          JSON.stringify(state.preferences.favorites)
         )
       }
     }

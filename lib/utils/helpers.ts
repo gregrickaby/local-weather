@@ -1,9 +1,68 @@
 /**
+ * Weather Helper Functions
+ *
+ * IMPORTANT TIMEZONE HANDLING:
+ * The Open-Meteo API returns times in the LOCATION'S timezone (via timezone: 'auto').
+ * All time/date parsing in this file uses the ISO strings directly WITHOUT timezone conversion.
+ * This ensures that when a user searches for weather in London, they see London's times,
+ * not their browser's local time.
+ *
+ * DO NOT use `new Date().getHours()` or similar methods that convert to browser timezone.
+ * Instead, parse the hour/date directly from the ISO string using helper functions below.
+ */
+
+/**
  * Helper function to create time ranges for SDK responses.
  * Generates an array of numbers from start to stop with a given step.
  */
 export function range(start: number, stop: number, step: number): number[] {
   return Array.from({length: (stop - start) / step}, (_, i) => start + i * step)
+}
+
+/**
+ * Extract hour from ISO string without timezone conversion.
+ * The API provides times in the location's timezone, so we parse directly.
+ */
+function getHourFromISO(isoString: string): number {
+  // ISO format: "2025-01-15T14:30:00..." - extract the hour part
+  const timePart = isoString.split('T')[1]
+  return Number.parseInt(timePart.split(':')[0], 10)
+}
+
+/**
+ * Extract date components from ISO string without timezone conversion.
+ * Returns {year, month, day, dateString} in the location's timezone.
+ */
+function getDateFromISO(isoString: string): {
+  year: number
+  month: number
+  day: number
+  dateString: string
+} {
+  // ISO format: "2025-01-15T14:30:00..." or "2025-01-15"
+  const datePart = isoString.split('T')[0]
+  const [year, month, day] = datePart.split('-').map(Number)
+  return {year, month, day, dateString: datePart}
+}
+
+/**
+ * Compare two date strings (YYYY-MM-DD) without timezone issues.
+ */
+function isSameDate(date1: string, date2: string): boolean {
+  return date1 === date2
+}
+
+/**
+ * Get tomorrow's date string from a given date string.
+ */
+function getTomorrowDateString(dateString: string): string {
+  const {year, month, day} = getDateFromISO(dateString)
+  const date = new Date(year, month - 1, day)
+  date.setDate(date.getDate() + 1)
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
 }
 
 /**
@@ -87,28 +146,47 @@ export function formatTemperature(tempUnit: string, temp: number): string {
 
 /**
  * Format ISO date string to day of week.
+ * Uses the current date from API response (location's timezone) for "Today"/"Tomorrow".
+ *
+ * @param isoDate - Date string in YYYY-MM-DD format from the API (location's timezone)
+ * @param currentDate - Optional current date string from weather.current.time (location's timezone)
  */
-export function formatDay(isoDate: string): string {
-  // Parse the ISO date as local date (YYYY-MM-DD format)
-  const [year, month, day] = isoDate.split('-').map(Number)
+export function formatDay(isoDate: string, currentDate?: string): string {
+  // Parse the ISO date (YYYY-MM-DD format)
+  const {year, month, day, dateString} = getDateFromISO(isoDate)
   const date = new Date(year, month - 1, day)
 
-  const now = new Date()
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const tomorrow = new Date(today)
-  tomorrow.setDate(tomorrow.getDate() + 1)
+  // If currentDate provided, use it (location's timezone)
+  // Otherwise fall back to browser's date (for backward compatibility)
+  if (currentDate) {
+    const todayString = getDateFromISO(currentDate).dateString
+    const tomorrowString = getTomorrowDateString(todayString)
 
-  // Compare dates directly
-  const dateTime = date.getTime()
-  const todayTime = today.getTime()
-  const tomorrowTime = tomorrow.getTime()
+    if (isSameDate(dateString, todayString)) {
+      return 'Today'
+    }
 
-  if (dateTime === todayTime) {
-    return 'Today'
-  }
+    if (isSameDate(dateString, tomorrowString)) {
+      return 'Tomorrow'
+    }
+  } else {
+    // Backward compatibility: use browser time
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
 
-  if (dateTime === tomorrowTime) {
-    return 'Tomorrow'
+    const dateTime = date.getTime()
+    const todayTime = today.getTime()
+    const tomorrowTime = tomorrow.getTime()
+
+    if (dateTime === todayTime) {
+      return 'Today'
+    }
+
+    if (dateTime === tomorrowTime) {
+      return 'Tomorrow'
+    }
   }
 
   // Format the day of the week from the ISO date
@@ -190,24 +268,21 @@ function getSimpleWeather(code: number): string {
  */
 function analyzeDayWeather(
   currentHour: number,
-  hourlyData: Array<{time: Date; code: number; precip: number}>
+  hourlyData: Array<{hour: number; code: number; precip: number}>
 ): {
   morning: string | null
   afternoon: string | null
   evening: string | null
 } {
-  // Define time periods (using location's time)
+  // Define time periods (using location's time, not browser time)
   const morningHours = hourlyData.filter((h) => {
-    const hour = h.time.getHours()
-    return hour >= 6 && hour < 12
+    return h.hour >= 6 && h.hour < 12
   })
   const afternoonHours = hourlyData.filter((h) => {
-    const hour = h.time.getHours()
-    return hour >= 12 && hour < 17
+    return h.hour >= 12 && h.hour < 17
   })
   const eveningHours = hourlyData.filter((h) => {
-    const hour = h.time.getHours()
-    return hour >= 17 && hour < 22
+    return h.hour >= 17 && h.hour < 22
   })
 
   // Get dominant weather for each period
@@ -347,6 +422,9 @@ function buildForecastParts(
 /**
  * Generate a short forecast statement based on weather data.
  * Examples: "Clear tonight, cooler tomorrow", "Rain expected this evening"
+ *
+ * IMPORTANT: All time/date logic uses the location's timezone from the API,
+ * not the browser's local timezone.
  */
 export function generateForecastStatement(weather: {
   current: {
@@ -368,8 +446,9 @@ export function generateForecastStatement(weather: {
     sunset: string[]
   }
 }): string {
-  const currentTime = new Date(weather.current.time)
-  const currentHour = currentTime.getHours()
+  // Extract hour from location's time (not browser time!)
+  const currentHour = getHourFromISO(weather.current.time)
+  const currentDateString = getDateFromISO(weather.current.time).dateString
 
   // Get today's and tomorrow's data
   const todayMax = weather.daily.temperature_2m_max[0]
@@ -377,15 +456,21 @@ export function generateForecastStatement(weather: {
   const tomorrowCode = weather.daily.weather_code[1]
 
   // Prepare hourly data for analysis (next 24 hours)
+  // Filter hours that are in the future relative to location's time
   const hourlyDataToday = weather.hourly.time
-    .map((time, index) => ({
-      time: new Date(time),
-      code: weather.hourly.weather_code[index],
-      precip: weather.hourly.precipitation_probability[index]
-    }))
+    .map((time, index) => {
+      const hourData = {
+        time,
+        hour: getHourFromISO(time),
+        dateString: getDateFromISO(time).dateString,
+        code: weather.hourly.weather_code[index],
+        precip: weather.hourly.precipitation_probability[index]
+      }
+      return hourData
+    })
     .filter((hour) => {
-      const isToday = hour.time.getDate() === currentTime.getDate()
-      const isFuture = hour.time > currentTime
+      const isToday = isSameDate(hour.dateString, currentDateString)
+      const isFuture = hour.time > weather.current.time
       return isToday && isFuture
     })
     .slice(0, 18) // Next ~18 hours

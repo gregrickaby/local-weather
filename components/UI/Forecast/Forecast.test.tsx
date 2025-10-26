@@ -10,7 +10,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: false
         }
       }
@@ -27,7 +27,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -46,7 +46,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -64,7 +64,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -82,7 +82,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -104,7 +104,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -129,7 +129,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -149,7 +149,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'c',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -169,7 +169,7 @@ describe('Forecast', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }

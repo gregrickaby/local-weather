@@ -3,8 +3,9 @@ import type {Location} from '@/lib/types'
 import {mockLocation} from '@/test-utils'
 import {beforeEach, describe, expect, it} from 'vitest'
 import preferencesReducer, {
-  clearSearchHistory,
-  removeFromSearchHistory,
+  addToFavorites,
+  clearFavorites,
+  removeFromFavorites,
   setColorScheme,
   setLocation,
   setMounted,
@@ -16,7 +17,7 @@ describe('preferencesSlice', () => {
     location: DEFAULT_LOCATION,
     tempUnit: 'f' as 'c' | 'f',
     colorScheme: 'auto' as 'light' | 'dark' | 'auto',
-    searchHistory: [] as Location[],
+    favorites: [] as Location[],
     mounted: false
   }
 
@@ -33,44 +34,9 @@ describe('preferencesSlice', () => {
       expect(state.location).toEqual(mockLocation)
     })
 
-    it('should add location to search history', () => {
+    it('should not automatically add location to favorites', () => {
       const state = preferencesReducer(initialState, setLocation(mockLocation))
-      expect(state.searchHistory).toHaveLength(1)
-      expect(state.searchHistory[0]).toEqual(mockLocation)
-    })
-
-    it('should move existing location to front of history', () => {
-      const location2: Location = {
-        ...mockLocation,
-        id: 2,
-        name: 'New York'
-      }
-
-      let state = preferencesReducer(initialState, setLocation(mockLocation))
-      state = preferencesReducer(state, setLocation(location2))
-      state = preferencesReducer(state, setLocation(mockLocation))
-
-      expect(state.searchHistory).toHaveLength(2)
-      expect(state.searchHistory[0]).toEqual(mockLocation)
-      expect(state.searchHistory[1]).toEqual(location2)
-    })
-
-    it('should limit search history to 10 items', () => {
-      let state = initialState
-
-      // Add 15 locations
-      for (let i = 1; i <= 15; i++) {
-        const location: Location = {
-          ...mockLocation,
-          id: i,
-          name: `City ${i}`
-        }
-        state = preferencesReducer(state, setLocation(location))
-      }
-
-      expect(state.searchHistory).toHaveLength(10)
-      expect(state.searchHistory[0].name).toBe('City 15')
-      expect(state.searchHistory[9].name).toBe('City 6')
+      expect(state.favorites).toHaveLength(0)
     })
   })
 
@@ -103,44 +69,90 @@ describe('preferencesSlice', () => {
     })
   })
 
-  describe('clearSearchHistory', () => {
-    it('should clear all search history', () => {
-      let state = preferencesReducer(initialState, setLocation(mockLocation))
-      expect(state.searchHistory).toHaveLength(1)
-
-      state = preferencesReducer(state, clearSearchHistory())
-      expect(state.searchHistory).toHaveLength(0)
+  describe('addToFavorites', () => {
+    it('should add location to favorites', () => {
+      const state = preferencesReducer(
+        initialState,
+        addToFavorites(mockLocation)
+      )
+      expect(state.favorites).toHaveLength(1)
+      expect(state.favorites[0]).toEqual(mockLocation)
     })
-  })
 
-  describe('removeFromSearchHistory', () => {
-    it('should remove location from search history by ID', () => {
+    it('should not add duplicate locations to favorites', () => {
+      let state = preferencesReducer(initialState, addToFavorites(mockLocation))
+      state = preferencesReducer(state, addToFavorites(mockLocation))
+
+      expect(state.favorites).toHaveLength(1)
+      expect(state.favorites[0]).toEqual(mockLocation)
+    })
+
+    it('should add multiple different locations to favorites', () => {
       const location2: Location = {
         ...mockLocation,
         id: 2,
-        name: 'New York'
+        name: 'New York',
+        display: 'New York, New York, United States'
       }
 
-      let state = preferencesReducer(initialState, setLocation(mockLocation))
-      state = preferencesReducer(state, setLocation(location2))
+      let state = preferencesReducer(initialState, addToFavorites(mockLocation))
+      state = preferencesReducer(state, addToFavorites(location2))
 
-      expect(state.searchHistory).toHaveLength(2)
+      expect(state.favorites).toHaveLength(2)
+      expect(state.favorites[0]).toEqual(mockLocation)
+      expect(state.favorites[1]).toEqual(location2)
+    })
+  })
 
-      state = preferencesReducer(
-        state,
-        removeFromSearchHistory(mockLocation.id)
-      )
+  describe('removeFromFavorites', () => {
+    it('should remove location from favorites by ID', () => {
+      const location2: Location = {
+        ...mockLocation,
+        id: 2,
+        name: 'New York',
+        display: 'New York, New York, United States'
+      }
 
-      expect(state.searchHistory).toHaveLength(1)
-      expect(state.searchHistory[0]).toEqual(location2)
+      let state = preferencesReducer(initialState, addToFavorites(mockLocation))
+      state = preferencesReducer(state, addToFavorites(location2))
+
+      expect(state.favorites).toHaveLength(2)
+
+      state = preferencesReducer(state, removeFromFavorites(mockLocation.id))
+
+      expect(state.favorites).toHaveLength(1)
+      expect(state.favorites[0]).toEqual(location2)
     })
 
     it('should not error when removing non-existent ID', () => {
-      const state = preferencesReducer(
-        initialState,
-        removeFromSearchHistory(999)
-      )
-      expect(state.searchHistory).toHaveLength(0)
+      const state = preferencesReducer(initialState, removeFromFavorites(999))
+      expect(state.favorites).toHaveLength(0)
+    })
+  })
+
+  describe('clearFavorites', () => {
+    it('should clear all favorites', () => {
+      let state = preferencesReducer(initialState, addToFavorites(mockLocation))
+      expect(state.favorites).toHaveLength(1)
+
+      state = preferencesReducer(state, clearFavorites())
+      expect(state.favorites).toHaveLength(0)
+    })
+
+    it('should clear multiple favorites', () => {
+      const location2: Location = {
+        ...mockLocation,
+        id: 2,
+        name: 'New York',
+        display: 'New York, New York, United States'
+      }
+
+      let state = preferencesReducer(initialState, addToFavorites(mockLocation))
+      state = preferencesReducer(state, addToFavorites(location2))
+      expect(state.favorites).toHaveLength(2)
+
+      state = preferencesReducer(state, clearFavorites())
+      expect(state.favorites).toHaveLength(0)
     })
   })
 

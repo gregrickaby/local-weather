@@ -10,7 +10,7 @@ describe('Pressure', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -26,7 +26,7 @@ describe('Pressure', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -46,7 +46,7 @@ describe('Pressure', () => {
           location: mockLocation,
           tempUnit: 'c',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -65,7 +65,7 @@ describe('Pressure', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -84,7 +84,7 @@ describe('Pressure', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }

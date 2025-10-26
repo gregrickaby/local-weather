@@ -1,6 +1,6 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import {mockLocation, render, screen, waitFor} from '@/test-utils'
 import userEvent from '@testing-library/user-event'
+import {describe, expect, it} from 'vitest'
 import Search from './Search'
 
 describe('Search', () => {
@@ -11,7 +11,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -28,7 +28,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -45,7 +45,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -66,7 +66,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -86,7 +86,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -106,7 +106,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -127,7 +127,7 @@ describe('Search', () => {
           },
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -137,8 +137,8 @@ describe('Search', () => {
     expect(input).toHaveValue('')
   })
 
-  it('should display search history locations when available', async () => {
-    const historyLocation = {
+  it('should display favorite locations when available', async () => {
+    const favoriteLocation = {
       id: 2,
       name: 'Chicago',
       latitude: 41.85,
@@ -155,7 +155,7 @@ describe('Search', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [historyLocation],
+          favorites: [favoriteLocation],
           mounted: true
         }
       }

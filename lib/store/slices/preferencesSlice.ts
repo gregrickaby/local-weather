@@ -9,11 +9,9 @@ interface PreferencesState {
   location: Location
   tempUnit: TempUnit
   colorScheme: ColorScheme
-  searchHistory: Location[]
+  favorites: Location[]
   mounted: boolean
 }
-
-const MAX_SEARCH_HISTORY = 10
 
 /**
  * Load initial state from localStorage (with SSR safety).
@@ -24,13 +22,13 @@ const getInitialState = (): PreferencesState => {
       location: DEFAULT_LOCATION,
       tempUnit: 'f',
       colorScheme: 'auto',
-      searchHistory: [],
+      favorites: [],
       mounted: false
     }
   }
 
   let location = DEFAULT_LOCATION
-  let searchHistory: Location[] = []
+  let favorites: Location[] = []
 
   // Safely parse localStorage with try-catch
   try {
@@ -45,13 +43,13 @@ const getInitialState = (): PreferencesState => {
   }
 
   try {
-    const storedHistory = localStorage.getItem('searchHistory')
-    if (storedHistory) {
-      searchHistory = JSON.parse(storedHistory)
+    const storedFavorites = localStorage.getItem('favorites')
+    if (storedFavorites) {
+      favorites = JSON.parse(storedFavorites)
     }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
-      console.error('Failed to parse search history:', error)
+      console.error('Failed to parse favorites:', error)
     }
   }
 
@@ -59,7 +57,7 @@ const getInitialState = (): PreferencesState => {
     location,
     tempUnit: (localStorage.getItem('tempUnit') as TempUnit) || 'f',
     colorScheme: (localStorage.getItem('colorScheme') as ColorScheme) || 'auto',
-    searchHistory,
+    favorites,
     mounted: true
   }
 }
@@ -73,39 +71,27 @@ const preferencesSlice = createSlice({
   reducers: {
     setLocation: (state, action: PayloadAction<Location>) => {
       state.location = action.payload
-
-      // Add to search history if not already present (check by ID)
-      const newLocation = action.payload
-      const existingIndex = state.searchHistory.findIndex(
-        (loc) => loc.id === newLocation.id
-      )
-
-      if (existingIndex >= 0) {
-        // Move to front if already exists
-        state.searchHistory = [
-          newLocation,
-          ...state.searchHistory.filter((loc) => loc.id !== newLocation.id)
-        ]
-      } else {
-        state.searchHistory = [newLocation, ...state.searchHistory].slice(
-          0,
-          MAX_SEARCH_HISTORY
-        )
+    },
+    addToFavorites: (state, action: PayloadAction<Location>) => {
+      const newFavorite = action.payload
+      // Only add if not already in favorites
+      if (!state.favorites.some((loc) => loc.id === newFavorite.id)) {
+        state.favorites = [...state.favorites, newFavorite]
       }
+    },
+    removeFromFavorites: (state, action: PayloadAction<number>) => {
+      state.favorites = state.favorites.filter(
+        (loc) => loc.id !== action.payload
+      )
+    },
+    clearFavorites: (state) => {
+      state.favorites = []
     },
     setTempUnit: (state, action: PayloadAction<TempUnit>) => {
       state.tempUnit = action.payload
     },
     setColorScheme: (state, action: PayloadAction<ColorScheme>) => {
       state.colorScheme = action.payload
-    },
-    clearSearchHistory: (state) => {
-      state.searchHistory = []
-    },
-    removeFromSearchHistory: (state, action: PayloadAction<number>) => {
-      state.searchHistory = state.searchHistory.filter(
-        (loc) => loc.id !== action.payload
-      )
     },
     setMounted: (state, action: PayloadAction<boolean>) => {
       state.mounted = action.payload
@@ -115,10 +101,11 @@ const preferencesSlice = createSlice({
 
 export const {
   setLocation,
+  addToFavorites,
+  removeFromFavorites,
+  clearFavorites,
   setTempUnit,
   setColorScheme,
-  clearSearchHistory,
-  removeFromSearchHistory,
   setMounted
 } = preferencesSlice.actions
 

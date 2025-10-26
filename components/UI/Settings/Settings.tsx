@@ -3,15 +3,19 @@
 import config from '@/lib/constants/config'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {
-  clearSearchHistory,
+  clearFavorites,
+  removeFromFavorites,
   setColorScheme,
+  setLocation,
   setTempUnit
 } from '@/lib/store/slices/preferencesSlice'
+import type {Location} from '@/lib/types'
 import {
   ActionIcon,
   Button,
   Divider,
   Flex,
+  Group,
   Modal,
   Select,
   Stack,
@@ -34,9 +38,7 @@ export default function Settings() {
   } = useMantineColorScheme()
   const dispatch = useAppDispatch()
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-  const searchHistory = useAppSelector(
-    (state) => state.preferences.searchHistory
-  )
+  const favorites = useAppSelector((state) => state.preferences.favorites)
 
   function handleUnitChange(value: string | null) {
     if (value === 'imperial' || value === 'metric') {
@@ -51,8 +53,17 @@ export default function Settings() {
     dispatch(setColorScheme(newScheme))
   }
 
-  function handleClearHistory() {
-    dispatch(clearSearchHistory())
+  function handleClearFavorites() {
+    dispatch(clearFavorites())
+  }
+
+  function handleRemoveFavorite(locationId: number) {
+    dispatch(removeFromFavorites(locationId))
+  }
+
+  function handleSelectFavorite(favorite: Location) {
+    dispatch(setLocation(favorite))
+    close()
   }
 
   return (
@@ -100,23 +111,45 @@ export default function Settings() {
             onLabel="ON"
             size="lg"
           />
-          {searchHistory.length > 0 && (
+          {favorites.length > 0 && (
             <>
               <Divider />
               <div>
                 <Text size="sm" fw={500} mb="xs">
-                  Search History ({searchHistory.length})
+                  Favorites ({favorites.length})
                 </Text>
-                <Button
-                  leftSection={<IconTrash size={16} />}
-                  variant="light"
-                  color="red"
-                  fullWidth
-                  onClick={handleClearHistory}
-                  size="sm"
-                >
-                  Clear History
-                </Button>
+                <Stack gap="xs">
+                  {favorites.map((fav) => (
+                    <Group key={fav.id} justify="space-between" wrap="nowrap">
+                      <Button
+                        variant="light"
+                        fullWidth
+                        onClick={() => handleSelectFavorite(fav)}
+                        style={{flex: 1}}
+                      >
+                        {fav.display}
+                      </Button>
+                      <ActionIcon
+                        color="red"
+                        variant="subtle"
+                        aria-label={`Remove ${fav.display} from favorites`}
+                        onClick={() => handleRemoveFavorite(fav.id)}
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
+                  ))}
+                  <Button
+                    leftSection={<IconTrash size={16} />}
+                    variant="light"
+                    color="red"
+                    fullWidth
+                    onClick={handleClearFavorites}
+                    size="sm"
+                  >
+                    Clear All Favorites
+                  </Button>
+                </Stack>
               </div>
             </>
           )}

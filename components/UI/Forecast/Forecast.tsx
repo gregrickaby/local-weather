@@ -163,7 +163,7 @@ export default function Forecast() {
               <div key={forecast.date} className={classes.forecastItem}>
                 <div className={classes.dayLabel}>
                   <Text size="lg" fw={500}>
-                    {formatDay(forecast.date)}
+                    {formatDay(forecast.date, weather.current.time)}
                   </Text>
                 </div>
 

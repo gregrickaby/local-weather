@@ -1,6 +1,6 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import {mockLocation, render, screen, waitFor} from '@/test-utils'
 import userEvent from '@testing-library/user-event'
+import {describe, expect, it} from 'vitest'
 import Settings from './Settings'
 
 describe('Settings', () => {
@@ -48,7 +48,7 @@ describe('Settings', () => {
     })
   })
 
-  it('should show clear history button when there is search history', async () => {
+  it('should show clear favorites button when there is favorites', async () => {
     const user = userEvent.setup()
     render(<Settings />, {
       preloadedState: {
@@ -56,7 +56,7 @@ describe('Settings', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [mockLocation],
+          favorites: [mockLocation],
           mounted: true
         }
       }
@@ -66,12 +66,12 @@ describe('Settings', () => {
     await user.click(button)
 
     await waitFor(() => {
-      expect(screen.getByText('Search History (1)')).toBeInTheDocument()
-      expect(screen.getByText('Clear History')).toBeInTheDocument()
+      expect(screen.getByText('Favorites (1)')).toBeInTheDocument()
+      expect(screen.getByText('Clear All Favorites')).toBeInTheDocument()
     })
   })
 
-  it('should NOT show clear history button when there is no search history', async () => {
+  it('should NOT show clear favorites button when there is no favorites', async () => {
     const user = userEvent.setup()
     render(<Settings />, {
       preloadedState: {
@@ -79,7 +79,7 @@ describe('Settings', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -89,7 +89,7 @@ describe('Settings', () => {
     await user.click(button)
 
     await waitFor(() => {
-      expect(screen.queryByText('Clear History')).not.toBeInTheDocument()
+      expect(screen.queryByText('Clear All Favorites')).not.toBeInTheDocument()
     })
   })
 
@@ -101,7 +101,7 @@ describe('Settings', () => {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -127,7 +127,7 @@ describe('Settings', () => {
           location: mockLocation,
           tempUnit: 'c',
           colorScheme: 'light',
-          searchHistory: [],
+          favorites: [],
           mounted: true
         }
       }
@@ -140,6 +140,108 @@ describe('Settings', () => {
       expect(screen.getByText('Select Units')).toBeInTheDocument()
       // Verify metric is displayed
       expect(screen.getByText(/Metric \(°C, km\/h, hPa\)/i)).toBeInTheDocument()
+    })
+  })
+
+  it('should toggle color scheme when switch is clicked', async () => {
+    const user = userEvent.setup()
+    render(<Settings />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'f',
+          colorScheme: 'light',
+          favorites: [],
+          mounted: true
+        }
+      }
+    })
+
+    const button = screen.getByLabelText('open settings')
+    await user.click(button)
+
+    const themeToggle = await screen.findByLabelText(
+      'Toggle between light and theme.'
+    )
+    await user.click(themeToggle)
+
+    // The switch should now be checked (dark mode)
+    expect(themeToggle).toBeChecked()
+  })
+
+  it('should display unit selector with current selection', async () => {
+    const user = userEvent.setup()
+    render(<Settings />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'f',
+          colorScheme: 'light',
+          favorites: [],
+          mounted: true
+        }
+      }
+    })
+
+    const settingsButton = screen.getByLabelText('open settings')
+    await user.click(settingsButton)
+
+    await waitFor(() => {
+      expect(screen.getByText('Select Units')).toBeInTheDocument()
+      // Imperial should be shown (tempUnit is 'f')
+      expect(
+        screen.getByText(/Imperial \(°F, mph, inHg\)/i)
+      ).toBeInTheDocument()
+    })
+  })
+
+  it('should clear favorites when clear button is clicked', async () => {
+    const user = userEvent.setup()
+    render(<Settings />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'f',
+          colorScheme: 'light',
+          favorites: [mockLocation, {...mockLocation, name: 'Test City'}],
+          mounted: true
+        }
+      }
+    })
+
+    const settingsButton = screen.getByLabelText('open settings')
+    await user.click(settingsButton)
+
+    // Should show 2 items in history
+    await waitFor(() => {
+      expect(screen.getByText('Favorites (2)')).toBeInTheDocument()
+    })
+
+    const clearButton = screen.getByText('Clear All Favorites')
+    await user.click(clearButton)
+
+    // History should be cleared, button should disappear
+    await waitFor(() => {
+      expect(screen.queryByText('Clear All Favorites')).not.toBeInTheDocument()
+    })
+  })
+
+  it('should close modal when close button is clicked', async () => {
+    const user = userEvent.setup()
+    render(<Settings />)
+
+    const settingsButton = screen.getByLabelText('open settings')
+    await user.click(settingsButton)
+
+    await waitFor(() => {
+      expect(screen.getByText('Settings')).toBeInTheDocument()
+    })
+
+    const closeButton = screen.getByLabelText('close settings')
+    await user.click(closeButton)
+
+    await waitFor(() => {
+      expect(screen.queryByText('Settings')).not.toBeInTheDocument()
     })
   })
 })

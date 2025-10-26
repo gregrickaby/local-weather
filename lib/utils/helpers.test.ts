@@ -1,10 +1,11 @@
-import {describe, it, expect} from 'vitest'
+import {describe, expect, it} from 'vitest'
 import {
-  formatTemperature,
-  formatPressure,
-  getWeatherInfo,
   formatDay,
+  formatPressure,
+  formatTemperature,
   formatTime,
+  generateForecastStatement,
+  getWeatherInfo,
   range
 } from './helpers'
 
@@ -87,6 +88,55 @@ describe('getWeatherInfo', () => {
     expect(result.description).toBe('Unknown')
     expect(result.icon).toMatch(/01[dn]/)
   })
+
+  it('should return partly cloudy for code 2', () => {
+    const result = getWeatherInfo(2)
+    expect(result.description).toBe('Partly cloudy')
+    expect(result.icon).toMatch(/02[dn]/)
+  })
+
+  it('should return fog for codes 45 and 48', () => {
+    const fog = getWeatherInfo(45)
+    expect(fog.description).toBe('Foggy')
+    expect(fog.icon).toMatch(/50[dn]/)
+
+    const rimeFog = getWeatherInfo(48)
+    expect(rimeFog.description).toBe('Depositing rime fog')
+    expect(rimeFog.icon).toMatch(/50[dn]/)
+  })
+
+  it('should return drizzle for codes 51-57', () => {
+    const lightDrizzle = getWeatherInfo(51)
+    expect(lightDrizzle.description).toBe('Light drizzle')
+
+    const freezingDrizzle = getWeatherInfo(56)
+    expect(freezingDrizzle.description).toBe('Light freezing drizzle')
+  })
+
+  it('should return snow for codes 71-77', () => {
+    const lightSnow = getWeatherInfo(71)
+    expect(lightSnow.description).toBe('Slight snow fall')
+    expect(lightSnow.icon).toMatch(/13[dn]/)
+
+    const heavySnow = getWeatherInfo(75)
+    expect(heavySnow.description).toBe('Heavy snow fall')
+  })
+
+  it('should return showers for codes 80-86', () => {
+    const rainShower = getWeatherInfo(80)
+    expect(rainShower.description).toBe('Slight rain showers')
+
+    const snowShower = getWeatherInfo(85)
+    expect(snowShower.description).toBe('Slight snow showers')
+  })
+
+  it('should return thunderstorm with hail for codes 96-99', () => {
+    const lightHail = getWeatherInfo(96)
+    expect(lightHail.description).toBe('Thunderstorm with slight hail')
+
+    const heavyHail = getWeatherInfo(99)
+    expect(heavyHail.description).toBe('Thunderstorm with heavy hail')
+  })
 })
 
 describe('formatDay', () => {
@@ -144,5 +194,171 @@ describe('range', () => {
   it('should create empty array for equal start and stop', () => {
     const result = range(5, 5, 1)
     expect(result).toEqual([])
+  })
+})
+
+describe('generateForecastStatement', () => {
+  const createMockWeather = (
+    overrides: {
+      current?: Partial<{
+        time: string
+        temperature_2m: number
+        weather_code: number
+      }>
+      hourly?: Partial<{
+        time?: string[]
+        temperature_2m?: number[]
+        weather_code?: number[]
+        precipitation_probability?: number[]
+      }>
+      daily?: Partial<{
+        time?: string[]
+        temperature_2m_max?: number[]
+        temperature_2m_min?: number[]
+        weather_code?: number[]
+        sunset?: string[]
+      }>
+    } = {}
+  ) => ({
+    current: {
+      time: '2025-01-15T10:00:00Z',
+      temperature_2m: 72,
+      weather_code: 0,
+      ...overrides.current
+    },
+    hourly: {
+      time: Array.from({length: 24}, (_, i) => {
+        const date = new Date('2025-01-15T00:00:00Z')
+        date.setHours(i)
+        return date.toISOString()
+      }),
+      temperature_2m: new Array(24).fill(70),
+      weather_code: new Array(24).fill(0),
+      precipitation_probability: new Array(24).fill(0),
+      ...overrides.hourly
+    },
+    daily: {
+      time: ['2025-01-15', '2025-01-16', '2025-01-17'],
+      temperature_2m_max: [75, 80, 72],
+      temperature_2m_min: [65, 68, 60],
+      weather_code: [0, 2, 61],
+      sunset: [
+        '2025-01-15T18:00:00Z',
+        '2025-01-16T18:00:00Z',
+        '2025-01-17T18:00:00Z'
+      ],
+      ...overrides.daily
+    }
+  })
+
+  it('should generate forecast for morning time', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T08:00:00Z', weather_code: 0}
+    })
+    const result = generateForecastStatement(weather)
+    expect(result).toBeTruthy()
+    expect(result.length).toBeGreaterThan(0)
+    // Should start with capital letter
+    expect(result[0]).toBe(result[0].toUpperCase())
+  })
+
+  it('should generate forecast for afternoon time', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T14:00:00Z', weather_code: 2}
+    })
+    const result = generateForecastStatement(weather)
+    expect(result).toBeTruthy()
+    expect(result.length).toBeGreaterThan(0)
+  })
+
+  it('should generate forecast for evening/night time', () => {
+    // Use a late hour that will definitely be evening in most timezones
+    const now = new Date()
+    now.setHours(21, 0, 0, 0) // 9 PM local time
+    const weather = createMockWeather({
+      current: {time: now.toISOString(), weather_code: 0}
+    })
+    const result = generateForecastStatement(weather)
+    expect(result).toBeTruthy()
+    // At evening/night, forecast should mention tomorrow or tonight
+    expect(result.toLowerCase()).toMatch(/tomorrow|tonight/)
+  })
+
+  it('should mention rain when rain is expected', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T14:00:00Z', weather_code: 61},
+      hourly: {
+        weather_code: new Array(24).fill(61)
+      }
+    })
+    const result = generateForecastStatement(weather)
+    expect(result.toLowerCase()).toMatch(/rain/)
+  })
+
+  it('should mention snow when snow is expected', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T14:00:00Z', weather_code: 71},
+      daily: {
+        weather_code: [71, 71, 0]
+      }
+    })
+    const result = generateForecastStatement(weather)
+    expect(result.toLowerCase()).toMatch(/snow/)
+  })
+
+  it('should mention temperature change when significant', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T10:00:00Z'},
+      daily: {
+        temperature_2m_max: [70, 85, 72] // 15° increase tomorrow
+      }
+    })
+    const result = generateForecastStatement(weather)
+    expect(result.toLowerCase()).toMatch(/warm/)
+  })
+
+  it('should mention cooling when temperature drops significantly', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T10:00:00Z'},
+      daily: {
+        temperature_2m_max: [80, 65, 70] // 15° decrease tomorrow
+      }
+    })
+    const result = generateForecastStatement(weather)
+    expect(result.toLowerCase()).toMatch(/cool/)
+  })
+
+  it('should handle clear conditions', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T10:00:00Z', weather_code: 0},
+      hourly: {weather_code: new Array(24).fill(0)},
+      daily: {weather_code: [0, 0, 0]}
+    })
+    const result = generateForecastStatement(weather)
+    expect(result).toBeTruthy()
+    expect(result.toLowerCase()).toMatch(/clear/)
+  })
+
+  it('should handle cloudy conditions', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T10:00:00Z', weather_code: 3},
+      hourly: {weather_code: new Array(24).fill(3)}
+    })
+    const result = generateForecastStatement(weather)
+    expect(result).toBeTruthy()
+    expect(result.toLowerCase()).toMatch(/cloud|overcast/)
+  })
+
+  it('should return default statement when no clear forecast', () => {
+    const weather = createMockWeather({
+      current: {time: '2025-01-15T23:00:00Z'}, // Late night
+      daily: {
+        temperature_2m_max: [72, 72, 72] // No change
+      }
+    })
+    const result = generateForecastStatement(weather)
+    expect(result).toBeTruthy()
+    // Should still return a statement
+    expect(result.length).toBeGreaterThan(0)
   })
 })

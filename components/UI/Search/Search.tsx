@@ -3,9 +3,13 @@
 import Settings from '@/components/UI/Settings/Settings'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
-import {setLocation} from '@/lib/store/slices/preferencesSlice'
+import {
+  addToFavorites,
+  removeFromFavorites,
+  setLocation
+} from '@/lib/store/slices/preferencesSlice'
 import type {Location} from '@/lib/types'
-import {Autocomplete, ComboboxItem} from '@mantine/core'
+import {ActionIcon, Autocomplete, ComboboxItem} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {IconHeart, IconMapPin} from '@tabler/icons-react'
 import {useEffect, useState} from 'react'
@@ -48,9 +52,7 @@ const DEFAULT_PLACES: Location[] = [
 export default function Search() {
   const dispatch = useAppDispatch()
   const location = useAppSelector((state) => state.preferences.location)
-  const searchHistory = useAppSelector(
-    (state) => state.preferences.searchHistory
-  )
+  const favorites = useAppSelector((state) => state.preferences.favorites)
   const [searchTerm, setSearchTerm] = useState(location.display)
   const [dropdownOpened, setDropdownOpened] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
@@ -67,20 +69,22 @@ export default function Search() {
     }
   }, [isTyping])
 
-  // Priority: API results > Search history (only if typing) > Default places
+  // Priority: API results > Favorites (only if typing) > Default places
   let places: Location[] = DEFAULT_PLACES
   if (!!locations && locations.length > 0) {
     places = locations
-  } else if (debounced && searchHistory.length > 0 && isTyping) {
-    // Only show search history if user is actively searching
-    places = searchHistory
+  } else if (debounced && favorites.length > 0 && isTyping) {
+    // Only show favorites if user is actively searching
+    places = favorites
   }
 
   // Convert locations to combobox items (display strings)
-  const comboboxData: ComboboxItem[] = places.map((loc) => ({
-    value: loc.id.toString(),
-    label: loc.display
-  }))
+  const comboboxData: ComboboxItem[] = places
+    .filter((loc) => loc?.id && loc?.display)
+    .map((loc) => ({
+      value: loc.id.toString(),
+      label: loc.display
+    }))
 
   const handleChange = (value: string) => {
     setSearchTerm(value)
@@ -115,10 +119,15 @@ export default function Search() {
         }}
         placeholder="Enter the name of your location"
         renderOption={({option}) => {
-          const loc = places.find((l) => l.id.toString() === option.value)
-          const isInHistory = searchHistory.some(
-            (h) => h.id.toString() === option.value
+          const loc = places.find((l) => l?.id?.toString() === option.value)
+          const isFavorited = favorites.some(
+            (f) => f?.id?.toString() === option.value
           )
+
+          // Safety check: if location not found, just show the option value
+          if (!loc) {
+            return <span>{option.value}</span>
+          }
 
           return (
             <div
@@ -126,17 +135,32 @@ export default function Search() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                width: '100%'
+                width: '100%',
+                gap: '8px'
               }}
             >
-              <span>{loc?.display || option.value}</span>
-              {isInHistory && (
+              <span style={{flex: 1}}>{loc.display}</span>
+              <ActionIcon
+                size="sm"
+                variant="subtle"
+                aria-label={
+                  isFavorited ? 'Remove from favorites' : 'Add to favorites'
+                }
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (isFavorited) {
+                    dispatch(removeFromFavorites(loc.id))
+                  } else {
+                    dispatch(addToFavorites(loc))
+                  }
+                }}
+              >
                 <IconHeart
                   size={16}
-                  style={{color: '#ff6b6b', marginLeft: '8px'}}
-                  fill="#ff6b6b"
+                  fill={isFavorited ? '#ff6b6b' : 'none'}
+                  style={{color: isFavorited ? '#ff6b6b' : 'currentColor'}}
                 />
-              )}
+              </ActionIcon>
             </div>
           )
         }}
