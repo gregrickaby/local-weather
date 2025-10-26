@@ -8,7 +8,12 @@ import {
   setLocation
 } from '@/lib/store/slices/preferencesSlice'
 import type {Location} from '@/lib/types'
-import {ActionIcon, Autocomplete, ComboboxItem} from '@mantine/core'
+import {
+  ActionIcon,
+  Autocomplete,
+  CloseButton,
+  ComboboxItem
+} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {IconHeart, IconMapPin} from '@tabler/icons-react'
 import {useEffect, useState} from 'react'
@@ -90,6 +95,12 @@ export default function Search() {
     setIsTyping(true)
   }
 
+  const handleClear = () => {
+    setSearchTerm('')
+    setIsTyping(false)
+    setDropdownOpened(false)
+  }
+
   return (
     <Autocomplete
       aria-label="Enter the name of your location"
@@ -97,6 +108,15 @@ export default function Search() {
       data={comboboxData}
       dropdownOpened={dropdownOpened}
       leftSection={<IconMapPin />}
+      rightSection={
+        searchTerm ? (
+          <CloseButton
+            aria-label="Clear search"
+            onClick={handleClear}
+            size="sm"
+          />
+        ) : null
+      }
       limit={10}
       onChange={handleChange}
       onDropdownClose={() => {
