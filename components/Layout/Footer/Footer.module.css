@@ -9,11 +9,7 @@
 }
 
 .content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: var(--mantine-spacing-xs);
+  text-align: center;
   font-size: 0.875rem;
   color: light-dark(var(--mantine-color-gray-7), var(--mantine-color-dark-2));
 
@@ -30,18 +26,5 @@
     &:hover {
       opacity: 0.7;
     }
-  }
-}
-
-.divider {
-  color: light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-4));
-  user-select: none;
-}
-
-.github {
-  a {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
   }
 }

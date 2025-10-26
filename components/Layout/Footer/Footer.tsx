@@ -1,5 +1,4 @@
 import config from '@/lib/constants/config'
-import {IconBrandGithub} from '@tabler/icons-react'
 import classes from './Footer.module.css'
 
 /**
@@ -9,8 +8,8 @@ export default function Footer() {
   return (
     <footer className={classes.footer}>
       <div className={classes.content}>
-        <p className={classes.attribution}>
-          Weather data by{' '}
+        <p>
+          Weather data from{' '}
           <a
             aria-label="visit Open-Meteo website"
             href="https://open-meteo.com/"
@@ -19,10 +18,7 @@ export default function Footer() {
           >
             Open-Meteo
           </a>
-        </p>
-        <p className={classes.divider}>·</p>
-        <p className={classes.author}>
-          Created by{' '}
+          . Weather app created by{' '}
           <a
             aria-label={`visit ${config.siteAuthor} website`}
             href={config.authorUrl}
@@ -30,18 +26,16 @@ export default function Footer() {
           >
             {config.siteAuthor}
           </a>
-        </p>
-        <p className={classes.divider}>·</p>
-        <p className={classes.github}>
+          . View source on{' '}
           <a
             aria-label="view source code on github"
             href={config.githubUrl}
             rel="noopener noreferrer"
             target="_blank"
           >
-            <IconBrandGithub size={18} />
-            <span>Source</span>
+            GitHub
           </a>
+          .
         </p>
       </div>
     </footer>
