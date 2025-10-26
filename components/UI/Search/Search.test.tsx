@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
 import userEvent from '@testing-library/user-event'
-import Search from '../Search'
+import Search from './Search'
 
 describe('Search', () => {
   it('should render search input', () => {

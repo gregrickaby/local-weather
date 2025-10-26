@@ -1,7 +1,7 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
 import userEvent from '@testing-library/user-event'
-import Settings from '../Settings'
+import Settings from './Settings'
 
 describe('Settings', () => {
   it('should render settings button', () => {

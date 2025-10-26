@@ -1,10 +1,10 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import Visibility from '../Visibility'
+import FeelsLike from './FeelsLike'
 
-describe('Visibility', () => {
-  it('should display "Visibility" label', async () => {
-    render(<Visibility />, {
+describe('FeelsLike', () => {
+  it('should display "Feels Like" label', async () => {
+    render(<FeelsLike />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -17,12 +17,12 @@ describe('Visibility', () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText('Visibility')).toBeInTheDocument()
+      expect(screen.getByText('Feels Like')).toBeInTheDocument()
     })
   })
 
-  it('should display visibility in miles for Fahrenheit users', async () => {
-    render(<Visibility />, {
+  it('should display feels like temperature in Fahrenheit', async () => {
+    render(<FeelsLike />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -35,13 +35,13 @@ describe('Visibility', () => {
     })
 
     await waitFor(() => {
-      // Mock data: visibility = 10000 meters = ~6 miles
-      expect(screen.getByText(/6 mi/i)).toBeInTheDocument()
+      // Mock data: apparent_temperature = 74
+      expect(screen.getByText('74°F')).toBeInTheDocument()
     })
   })
 
-  it('should display visibility in kilometers for Celsius users', async () => {
-    render(<Visibility />, {
+  it('should display feels like temperature in Celsius', async () => {
+    render(<FeelsLike />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -54,13 +54,13 @@ describe('Visibility', () => {
     })
 
     await waitFor(() => {
-      // Mock data: visibility = 10000 meters = 10 km
-      expect(screen.getByText(/10 km/i)).toBeInTheDocument()
+      // Mock data returns 74°C when unit is C
+      expect(screen.getByText('74°C')).toBeInTheDocument()
     })
   })
 
-  it('should display visibility description', async () => {
-    render(<Visibility />, {
+  it('should display warmer description when feels like > actual', async () => {
+    render(<FeelsLike />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -73,8 +73,8 @@ describe('Visibility', () => {
     })
 
     await waitFor(() => {
-      // 6 miles = "Good visibility"
-      expect(screen.getByText('Good visibility')).toBeInTheDocument()
+      // Mock: apparent_temperature (74) > temperature_2m (72) = 2° warmer
+      expect(screen.getByText('Feels 2° warmer')).toBeInTheDocument()
     })
   })
 })

@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import Wind from '../Wind'
+import Wind from './Wind'
 
 describe('Wind', () => {
   it('should render wind label', () => {

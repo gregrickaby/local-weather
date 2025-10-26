@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import UVIndex from '../UVIndex'
+import UVIndex from './UVIndex'
 
 describe('UVIndex', () => {
   it('should display "UV Index" label', async () => {

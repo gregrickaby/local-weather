@@ -1,15 +1,15 @@
-import {describe, it, expect, beforeEach} from 'vitest'
-import preferencesReducer, {
-  setLocation,
-  setTempUnit,
-  setColorScheme,
-  clearSearchHistory,
-  removeFromSearchHistory,
-  setMounted
-} from '../preferencesSlice'
-import {mockLocation} from '@/test-utils'
 import {DEFAULT_LOCATION} from '@/lib/constants'
 import type {Location} from '@/lib/types'
+import {mockLocation} from '@/test-utils'
+import {beforeEach, describe, expect, it} from 'vitest'
+import preferencesReducer, {
+  clearSearchHistory,
+  removeFromSearchHistory,
+  setColorScheme,
+  setLocation,
+  setMounted,
+  setTempUnit
+} from './preferencesSlice'
 
 describe('preferencesSlice', () => {
   const initialState = {
@@ -22,7 +22,7 @@ describe('preferencesSlice', () => {
 
   beforeEach(() => {
     // Clear any localStorage before each test
-    if (typeof window !== 'undefined') {
+    if (globalThis.window) {
       localStorage.clear()
     }
   })

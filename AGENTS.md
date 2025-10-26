@@ -45,18 +45,16 @@ npm run test:coverage  # Generate coverage report
 - **@testing-library/user-event**: User interaction simulation
 
 **Test Structure:**
-Tests are located next to the files they test in `__tests__` directories:
+Tests are co-located with the files they test (no `__tests__` directories):
 
 ```
 components/UI/Icon/
   ├── Icon.tsx
-  └── __tests__/
-      └── Icon.test.tsx
+  └── Icon.test.tsx
 
 lib/utils/
   ├── helpers.ts
-  └── __tests__/
-      └── helpers.test.ts
+  └── helpers.test.ts
 ```
 
 **Importing Test Utilities:**

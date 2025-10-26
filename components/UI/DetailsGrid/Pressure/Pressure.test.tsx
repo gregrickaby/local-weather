@@ -1,10 +1,10 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import Humidity from '../Humidity'
+import Pressure from './Pressure'
 
-describe('Humidity', () => {
-  it('should render humidity label', () => {
-    render(<Humidity />, {
+describe('Pressure', () => {
+  it('should render pressure label', () => {
+    render(<Pressure />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -16,30 +16,11 @@ describe('Humidity', () => {
       }
     })
 
-    expect(screen.getByText('Humidity')).toBeInTheDocument()
+    expect(screen.getByText('Pressure')).toBeInTheDocument()
   })
 
-  it('should display humidity percentage from weather data', async () => {
-    render(<Humidity />, {
-      preloadedState: {
-        preferences: {
-          location: mockLocation,
-          tempUnit: 'f',
-          colorScheme: 'light',
-          searchHistory: [],
-          mounted: true
-        }
-      }
-    })
-
-    // Wait for weather data to load (65% from mockWeatherResponse)
-    await waitFor(() => {
-      expect(screen.getByText('65%')).toBeInTheDocument()
-    })
-  })
-
-  it('should display dew point', async () => {
-    render(<Humidity />, {
+  it('should display pressure in inHg for Fahrenheit users', async () => {
+    render(<Pressure />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -52,12 +33,33 @@ describe('Humidity', () => {
     })
 
     await waitFor(() => {
-      expect(screen.getByText(/Dew point: 60°/)).toBeInTheDocument()
+      expect(screen.getByText('inHg')).toBeInTheDocument()
+      // 1013.25 hPa = 29.92 inHg
+      expect(screen.getByText('29.92')).toBeInTheDocument()
     })
   })
 
-  it('should display comfort description', async () => {
-    render(<Humidity />, {
+  it('should display pressure in hPa for Celsius users', async () => {
+    render(<Pressure />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'c',
+          colorScheme: 'light',
+          searchHistory: [],
+          mounted: true
+        }
+      }
+    })
+
+    await waitFor(() => {
+      expect(screen.getByText('hPa')).toBeInTheDocument()
+      expect(screen.getByText('1013')).toBeInTheDocument()
+    })
+  })
+
+  it('should display pressure description', async () => {
+    render(<Pressure />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -70,25 +72,25 @@ describe('Humidity', () => {
     })
 
     await waitFor(() => {
-      // 65% humidity = "Slightly humid"
-      expect(screen.getByText('Slightly humid')).toBeInTheDocument()
+      // 1013.25 hPa = Normal pressure
+      expect(screen.getByText('Normal pressure')).toBeInTheDocument()
     })
   })
 
-  it('should skip query when not mounted', () => {
-    render(<Humidity />, {
+  it('should render Low/High labels', () => {
+    render(<Pressure />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
           searchHistory: [],
-          mounted: false
+          mounted: true
         }
       }
     })
 
-    // Should still render the component structure
-    expect(screen.getByText('Humidity')).toBeInTheDocument()
+    expect(screen.getByText('Low')).toBeInTheDocument()
+    expect(screen.getByText('High')).toBeInTheDocument()
   })
 })

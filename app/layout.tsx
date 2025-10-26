@@ -1,9 +1,13 @@
-import {ErrorBoundary} from '@/components/ErrorBoundary'
-import StoreProvider from '@/components/Providers/StoreProvider'
+import {ErrorBoundary} from '@/components/Layout/ErrorBoundary'
 import {Analytics} from '@/components/UI/Analytics/Analytics'
 import config from '@/lib/constants/config'
-import theme from '@/lib/theme'
-import {ColorSchemeScript, MantineProvider} from '@mantine/core'
+import StoreProvider from '@/lib/store/StoreProvider'
+import {
+  ColorSchemeScript,
+  MantineProvider,
+  createTheme,
+  mantineHtmlProps
+} from '@mantine/core'
 import '@mantine/core/styles.css'
 import type {Metadata} from 'next'
 import {Suspense} from 'react'
@@ -29,13 +33,22 @@ export const metadata: Metadata = {
 }
 
 /**
+ * Customize Mantine Theme.
+ *
+ * @see https://mantine.dev/theming/mantine-provider/#theme
+ */
+const theme = createTheme({
+  primaryColor: 'gray'
+})
+
+/**
  * Root layout component.
  */
 export default function RootLayout({
   children
 }: Readonly<{children: React.ReactNode}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
         <Analytics />

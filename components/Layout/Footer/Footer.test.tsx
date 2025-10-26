@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen} from '@/test-utils'
-import Footer from '../Footer'
+import Footer from './Footer'
 import config from '@/lib/constants/config'
 
 describe('Footer', () => {

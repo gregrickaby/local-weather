@@ -12,9 +12,7 @@ import {Provider} from 'react-redux'
 export default function StoreProvider({children}: Readonly<ChildrenProps>) {
   const storeRef = useRef<AppStore | undefined>(undefined)
 
-  if (!storeRef.current) {
-    storeRef.current = makeStore()
-  }
+  storeRef.current ??= makeStore()
 
   useEffect(() => {
     // Mark as mounted after hydration to avoid SSR mismatch

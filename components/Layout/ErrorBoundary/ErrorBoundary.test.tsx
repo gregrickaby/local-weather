@@ -2,7 +2,7 @@ import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest'
 import {render, screen} from '@/test-utils'
 import {useState} from 'react'
 import userEvent from '@testing-library/user-event'
-import ErrorBoundary from '../ErrorBoundary'
+import ErrorBoundary from './ErrorBoundary'
 
 // Component that throws an error when shouldThrow prop is true
 function ThrowError({shouldThrow}: {shouldThrow: boolean}) {

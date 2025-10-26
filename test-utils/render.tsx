@@ -1,5 +1,4 @@
 import type {RootState} from '@/lib/store'
-import theme from '@/lib/theme'
 import {MantineProvider} from '@mantine/core'
 import {render, type RenderOptions} from '@testing-library/react'
 import type {ReactElement} from 'react'
@@ -42,10 +41,10 @@ export function renderWithProviders(
 ) {
   const store = setupTestStore(preloadedState as any)
 
-  function Wrapper({children}: {children: React.ReactNode}) {
+  function Wrapper({children}: Readonly<{children: React.ReactNode}>) {
     return (
       <Provider store={store}>
-        <MantineProvider theme={theme}>{children}</MantineProvider>
+        <MantineProvider>{children}</MantineProvider>
       </Provider>
     )
   }

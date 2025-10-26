@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import SunriseSunset from '../SunriseSunset'
+import SunriseSunset from './SunriseSunset'
 
 describe('SunriseSunset', () => {
   it('should display "Sunrise / Sunset" label', async () => {

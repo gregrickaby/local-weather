@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render} from '@/test-utils'
-import BackToTop from '../BackToTop'
+import BackToTop from './BackToTop'
 
 describe('BackToTop', () => {
   it('should render component without errors', () => {

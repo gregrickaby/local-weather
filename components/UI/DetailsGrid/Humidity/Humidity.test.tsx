@@ -1,10 +1,10 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import AirQuality from '../AirQuality'
+import Humidity from './Humidity'
 
-describe('AirQuality', () => {
-  it('should display "Air Quality" label', async () => {
-    render(<AirQuality />, {
+describe('Humidity', () => {
+  it('should render humidity label', () => {
+    render(<Humidity />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -16,13 +16,30 @@ describe('AirQuality', () => {
       }
     })
 
+    expect(screen.getByText('Humidity')).toBeInTheDocument()
+  })
+
+  it('should display humidity percentage from weather data', async () => {
+    render(<Humidity />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'f',
+          colorScheme: 'light',
+          searchHistory: [],
+          mounted: true
+        }
+      }
+    })
+
+    // Wait for weather data to load (65% from mockWeatherResponse)
     await waitFor(() => {
-      expect(screen.getByText('Air Quality')).toBeInTheDocument()
+      expect(screen.getByText('65%')).toBeInTheDocument()
     })
   })
 
-  it('should display AQI label', async () => {
-    render(<AirQuality />, {
+  it('should display dew point', async () => {
+    render(<Humidity />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -35,13 +52,12 @@ describe('AirQuality', () => {
     })
 
     await waitFor(() => {
-      // Check for AQI label
-      expect(screen.getByText('AQI')).toBeInTheDocument()
+      expect(screen.getByText(/Dew point: 60°/)).toBeInTheDocument()
     })
   })
 
-  it('should display "Good" level for AQI <= 50', async () => {
-    render(<AirQuality />, {
+  it('should display comfort description', async () => {
+    render(<Humidity />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
@@ -54,47 +70,25 @@ describe('AirQuality', () => {
     })
 
     await waitFor(() => {
-      // Mock AQI is 42, which is "Good"
-      expect(screen.getByText('Good')).toBeInTheDocument()
+      // 65% humidity = "Slightly humid"
+      expect(screen.getByText('Slightly humid')).toBeInTheDocument()
     })
   })
 
-  it('should display correct description for good air quality', async () => {
-    render(<AirQuality />, {
+  it('should skip query when not mounted', () => {
+    render(<Humidity />, {
       preloadedState: {
         preferences: {
           location: mockLocation,
           tempUnit: 'f',
           colorScheme: 'light',
           searchHistory: [],
-          mounted: true
+          mounted: false
         }
       }
     })
 
-    await waitFor(() => {
-      expect(
-        screen.getByText('Air quality is satisfactory')
-      ).toBeInTheDocument()
-    })
-  })
-
-  it('should render badge with air quality level', async () => {
-    render(<AirQuality />, {
-      preloadedState: {
-        preferences: {
-          location: mockLocation,
-          tempUnit: 'f',
-          colorScheme: 'light',
-          searchHistory: [],
-          mounted: true
-        }
-      }
-    })
-
-    await waitFor(() => {
-      // Badge with quality level should be present
-      expect(screen.getByText('Good')).toBeInTheDocument()
-    })
+    // Should still render the component structure
+    expect(screen.getByText('Humidity')).toBeInTheDocument()
   })
 })

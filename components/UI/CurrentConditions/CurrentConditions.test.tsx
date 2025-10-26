@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import CurrentConditions from '../CurrentConditions'
+import CurrentConditions from './CurrentConditions'
 
 describe('CurrentConditions', () => {
   it('should not render when not mounted', () => {

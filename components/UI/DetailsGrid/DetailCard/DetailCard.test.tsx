@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen} from '@/test-utils'
-import DetailCard from '../DetailCard'
+import DetailCard from './DetailCard'
 
 describe('DetailCard', () => {
   it('should render children content', () => {

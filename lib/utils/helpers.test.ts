@@ -6,7 +6,7 @@ import {
   formatDay,
   formatTime,
   range
-} from '../helpers'
+} from './helpers'
 
 describe('formatTemperature', () => {
   it('should format temperature in Celsius', () => {

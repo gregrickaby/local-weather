@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen} from '@/test-utils'
-import Icon from '../Icon'
+import Icon from './Icon'
 
 describe('Icon', () => {
   it('should render with default alt text', () => {

@@ -25,5 +25,6 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
-  }
+  },
+  "cSpell.words": ["Meteo", "openmeteo"]
 }

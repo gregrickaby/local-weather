@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 import {render, screen, waitFor, mockLocation} from '@/test-utils'
-import Forecast from '../Forecast'
+import Forecast from './Forecast'
 
 describe('Forecast', () => {
   it('should not render forecast when not mounted', () => {
