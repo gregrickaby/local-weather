@@ -1,7 +1,6 @@
 'use client'
 
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {useWindData} from '@/lib/hooks/useWindData'
 import {Box, Group, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
@@ -11,22 +10,8 @@ import DetailCard from '../DetailCard/DetailCard'
  * Displays current wind speed, gusts, and direction with compass visualization.
  */
 export default function Wind() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
-
-  const windSpeed = Math.round(weather?.current?.wind_speed_10m || 0)
-  const windGusts = Math.round(weather?.current?.wind_gusts_10m || 0)
-  const windDirection = weather?.current?.wind_direction_10m || 0
-  const directionLabel = getWindDirection(windDirection)
-  const speedUnit = tempUnit === 'c' ? 'km/h' : 'mph'
+  const {windSpeed, windGusts, windDirection, directionLabel, speedUnit} =
+    useWindData()
 
   return (
     <DetailCard delay={0}>
@@ -130,13 +115,4 @@ export default function Wind() {
       </Stack>
     </DetailCard>
   )
-}
-
-/**
- * Convert wind direction degrees to cardinal direction.
- */
-function getWindDirection(degrees: number): string {
-  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
-  const index = Math.round(degrees / 45) % 8
-  return directions[index]
 }

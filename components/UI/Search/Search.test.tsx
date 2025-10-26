@@ -17,7 +17,9 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByPlaceholderText('Enter the name of your location')
+    const input = screen.getByRole('textbox', {
+      name: 'Enter the name of your location'
+    })
     expect(input).toBeInTheDocument()
   })
 
@@ -34,7 +36,9 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByPlaceholderText('Enter the name of your location')
+    const input = screen.getByRole('textbox', {
+      name: 'Enter the name of your location'
+    })
     expect(input).toHaveValue(mockLocation.display)
   })
 
@@ -74,7 +78,9 @@ describe('Search', () => {
 
     // IconMapPin renders an SVG - check for role or aria-label instead
     // Map pin icon is decorative, so just verify the input is present
-    const input = screen.getByPlaceholderText('Enter the name of your location')
+    const input = screen.getByRole('textbox', {
+      name: 'Enter the name of your location'
+    })
     expect(input).toBeInTheDocument()
   })
 
@@ -92,7 +98,9 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByPlaceholderText('Enter the name of your location')
+    const input = screen.getByRole('textbox', {
+      name: 'Enter the name of your location'
+    })
     await user.clear(input)
     await user.type(input, 'New York')
 
@@ -115,7 +123,9 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByPlaceholderText('Enter the name of your location')
+    const input = screen.getByRole('textbox', {
+      name: 'Enter the name of your location'
+    })
     expect(input).toHaveValue('')
   })
 
@@ -143,7 +153,9 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByPlaceholderText('Enter the name of your location')
+    const input = screen.getByRole('textbox', {
+      name: 'Enter the name of your location'
+    })
     await user.clear(input)
     await user.type(input, 'Chi')
 

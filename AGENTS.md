@@ -254,13 +254,128 @@ npm run test:ui  // Opens browser interface
 - Default location: "Enterprise, AL"
 - Search dropdown shows: API results > Favorites (when typing) > Default cities
 
-- **Component Structure**
+**Component Structure**
 
 - `app/layout.tsx` - Root layout with Mantine provider and StoreProvider
 - `app/page.tsx` - Client component assembling all UI components
 - `components/` - Presentational components (Header, Search, CurrentConditions, Forecast, DetailsGrid, etc.)
 - `components/Providers/StoreProvider.tsx` - Redux store provider
 - All components consume state via Redux hooks (`useAppSelector`, `useAppDispatch`)
+
+**Separation of Concerns Pattern**
+
+This codebase follows a strict separation between **presentational components** and **business logic**:
+
+**Presentational Components** (`components/`):
+
+- Should ONLY handle rendering and user interactions
+- Consume data via hooks, display it using Mantine components
+- Handle user events (clicks, input changes) by calling hook functions
+- Should be simple, readable, and easy to understand
+- Tests focus on: "Does it render correctly?" and "Does it respond to user interactions?"
+
+**Business Logic** (`lib/hooks/` and `lib/utils/`):
+
+- **Custom Hooks** (`lib/hooks/`): Encapsulate stateful logic, data transformations, and complex calculations
+  - Named with `use` prefix (e.g., `useHourlyForecast`, `useLocationSearch`)
+  - Return processed data and action functions
+  - Handle all data manipulation before passing to components
+  - Co-located with tests (e.g., `useHourlyForecast.test.ts`)
+- **Helper Functions** (`lib/utils/`): Pure functions for calculations, formatting, and data transformation
+  - `helpers.ts`: General utilities (date formatting, temperature conversion, etc.)
+  - `weather-helpers.ts`: Weather-specific utilities (AQI levels, wind direction, UV info, etc.)
+  - Co-located with tests (e.g., `helpers.test.ts`)
+
+**Migration Guidelines:**
+
+When adding new features or refactoring existing code:
+
+1. **Extract Helper Functions:**
+   - Move pure calculation/formatting functions to `lib/utils/`
+   - Examples: `getWindDirection()`, `getUVInfo()`, `calculateSunPosition()`
+   - These should be pure functions with no side effects
+
+2. **Create Custom Hooks:**
+   - Extract stateful logic and data transformations to `lib/hooks/`
+   - Hooks should handle: API data transformation, complex calculations, derived state
+   - Example: Instead of calculating hourly forecast in the component, use `useHourlyForecast()`
+
+3. **Simplify Components:**
+   - Components should call hooks to get processed data
+   - Render using Mantine primitives
+   - Pass hook action functions to event handlers
+   - Avoid: calculations, data transformations, complex conditionals
+
+**Example Pattern:**
+
+```typescript
+// ❌ BAD: Business logic in component
+export default function Wind() {
+  const {data: weather} = useGetWeatherQuery(...)
+  const windSpeed = Math.round(weather?.current?.wind_speed_10m || 0)
+  const windDirection = weather?.current?.wind_direction_10m || 0
+
+  // Helper function defined in component
+  function getWindDirection(degrees: number): string {
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+    const index = Math.round(degrees / 45) % 8
+    return directions[index]
+  }
+
+  const directionLabel = getWindDirection(windDirection)
+  // ... render logic
+}
+
+// ✅ GOOD: Business logic in hook and helpers
+// lib/utils/weather-helpers.ts
+export function getWindDirection(degrees: number): string {
+  const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+  const index = Math.round(degrees / 45) % 8
+  return directions[index]
+}
+
+// lib/hooks/useWindData.ts
+export function useWindData() {
+  const location = useAppSelector((state) => state.preferences.location)
+  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
+  const mounted = useAppSelector((state) => state.preferences.mounted)
+
+  const {data: weather} = useGetWeatherQuery(
+    {latitude: location.latitude, longitude: location.longitude, tempUnit},
+    {skip: !mounted || !location}
+  )
+
+  const windSpeed = Math.round(weather?.current?.wind_speed_10m || 0)
+  const windGusts = Math.round(weather?.current?.wind_gusts_10m || 0)
+  const windDirection = weather?.current?.wind_direction_10m || 0
+  const directionLabel = getWindDirection(windDirection)
+  const speedUnit = tempUnit === 'c' ? 'km/h' : 'mph'
+
+  return {windSpeed, windGusts, windDirection, directionLabel, speedUnit}
+}
+
+// components/UI/DetailsGrid/Wind/Wind.tsx
+export default function Wind() {
+  const {windSpeed, windGusts, windDirection, directionLabel, speedUnit} = useWindData()
+
+  return (
+    <DetailCard delay={0}>
+      {/* Simple rendering - no calculations */}
+      <Text>{windSpeed} {speedUnit}</Text>
+      <Text>Gusts {windGusts} {speedUnit}</Text>
+      <Text>{directionLabel}</Text>
+    </DetailCard>
+  )
+}
+```
+
+**Testing Strategy:**
+
+- **Hook Tests:** Test all business logic, calculations, and data transformations
+- **Helper Tests:** Test pure functions with various inputs/outputs
+- **Component Tests:** Test rendering and user interactions only (simplified tests)
+
+This pattern keeps components focused on presentation, makes business logic reusable and testable, and improves code maintainability.
 
 ### TypeScript Configuration
 

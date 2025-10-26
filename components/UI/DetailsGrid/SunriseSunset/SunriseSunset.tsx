@@ -1,8 +1,6 @@
 'use client'
 
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {formatTimeWithMinutes} from '@/lib/utils/helpers'
+import {useSunriseSunset} from '@/lib/hooks/useSunriseSunset'
 import {Box, Group, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
@@ -12,27 +10,7 @@ import DetailCard from '../DetailCard/DetailCard'
  * Displays sunrise and sunset times with arc visualization.
  */
 export default function SunriseSunset() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
-
-  const sunriseISO = weather?.daily?.sunrise?.[0]
-  const sunsetISO = weather?.daily?.sunset?.[0]
-
-  const sunrise = sunriseISO ? formatTimeWithMinutes(sunriseISO) : '--:--'
-  const sunset = sunsetISO ? formatTimeWithMinutes(sunsetISO) : '--:--'
-  const sunPosition = calculateSunPosition(
-    weather?.current?.time,
-    weather?.daily?.sunrise?.[0],
-    weather?.daily?.sunset?.[0]
-  )
+  const {sunrise, sunset, sunPosition} = useSunriseSunset()
 
   return (
     <DetailCard delay={100}>
@@ -108,32 +86,4 @@ export default function SunriseSunset() {
       </Stack>
     </DetailCard>
   )
-}
-
-/**
- * Calculate sun position as percentage of day (0-100).
- * Uses location's current time from API, not browser time.
- */
-function calculateSunPosition(
-  currentTimeISO?: string,
-  sunriseISO?: string,
-  sunsetISO?: string
-): number {
-  if (!currentTimeISO || !sunriseISO || !sunsetISO) return 50
-
-  const now = new Date(currentTimeISO)
-  const sunrise = new Date(sunriseISO)
-  const sunset = new Date(sunsetISO)
-
-  // If before sunrise, return 0
-  if (now < sunrise) return 0
-
-  // If after sunset, return 100
-  if (now > sunset) return 100
-
-  // Calculate percentage of day completed
-  const totalDaylight = sunset.getTime() - sunrise.getTime()
-  const elapsedDaylight = now.getTime() - sunrise.getTime()
-
-  return (elapsedDaylight / totalDaylight) * 100
 }

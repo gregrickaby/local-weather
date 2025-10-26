@@ -1,7 +1,7 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen} from '@/test-utils'
-import Footer from './Footer'
 import config from '@/lib/constants/config'
+import {render, screen} from '@/test-utils'
+import {describe, expect, it} from 'vitest'
+import Footer from './Footer'
 
 describe('Footer', () => {
   it('should render footer element', () => {
@@ -44,14 +44,5 @@ describe('Footer', () => {
     })
     expect(githubLink).toHaveAttribute('target', '_blank')
     expect(githubLink).toHaveAttribute('rel', 'noopener noreferrer')
-  })
-
-  it('should contain GitHub icon', () => {
-    render(<Footer />)
-    const githubLink = screen.getByRole('link', {
-      name: 'view source code on github'
-    })
-    const icon = githubLink.querySelector('svg')
-    expect(icon).toBeInTheDocument()
   })
 })

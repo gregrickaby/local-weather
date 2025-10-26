@@ -1,7 +1,6 @@
 'use client'
 
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {useUVIndex} from '@/lib/hooks/useUVIndex'
 import {Box, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
@@ -11,25 +10,7 @@ import DetailCard from '../DetailCard/DetailCard'
  * Displays UV index with Apple Weather-style gradient bar and indicator.
  */
 export default function UVIndex() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
-
-  // Current UV index (what's happening now)
-  const currentUV = Math.round(weather?.current?.uv_index || 0)
-
-  // Calculate position on 0-11 scale
-  const uvScale = 11
-  const indicatorPercent = (currentUV / uvScale) * 100
-
-  const {level, description} = getUVInfo(currentUV)
+  const {currentUV, indicatorPercent, level, description} = useUVIndex()
 
   return (
     <DetailCard delay={50}>
@@ -86,17 +67,4 @@ export default function UVIndex() {
       </Stack>
     </DetailCard>
   )
-}
-
-/**
- * Get UV level and description based on UV index.
- */
-function getUVInfo(uv: number): {level: string; description: string} {
-  if (uv <= 2) return {level: 'Low', description: 'Low for the rest of the day'}
-  if (uv <= 5)
-    return {level: 'Moderate', description: 'Some protection required'}
-  if (uv <= 7) return {level: 'High', description: 'Protection essential'}
-  if (uv <= 10)
-    return {level: 'Very High', description: 'Extra protection needed'}
-  return {level: 'Extreme', description: 'Stay inside if possible'}
 }

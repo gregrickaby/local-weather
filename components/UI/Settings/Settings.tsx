@@ -1,15 +1,7 @@
 'use client'
 
 import config from '@/lib/constants/config'
-import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
-import {
-  clearFavorites,
-  removeFromFavorites,
-  setColorScheme,
-  setLocation,
-  setTempUnit
-} from '@/lib/store/slices/preferencesSlice'
-import type {Location} from '@/lib/types'
+import {useSettings} from '@/lib/hooks/useSettings'
 import {
   ActionIcon,
   Button,
@@ -19,8 +11,7 @@ import {
   SegmentedControl,
   Stack,
   Switch,
-  Text,
-  useMantineColorScheme
+  Text
 } from '@mantine/core'
 import {useDisclosure} from '@mantine/hooks'
 import {IconHeart, IconSettings, IconTrash} from '@tabler/icons-react'
@@ -32,33 +23,18 @@ import classes from './Settings.module.css'
 export default function Settings() {
   const [opened, {open, close}] = useDisclosure(false)
   const {
-    colorScheme: mantineColorScheme,
-    setColorScheme: setMantineColorScheme
-  } = useMantineColorScheme()
-  const dispatch = useAppDispatch()
-  const favorites = useAppSelector((state) => state.preferences.favorites)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
+    favorites,
+    tempUnit,
+    mantineColorScheme,
+    toggleColorScheme,
+    handleTempUnitChange,
+    handleClearFavorites,
+    handleRemoveFavorite,
+    handleSelectFavorite
+  } = useSettings()
 
-  function toggleColorScheme() {
-    const newScheme = mantineColorScheme === 'dark' ? 'light' : 'dark'
-    setMantineColorScheme(newScheme)
-    dispatch(setColorScheme(newScheme))
-  }
-
-  function handleTempUnitChange(value: string) {
-    dispatch(setTempUnit(value as 'c' | 'f'))
-  }
-
-  function handleClearFavorites() {
-    dispatch(clearFavorites())
-  }
-
-  function handleRemoveFavorite(locationId: number) {
-    dispatch(removeFromFavorites(locationId))
-  }
-
-  function handleSelectFavorite(favorite: Location) {
-    dispatch(setLocation(favorite))
+  const onSelectFavorite = (favorite: (typeof favorites)[0]) => {
+    handleSelectFavorite(favorite)
     close()
   }
 
@@ -134,7 +110,7 @@ export default function Settings() {
                     <Button
                       variant="light"
                       fullWidth
-                      onClick={() => handleSelectFavorite(fav)}
+                      onClick={() => onSelectFavorite(fav)}
                       style={{flex: 1}}
                       size="sm"
                     >

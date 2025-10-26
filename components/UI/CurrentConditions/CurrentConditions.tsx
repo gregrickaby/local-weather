@@ -1,13 +1,8 @@
 'use client'
 
 import Icon from '@/components/UI/Icon/Icon'
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {
-  formatTemperature,
-  generateForecastStatement,
-  getWeatherInfo
-} from '@/lib/utils/helpers'
+import {useCurrentConditions} from '@/lib/hooks/useCurrentConditions'
+import {formatTemperature} from '@/lib/utils/helpers'
 import {Stack, Text} from '@mantine/core'
 import classes from './CurrentConditions.module.css'
 
@@ -15,37 +10,22 @@ import classes from './CurrentConditions.module.css'
  * Current Conditions component.
  */
 export default function CurrentConditions() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const conditions = useCurrentConditions()
 
   // Return null if weather data isn't loaded yet
-  if (!weather?.current) {
+  if (!conditions) {
     return null
   }
 
   const {
-    current: {weather_code, temperature_2m, apparent_temperature, time},
-    daily: {sunrise, sunset}
-  } = weather
-
-  // Get current conditions with day/night icon
-  const {description, icon} = getWeatherInfo(
-    weather_code,
-    time,
-    sunrise[0],
-    sunset[0]
-  )
-
-  // Generate forecast statement
-  const forecastStatement = generateForecastStatement(weather)
+    tempUnit,
+    temperature,
+    apparentTemperature,
+    description,
+    icon,
+    forecastStatement,
+    showFeelsLike
+  } = conditions
 
   return (
     <div className={classes.hero}>
@@ -57,14 +37,14 @@ export default function CurrentConditions() {
           </Text>
         </div>
         <Text className={classes.bigtemp} component="p">
-          {formatTemperature(tempUnit, temperature_2m)}
+          {formatTemperature(tempUnit, temperature)}
         </Text>
         <Text className={classes.forecastStatement} ta="center">
           {forecastStatement}
         </Text>
-        {apparent_temperature > temperature_2m && (
+        {showFeelsLike && (
           <Text className={classes.feelslike} component="p">
-            Feels Like: {formatTemperature(tempUnit, apparent_temperature)}
+            Feels Like: {formatTemperature(tempUnit, apparentTemperature)}
           </Text>
         )}
       </Stack>
