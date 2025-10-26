@@ -9,10 +9,9 @@ import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
 import Forecast from '@/components/UI/Forecast/Forecast'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
-import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
+import {useAppSelector} from '@/lib/store/hooks'
 import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {setTempUnit} from '@/lib/store/slices/preferencesSlice'
-import {SegmentedControl, Skeleton, Stack} from '@mantine/core'
+import {Skeleton, Stack} from '@mantine/core'
 
 /**
  * Loading skeleton component.
@@ -32,7 +31,6 @@ function WeatherSkeleton() {
  * Home page component.
  */
 export default function HomePage() {
-  const dispatch = useAppDispatch()
   const location = useAppSelector((state) => state.preferences.location)
   const mounted = useAppSelector((state) => state.preferences.mounted)
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
@@ -50,17 +48,6 @@ export default function HomePage() {
       <main className={classes.main}>
         <div className={classes.search}>
           <Search />
-          <SegmentedControl
-            value={tempUnit}
-            onChange={(value) => dispatch(setTempUnit(value as 'c' | 'f'))}
-            data={[
-              {label: '°C', value: 'c'},
-              {label: '°F', value: 'f'}
-            ]}
-            color="blue"
-            size="md"
-            radius="md"
-          />
           <Settings />
         </div>
         {isLoading || !weather ? (

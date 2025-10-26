@@ -6,7 +6,8 @@ import {
   clearFavorites,
   removeFromFavorites,
   setColorScheme,
-  setLocation
+  setLocation,
+  setTempUnit
 } from '@/lib/store/slices/preferencesSlice'
 import type {Location} from '@/lib/types'
 import {
@@ -15,6 +16,7 @@ import {
   Card,
   Group,
   Modal,
+  SegmentedControl,
   Stack,
   Switch,
   Text,
@@ -35,11 +37,16 @@ export default function Settings() {
   } = useMantineColorScheme()
   const dispatch = useAppDispatch()
   const favorites = useAppSelector((state) => state.preferences.favorites)
+  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
 
   function toggleColorScheme() {
     const newScheme = mantineColorScheme === 'dark' ? 'light' : 'dark'
     setMantineColorScheme(newScheme)
     dispatch(setColorScheme(newScheme))
+  }
+
+  function handleTempUnitChange(value: string) {
+    dispatch(setTempUnit(value as 'c' | 'f'))
   }
 
   function handleClearFavorites() {
@@ -76,6 +83,22 @@ export default function Settings() {
         centered
       >
         <Stack gap="lg">
+          <Card shadow="sm" padding="lg" radius="md" withBorder>
+            <Text size="sm" fw={500} mb="sm">
+              Temperature Unit
+            </Text>
+            <SegmentedControl
+              value={tempUnit}
+              onChange={handleTempUnitChange}
+              data={[
+                {label: 'Celsius (°C)', value: 'c'},
+                {label: 'Fahrenheit (°F)', value: 'f'}
+              ]}
+              fullWidth
+              size="md"
+            />
+          </Card>
+
           <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Text size="sm" fw={500} mb="sm">
               Appearance

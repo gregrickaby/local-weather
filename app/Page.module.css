@@ -21,25 +21,20 @@
   display: flex;
   gap: 12px;
   justify-content: space-between;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
+  margin-bottom: 24px;
 
   @media screen and (min-width: 768px) {
-    margin-bottom: 20px;
+    margin-bottom: 32px;
   }
 }
 
 .search > :first-child {
-  flex: 1 1 100%;
+  flex: 1;
   min-width: 0;
-
-  @media screen and (min-width: 768px) {
-    flex: 1 1 auto;
-  }
 }
 
-.search > :not(:first-child) {
-  flex: 0 0 auto;
+.search > :last-child {
+  flex-shrink: 0;
 }
 
 .main {

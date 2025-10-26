@@ -15,7 +15,7 @@ import {
   ComboboxItem
 } from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
-import {IconHeart, IconMapPin} from '@tabler/icons-react'
+import {IconHeart} from '@tabler/icons-react'
 import {useEffect, useState} from 'react'
 import classes from './Search.module.css'
 
@@ -111,7 +111,6 @@ export default function Search() {
       className={classes.searchbar}
       data={comboboxData}
       dropdownOpened={dropdownOpened}
-      leftSection={<IconMapPin />}
       rightSection={
         searchTerm ? (
           <CloseButton
@@ -139,7 +138,7 @@ export default function Search() {
         setDropdownOpened(false)
         setIsTyping(false)
       }}
-      placeholder="Enter the name of your location"
+      placeholder="New York, NY"
       renderOption={({option}) => {
         const loc = places.find((l) => l?.id?.toString() === option.value)
         const isFavorited = favorites.some(
