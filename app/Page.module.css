@@ -4,8 +4,15 @@
   padding: 0 20px;
 
   & > * {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 12px;
+    margin-top: 12px;
+  }
+
+  @media screen and (min-width: 768px) {
+    & > * {
+      margin-bottom: 20px;
+      margin-top: 20px;
+    }
   }
 }
 
@@ -14,12 +21,25 @@
   display: flex;
   gap: 12px;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 12px;
+  @media screen and (min-width: 768px) {
+    margin-bottom: 20px;
   }
+}
+
+.search > :first-child {
+  flex: 1 1 100%;
+  min-width: 0;
+
+  @media screen and (min-width: 768px) {
+    flex: 1 1 auto;
+  }
+}
+
+.search > :not(:first-child) {
+  flex: 0 0 auto;
 }
 
 .main {

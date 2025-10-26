@@ -18,11 +18,13 @@ export default function BackToTop() {
           {(transitionStyles) => (
             <Button
               aria-label="scroll to top"
-              leftSection={<IconArrowUp size="1rem" />}
               style={transitionStyles}
               onClick={() => scrollTo({y: 0})}
+              size="lg"
+              radius="xl"
+              p="md"
             >
-              Scroll to top
+              <IconArrowUp size="1.25rem" />
             </Button>
           )}
         </Transition>
