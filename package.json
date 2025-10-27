@@ -46,8 +46,8 @@
     "@types/react": "^19.2.2",
     "@types/suncalc": "^1.9.2",
     "@vitejs/plugin-react": "^5.1.0",
-    "@vitest/coverage-v8": "^4.0.3",
-    "@vitest/ui": "^4.0.3",
+    "@vitest/coverage-v8": "^4.0.4",
+    "@vitest/ui": "^4.0.4",
     "eslint": "^9.38.0",
     "eslint-config-mantine": "^4.0.3",
     "eslint-config-next": "^16.0.0",
@@ -64,6 +64,6 @@
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.3"
+    "vitest": "^4.0.4"
   }
 }
