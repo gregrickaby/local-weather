@@ -7,6 +7,7 @@ import BackToTop from '@/components/UI/BackToTop/BackToTop'
 import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditions'
 import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
 import Forecast from '@/components/UI/Forecast/Forecast'
+import Radar from '@/components/UI/Radar/Radar'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
@@ -46,6 +47,7 @@ export default function HomePage() {
           <Stack gap="xl" className={classes.content}>
             <CurrentConditions />
             <DetailsGrid />
+            <Radar />
             <Forecast />
           </Stack>
         )}

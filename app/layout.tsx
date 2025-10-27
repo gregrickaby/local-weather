@@ -1,6 +1,7 @@
 import {ErrorBoundary} from '@/components/Layout/ErrorBoundary'
 import {Analytics} from '@/components/UI/Analytics/Analytics'
 import config from '@/lib/constants/config'
+import {LEAFLET_CSS_INTEGRITY, LEAFLET_CSS_URL} from '@/lib/constants/radar'
 import StoreProvider from '@/lib/store/StoreProvider'
 import {
   ColorSchemeScript,
@@ -51,6 +52,12 @@ export default function RootLayout({
     <html lang="en" {...mantineHtmlProps}>
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
+        <link
+          rel="stylesheet"
+          href={LEAFLET_CSS_URL}
+          integrity={LEAFLET_CSS_INTEGRITY}
+          crossOrigin=""
+        />
         <Analytics />
       </head>
       <body>
