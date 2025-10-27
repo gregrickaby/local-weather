@@ -111,13 +111,13 @@ describe('Forecast', () => {
     })
 
     await waitFor(() => {
-      // Should show "Today", "Tomorrow", or day names
+      // Should show "Tod", "Tom", or 3-character day names
       const section = document.querySelector('section')
       const text = section?.textContent || ''
       const hasDayLabel =
-        text.includes('Today') ||
-        text.includes('Tomorrow') ||
-        /Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday/.test(text)
+        text.includes('Tod') ||
+        text.includes('Tom') ||
+        /Mon|Tue|Wed|Thu|Fri|Sat|Sun/.test(text)
       expect(hasDayLabel).toBe(true)
     })
   })

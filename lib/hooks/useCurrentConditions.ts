@@ -1,6 +1,8 @@
 import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {generateForecastStatement, getWeatherInfo} from '@/lib/utils/helpers'
+import {selectTempUnit} from '@/lib/store/selectors'
+import {generateForecastStatement} from '@/lib/utils/calculations'
+import {getWeatherInfo} from '@/lib/utils/conditions'
+import {useWeatherData} from './useWeatherData'
 
 /**
  * Hook to get processed current conditions data for display.
@@ -9,16 +11,8 @@ import {generateForecastStatement, getWeatherInfo} from '@/lib/utils/helpers'
  * Returns ready-to-display current weather information.
  */
 export function useCurrentConditions() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const tempUnit = useAppSelector(selectTempUnit)
+  const {data: weather} = useWeatherData()
 
   // Return null if weather data isn't loaded yet
   if (!weather?.current) {

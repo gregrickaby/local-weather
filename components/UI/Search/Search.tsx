@@ -3,6 +3,7 @@
 import {useLocationSearch} from '@/lib/hooks/useLocationSearch'
 import {ActionIcon, Autocomplete, CloseButton} from '@mantine/core'
 import {IconHeart} from '@tabler/icons-react'
+import {useCallback, useMemo} from 'react'
 import classes from './Search.module.css'
 
 /**
@@ -21,6 +22,57 @@ export default function Search() {
     isFavorited,
     toggleFavorite
   } = useLocationSearch()
+
+  // Convert places array to Map for O(1) lookups instead of O(n) find()
+  const placesMap = useMemo(
+    () => new Map(places.map((p) => [p.id.toString(), p])),
+    [places]
+  )
+
+  // Memoize renderOption to prevent recreation on every render
+  const renderOption = useCallback(
+    ({option}: {option: {value: string}}) => {
+      const loc = placesMap.get(option.value)
+      const favorited = isFavorited(option.value)
+
+      // Safety check: if location not found, just show the option value
+      if (!loc) {
+        return <span>{option.value}</span>
+      }
+
+      return (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
+            gap: '8px'
+          }}
+        >
+          <span style={{flex: 1}}>{loc.display}</span>
+          <ActionIcon
+            size="sm"
+            variant="subtle"
+            aria-label={
+              favorited ? 'Remove from favorites' : 'Add to favorites'
+            }
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFavorite(loc)
+            }}
+          >
+            <IconHeart
+              size={16}
+              fill={favorited ? '#ff6b6b' : 'none'}
+              style={{color: favorited ? '#ff6b6b' : 'currentColor'}}
+            />
+          </ActionIcon>
+        </div>
+      )
+    },
+    [placesMap, isFavorited, toggleFavorite]
+  )
 
   return (
     <Autocomplete
@@ -46,46 +98,7 @@ export default function Search() {
       onDropdownClose={handleDropdownClose}
       onOptionSubmit={handleOptionSubmit}
       placeholder="New York, NY"
-      renderOption={({option}) => {
-        const loc = places.find((l) => l?.id?.toString() === option.value)
-        const favorited = isFavorited(option.value)
-
-        // Safety check: if location not found, just show the option value
-        if (!loc) {
-          return <span>{option.value}</span>
-        }
-
-        return (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              width: '100%',
-              gap: '8px'
-            }}
-          >
-            <span style={{flex: 1}}>{loc.display}</span>
-            <ActionIcon
-              size="sm"
-              variant="subtle"
-              aria-label={
-                favorited ? 'Remove from favorites' : 'Add to favorites'
-              }
-              onClick={(e) => {
-                e.stopPropagation()
-                toggleFavorite(loc)
-              }}
-            >
-              <IconHeart
-                size={16}
-                fill={favorited ? '#ff6b6b' : 'none'}
-                style={{color: favorited ? '#ff6b6b' : 'currentColor'}}
-              />
-            </ActionIcon>
-          </div>
-        )
-      }}
+      renderOption={renderOption}
       size="lg"
       value={searchTerm}
     />

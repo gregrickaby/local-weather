@@ -1,6 +1,7 @@
 import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {getWindDirection} from '@/lib/utils/weather-helpers'
+import {selectTempUnit} from '@/lib/store/selectors'
+import {getWindDirection} from '@/lib/utils/conditions'
+import {useWeatherData} from './useWeatherData'
 
 /**
  * Hook to get processed wind data for display.
@@ -9,16 +10,8 @@ import {getWindDirection} from '@/lib/utils/weather-helpers'
  * Returns ready-to-display wind information.
  */
 export function useWindData() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const tempUnit = useAppSelector(selectTempUnit)
+  const {data: weather} = useWeatherData()
 
   const windSpeed = Math.round(weather?.current?.wind_speed_10m || 0)
   const windGusts = Math.round(weather?.current?.wind_gusts_10m || 0)

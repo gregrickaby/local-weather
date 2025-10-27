@@ -1,6 +1,7 @@
 import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {getHourFromISO} from '@/lib/utils/helpers'
+import {selectTempUnit} from '@/lib/store/selectors'
+import {getHourFromISO} from '@/lib/utils/calculations'
+import {useWeatherData} from './useWeatherData'
 
 type HourlyForecast = {
   time: string
@@ -27,16 +28,8 @@ type DailyForecast = {
  * Returns ready-to-display forecast information with weather data.
  */
 export function useForecast() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const tempUnit = useAppSelector(selectTempUnit)
+  const {data: weather} = useWeatherData()
 
   if (!weather?.hourly || !weather?.daily) {
     return null

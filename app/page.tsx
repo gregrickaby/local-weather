@@ -9,8 +9,7 @@ import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
 import Forecast from '@/components/UI/Forecast/Forecast'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {useWeatherData} from '@/lib/hooks/useWeatherData'
 import {Skeleton, Stack} from '@mantine/core'
 
 /**
@@ -31,16 +30,7 @@ function WeatherSkeleton() {
  * Home page component.
  */
 export default function HomePage() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather, isLoading} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const {data: weather, isLoading} = useWeatherData()
 
   return (
     <div className={classes.container}>

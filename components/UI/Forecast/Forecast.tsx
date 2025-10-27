@@ -1,11 +1,7 @@
 import Icon from '@/components/UI/Icon/Icon'
 import {useForecast} from '@/lib/hooks/useForecast'
-import {
-  formatDay,
-  formatTemperature,
-  formatTime,
-  getWeatherInfo
-} from '@/lib/utils/helpers'
+import {getWeatherInfo} from '@/lib/utils/conditions'
+import {formatDay, formatTemperature, formatTime} from '@/lib/utils/formatting'
 import {Card, Text, Title} from '@mantine/core'
 import classes from './Forecast.module.css'
 

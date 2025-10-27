@@ -1,6 +1,5 @@
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {getUVInfo} from '@/lib/utils/weather-helpers'
+import {getUVInfo} from '@/lib/utils/conditions'
+import {useWeatherData} from './useWeatherData'
 
 /**
  * Hook to get processed UV index data for display.
@@ -9,16 +8,7 @@ import {getUVInfo} from '@/lib/utils/weather-helpers'
  * Returns ready-to-display UV information with position for visualization.
  */
 export function useUVIndex() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const {data: weather} = useWeatherData()
 
   const currentUV = Math.round(weather?.current?.uv_index || 0)
   const uvScale = 11

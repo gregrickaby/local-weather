@@ -1,7 +1,6 @@
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {formatTimeWithMinutes} from '@/lib/utils/helpers'
-import {calculateSunPosition} from '@/lib/utils/weather-helpers'
+import {calculateSunPosition} from '@/lib/utils/calculations'
+import {formatTimeWithMinutes} from '@/lib/utils/formatting'
+import {useWeatherData} from './useWeatherData'
 
 /**
  * Hook to get processed sunrise/sunset data for display.
@@ -10,16 +9,7 @@ import {calculateSunPosition} from '@/lib/utils/weather-helpers'
  * Returns ready-to-display sunrise/sunset information.
  */
 export function useSunriseSunset() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const {data: weather} = useWeatherData()
 
   const sunriseISO = weather?.daily?.sunrise?.[0]
   const sunsetISO = weather?.daily?.sunset?.[0]

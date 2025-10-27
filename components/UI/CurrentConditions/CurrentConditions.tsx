@@ -2,7 +2,7 @@
 
 import Icon from '@/components/UI/Icon/Icon'
 import {useCurrentConditions} from '@/lib/hooks/useCurrentConditions'
-import {formatTemperature} from '@/lib/utils/helpers'
+import {formatTemperature} from '@/lib/utils/formatting'
 import {Stack, Text} from '@mantine/core'
 import classes from './CurrentConditions.module.css'
 

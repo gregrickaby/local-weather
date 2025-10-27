@@ -1,5 +1,5 @@
 import type {OpenMeteoResponse} from '@/lib/types'
-import {range} from '@/lib/utils/helpers'
+import {range} from '@/lib/utils/calculations'
 import {createApi, fakeBaseQuery} from '@reduxjs/toolkit/query/react'
 import {fetchWeatherApi} from 'openmeteo'
 

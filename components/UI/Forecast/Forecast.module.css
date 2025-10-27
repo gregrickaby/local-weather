@@ -73,12 +73,12 @@
   align-items: center;
   display: grid;
   gap: 8px;
-  grid-template-columns: 100px 40px 1fr;
+  grid-template-columns: 50px 40px 1fr;
   padding: 10px 0;
 
   @media (min-width: 768px) {
     gap: 16px;
-    grid-template-columns: 110px 50px 1fr;
+    grid-template-columns: 60px 50px 1fr;
     padding: 12px 0;
   }
 
@@ -93,13 +93,13 @@
 
 .dayLabel {
   text-align: left;
-  min-width: 100px;
+  min-width: 50px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 
   @media (min-width: 768px) {
-    min-width: 110px;
+    min-width: 60px;
   }
 }
 

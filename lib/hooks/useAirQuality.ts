@@ -1,6 +1,6 @@
 import {useAppSelector} from '@/lib/store/hooks'
 import {useGetAirQualityQuery} from '@/lib/store/services/airQualityApi'
-import {getAQIDescription, getAQILevel} from '@/lib/utils/weather-helpers'
+import {getAQIDescription, getAQILevel} from '@/lib/utils/conditions'
 
 /**
  * Hook to get processed air quality data for display.

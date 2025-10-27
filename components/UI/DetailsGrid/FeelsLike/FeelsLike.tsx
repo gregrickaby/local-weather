@@ -1,7 +1,7 @@
 'use client'
 
 import {useFeelsLike} from '@/lib/hooks/useFeelsLike'
-import {formatTemperature} from '@/lib/utils/helpers'
+import {formatTemperature} from '@/lib/utils/formatting'
 import {Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 

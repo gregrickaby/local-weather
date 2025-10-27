@@ -1,7 +1,8 @@
 import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
-import {formatPressure} from '@/lib/utils/helpers'
-import {getPressureDescription} from '@/lib/utils/weather-helpers'
+import {selectTempUnit} from '@/lib/store/selectors'
+import {formatPressure} from '@/lib/utils/formatting'
+import {getPressureDescription} from '@/lib/utils/conditions'
+import {useWeatherData} from './useWeatherData'
 
 /**
  * Hook to get processed pressure data for display.
@@ -10,16 +11,8 @@ import {getPressureDescription} from '@/lib/utils/weather-helpers'
  * Returns ready-to-display pressure information.
  */
 export function usePressure() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const tempUnit = useAppSelector(selectTempUnit)
+  const {data: weather} = useWeatherData()
 
   const pressureHpa = weather?.current?.pressure_msl || 1013
   const {value: pressureValue, unit: pressureUnit} = formatPressure(

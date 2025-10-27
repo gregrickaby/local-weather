@@ -73,8 +73,8 @@ describe('Visibility', () => {
     })
 
     await waitFor(() => {
-      // 6 miles = "Good visibility"
-      expect(screen.getByText('Good visibility')).toBeInTheDocument()
+      // 6 miles = "Very good visibility"
+      expect(screen.getByText('Very good visibility')).toBeInTheDocument()
     })
   })
 })

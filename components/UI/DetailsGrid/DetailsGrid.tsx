@@ -1,11 +1,11 @@
 'use client'
 
-import {useAppSelector} from '@/lib/store/hooks'
-import {useGetWeatherQuery} from '@/lib/store/services/weatherApi'
+import {useWeatherData} from '@/lib/hooks/useWeatherData'
 import {Card, SimpleGrid, Skeleton, Stack} from '@mantine/core'
 import AirQuality from './AirQuality/AirQuality'
 import FeelsLike from './FeelsLike/FeelsLike'
 import Humidity from './Humidity/Humidity'
+import MoonPhase from './MoonPhase/MoonPhase'
 import Pressure from './Pressure/Pressure'
 import SunriseSunset from './SunriseSunset/SunriseSunset'
 import UVIndex from './UVIndex/UVIndex'
@@ -33,16 +33,7 @@ function DetailCardSkeleton() {
  * Displays weather detail cards in a responsive grid layout.
  */
 export default function DetailsGrid() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-
-  const {data: weather, isLoading} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {
-      skip: !mounted || !location
-    }
-  )
+  const {data: weather, isLoading} = useWeatherData()
 
   const skeletonCards = [
     'wind',
@@ -52,7 +43,8 @@ export default function DetailsGrid() {
     'air',
     'visibility',
     'pressure',
-    'feels'
+    'feels',
+    'moon'
   ]
 
   return (
@@ -77,6 +69,7 @@ export default function DetailsGrid() {
           <Visibility />
           <Pressure />
           <FeelsLike />
+          <MoonPhase />
         </>
       )}
     </SimpleGrid>
