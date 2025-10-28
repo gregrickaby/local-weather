@@ -23,7 +23,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "sonar": "npm run test:coverage && sonar-scanner"
   },
   "dependencies": {
     "@mantine/core": "8.3.5",

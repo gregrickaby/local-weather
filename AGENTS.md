@@ -24,9 +24,36 @@ Run these before committing or creating PRs. Both commands must pass without err
 ```bash
 npm run lint         # Run ESLint
 npm run typecheck    # Run TypeScript type checking
+npm run sonar        # Run SonarQube code quality analysis (runs tests + scanner)
 ```
 
 If visual changes, you must verify using Playwright MCP at http://localhost:3000 (assume the dev server is already running)
+
+### Code Quality
+
+This project uses **SonarQube Community Edition** for static code analysis. The scanner is configured to analyze TypeScript/TSX files and report code smells, bugs, vulnerabilities, and test coverage.
+
+**Setup:**
+
+- SonarQube server runs locally via Docker on port 9000
+- Authentication token stored as `SONAR_TOKEN` environment variable in `~/.zshrc`
+- Configuration in `sonar-project.properties`
+
+**Usage:**
+
+```bash
+npm run sonar        # Runs test:coverage then sonar-scanner
+```
+
+View results at: http://localhost:9000/dashboard?id=local-weather
+
+**Important:** Always address SonarQube issues before creating PRs. The scanner will flag:
+
+- Code smells (maintainability issues)
+- Bugs (potential runtime errors)
+- Security vulnerabilities
+- Test coverage gaps
+- Code duplication
 
 ### Testing
 
