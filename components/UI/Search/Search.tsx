@@ -31,13 +31,14 @@ export default function Search() {
 
   // Memoize renderOption to prevent recreation on every render
   const renderOption = useCallback(
-    ({option}: {option: {value: string}}) => {
-      const loc = placesMap.get(option.value)
-      const favorited = isFavorited(option.value)
+    (item: {option: {value: string}}) => {
+      const {value} = item.option
+      const loc = placesMap.get(value)
+      const favorited = isFavorited(value)
 
       // Safety check: if location not found, just show the option value
       if (!loc) {
-        return <span>{option.value}</span>
+        return <span>{value}</span>
       }
 
       return (

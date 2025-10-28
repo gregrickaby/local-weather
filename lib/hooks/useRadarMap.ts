@@ -48,9 +48,9 @@ export function useRadarMap({
         const L = (await import('leaflet')).default
 
         // Clean up existing map and radar layers
-        radarLayersRef.current.forEach((layer) => {
+        for (const layer of radarLayersRef.current) {
           layer.remove()
-        })
+        }
         radarLayersRef.current = []
 
         if (leafletMapRef.current) {
@@ -96,9 +96,9 @@ export function useRadarMap({
 
     return () => {
       isMounted = false
-      radarLayersRef.current.forEach((layer) => {
+      for (const layer of radarLayersRef.current) {
         layer.remove()
-      })
+      }
       radarLayersRef.current = []
 
       if (leafletMapRef.current) {
@@ -120,13 +120,14 @@ export function useRadarMap({
         if (!leafletMapRef.current) return
 
         // Clean up existing layers
-        radarLayersRef.current.forEach((layer) => {
-          leafletMapRef.current?.removeLayer(layer)
-        })
+        for (const layer of radarLayersRef.current) {
+          leafletMapRef.current.removeLayer(layer)
+        }
         radarLayersRef.current = []
 
         // Create all radar layers and add them to map (all initially invisible)
-        radarFrames.forEach((frameUrl, index) => {
+        for (let index = 0; index < radarFrames.length; index++) {
+          const frameUrl = radarFrames[index]
           const layer = L.tileLayer(frameUrl, {
             opacity: index === 0 ? RADAR_LAYER_OPACITY : 0,
             maxZoom: 19
@@ -136,7 +137,7 @@ export function useRadarMap({
             layer.addTo(leafletMapRef.current)
             radarLayersRef.current.push(layer)
           }
-        })
+        }
       } catch (error) {
         console.error('[useRadarMap] Failed to preload radar layers:', error)
       }
@@ -150,9 +151,9 @@ export function useRadarMap({
     if (radarLayersRef.current.length === 0) return
 
     // Hide all layers
-    radarLayersRef.current.forEach((layer) => {
+    for (const layer of radarLayersRef.current) {
       layer.setOpacity(0)
-    })
+    }
 
     // Show current frame
     if (radarLayersRef.current[currentFrame]) {

@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
 import {render, screen} from '@/test-utils'
+import {describe, expect, it} from 'vitest'
 import Icon from './Icon'
 
 describe('Icon', () => {
@@ -17,8 +17,11 @@ describe('Icon', () => {
 
   it('should use correct icon path', () => {
     render(<Icon icon="10d" />)
-    const image = screen.getByAltText('weather icon: 10d') as HTMLImageElement
-    expect(image.src).toContain('/icons/10d.svg')
+    const image = screen.getByAltText('weather icon: 10d')
+    expect(image).toHaveAttribute(
+      'src',
+      expect.stringContaining('/icons/10d.svg')
+    )
   })
 
   it('should have correct dimensions', () => {

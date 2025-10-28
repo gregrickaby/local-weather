@@ -123,7 +123,7 @@ describe('formatPressure', () => {
 
 describe('getMoonIlluminationPercentage', () => {
   it('should format 0.0 as "0%"', () => {
-    expect(getMoonIlluminationPercentage(0.0)).toBe('0%')
+    expect(getMoonIlluminationPercentage(0)).toBe('0%')
   })
 
   it('should format 0.23 as "23%"', () => {
@@ -135,7 +135,7 @@ describe('getMoonIlluminationPercentage', () => {
   })
 
   it('should format 1.0 as "100%"', () => {
-    expect(getMoonIlluminationPercentage(1.0)).toBe('100%')
+    expect(getMoonIlluminationPercentage(1)).toBe('100%')
   })
 
   it('should round 0.237 to "24%"', () => {
