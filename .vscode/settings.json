@@ -26,5 +26,22 @@
       "source.organizeImports": "explicit"
     }
   },
-  "cSpell.words": ["Meteo", "openmeteo"]
+  "cSpell.words": [
+    "backtotop",
+    "bigtemp",
+    "Favorited",
+    "feelslike",
+    "generationtime",
+    "hectopascals",
+    "Meteo",
+    "nowcast",
+    "openmeteo",
+    "precip",
+    "suncalc",
+    "tabler"
+  ],
+  "sonarlint.connectedMode.project": {
+    "connectionId": "http-localhost-9000",
+    "projectKey": "local-weather"
+  }
 }
