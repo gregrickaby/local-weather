@@ -74,7 +74,7 @@ export default function Radar() {
         <Group justify="space-between" mb="md">
           <div>
             <Text size="lg" fw={600}>
-              Weather Radar
+              Radar
             </Text>
             <Text size="xs" c="dimmed">
               {statusMessage}
@@ -132,17 +132,6 @@ export default function Radar() {
             </div>
           )}
         </div>
-
-        <Text size="xs" c="dimmed" mt="xs" ta="center">
-          Radar data from{' '}
-          <a
-            href="https://www.rainviewer.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            RainViewer
-          </a>
-        </Text>
       </Card>
     </>
   )

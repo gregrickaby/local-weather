@@ -18,6 +18,15 @@ export default function Footer() {
           >
             Open-Meteo
           </a>
+          . Radar data from{' '}
+          <a
+            aria-label="visit RainViewer website"
+            href="https://www.rainviewer.com/"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            RainViewer
+          </a>
           . Weather app created by{' '}
           <a
             aria-label={`visit ${config.siteAuthor} website`}

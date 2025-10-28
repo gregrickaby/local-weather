@@ -10,6 +10,31 @@ describe('Footer', () => {
     expect(footer).toBeInTheDocument()
   })
 
+  it('should display Open-Meteo attribution', () => {
+    render(<Footer />)
+    const openMeteoLink = screen.getByRole('link', {
+      name: 'visit Open-Meteo website'
+    })
+    expect(openMeteoLink).toBeInTheDocument()
+    expect(openMeteoLink).toHaveAttribute('href', 'https://open-meteo.com/')
+    expect(openMeteoLink).toHaveAttribute('target', '_blank')
+    expect(openMeteoLink).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('should display RainViewer attribution', () => {
+    render(<Footer />)
+    const rainViewerLink = screen.getByRole('link', {
+      name: 'visit RainViewer website'
+    })
+    expect(rainViewerLink).toBeInTheDocument()
+    expect(rainViewerLink).toHaveAttribute(
+      'href',
+      'https://www.rainviewer.com/'
+    )
+    expect(rainViewerLink).toHaveAttribute('target', '_blank')
+    expect(rainViewerLink).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
   it('should display author name with link', () => {
     render(<Footer />)
     const authorLink = screen.getByRole('link', {
