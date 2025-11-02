@@ -1,59 +1,38 @@
 'use client'
 
-import classes from '@/app/Page.module.css'
-import Footer from '@/components/Layout/Footer/Footer'
-import Header from '@/components/Layout/Header/Header'
-import BackToTop from '@/components/UI/BackToTop/BackToTop'
-import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditions'
-import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
-import Forecast from '@/components/UI/Forecast/Forecast'
-import Radar from '@/components/UI/Radar/Radar'
-import Search from '@/components/UI/Search/Search'
-import Settings from '@/components/UI/Settings/Settings'
-import {useWeatherData} from '@/lib/hooks/useWeatherData'
-import {Skeleton, Stack} from '@mantine/core'
-
-/**
- * Loading skeleton component.
- */
-function WeatherSkeleton() {
-  return (
-    <Stack align="center" gap="lg">
-      <Skeleton height={40} width={200} />
-      <Skeleton height={120} width={150} />
-      <Skeleton height={300} width="100%" mt="xl" />
-      <Skeleton height={400} width="100%" />
-    </Stack>
-  )
-}
+import {DEFAULT_LOCATION} from '@/lib/constants'
+import {createLocationSlug} from '@/lib/utils/slug'
+import {useRouter} from 'next/navigation'
+import {useEffect} from 'react'
 
 /**
  * Home page component.
+ *
+ * Redirects to the default location's weather page.
  */
 export default function HomePage() {
-  const {data: weather, isLoading} = useWeatherData()
+  const router = useRouter()
 
-  return (
-    <div className={classes.container}>
-      <Header />
-      <main className={classes.main}>
-        <div className={classes.search}>
-          <Search />
-          <Settings />
-        </div>
-        {isLoading || !weather ? (
-          <WeatherSkeleton />
-        ) : (
-          <Stack gap="xl" className={classes.content}>
-            <CurrentConditions />
-            <DetailsGrid />
-            <Radar />
-            <Forecast />
-          </Stack>
-        )}
-      </main>
-      <Footer />
-      <BackToTop />
-    </div>
-  )
+  useEffect(() => {
+    // Get stored location from localStorage or use default
+    let targetLocation = DEFAULT_LOCATION
+    
+    if (typeof window !== 'undefined') {
+      try {
+        const storedLocation = localStorage.getItem('location')
+        if (storedLocation) {
+          targetLocation = JSON.parse(storedLocation)
+        }
+      } catch (error) {
+        console.error('Failed to parse stored location:', error)
+      }
+    }
+
+    // Navigate to the location's page
+    const slug = createLocationSlug(targetLocation)
+    router.replace(`/${slug}`)
+  }, [router])
+
+  // Show nothing while redirecting
+  return null
 }

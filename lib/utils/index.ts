@@ -5,3 +5,4 @@
 export * from './formatting'
 export * from './conditions'
 export * from './calculations'
+export * from './slug'
