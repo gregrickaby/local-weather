@@ -12,7 +12,7 @@ import Radar from '@/components/UI/Radar/Radar'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
-import {Card, Group, SimpleGrid, Skeleton, Stack, Text} from '@mantine/core'
+import {Card, Group, SimpleGrid, Skeleton, Stack} from '@mantine/core'
 
 /**
  * Loading skeleton component that matches the actual layout.
@@ -64,9 +64,7 @@ function WeatherSkeleton() {
       <Card shadow="sm" padding="lg" radius="md" withBorder>
         <Group justify="space-between" mb="md">
           <div>
-            <Text size="lg" fw={600}>
-              Radar
-            </Text>
+            <Skeleton height={20} width={60} />
             <Skeleton height={12} width={150} mt={4} />
           </div>
           <Group gap="xs">
@@ -87,7 +85,7 @@ function WeatherSkeleton() {
               shadow="none"
               padding="md"
               radius="md"
-              style={{minWidth: '100px', border: '1px solid var(--mantine-color-default-border)'}}
+              className={skeletonClasses.forecastCard}
             >
               <Stack gap="xs" align="center">
                 <Skeleton height={16} width={60} />
@@ -103,7 +101,7 @@ function WeatherSkeleton() {
           shadow="none"
           padding="md"
           radius="md"
-          style={{border: '1px solid var(--mantine-color-default-border)'}}
+          className={skeletonClasses.forecastContainer}
         >
           <Stack gap="xs">
             {Array.from({length: 10}, (_, i) => (

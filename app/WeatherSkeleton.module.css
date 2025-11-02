@@ -16,3 +16,12 @@
     padding: 80px 40px;
   }
 }
+
+.forecastCard {
+  min-width: 100px;
+  border: 1px solid var(--mantine-color-default-border);
+}
+
+.forecastContainer {
+  border: 1px solid var(--mantine-color-default-border);
+}
