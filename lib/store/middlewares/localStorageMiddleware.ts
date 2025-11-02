@@ -8,8 +8,13 @@ import {
   setTempUnit
 } from '../slices/preferencesSlice'
 
+// Debounce timer for batching localStorage writes
+let storageTimer: NodeJS.Timeout | null = null
+const STORAGE_DEBOUNCE_MS = 100
+
 /**
  * Middleware to sync preferences to localStorage.
+ * Debounces writes to reduce localStorage I/O operations.
  */
 export const localStorageMiddleware: Middleware =
   (store) => (next) => (action) => {
@@ -19,16 +24,19 @@ export const localStorageMiddleware: Middleware =
     if (globalThis.window !== undefined) {
       const state = store.getState()
 
+      // Track which keys need to be updated
+      const updates: Record<string, string> = {}
+
       if (setLocation.match(action)) {
-        localStorage.setItem('location', JSON.stringify(action.payload))
+        updates.location = JSON.stringify(action.payload)
       }
 
       if (setTempUnit.match(action)) {
-        localStorage.setItem('tempUnit', action.payload)
+        updates.tempUnit = action.payload
       }
 
       if (setColorScheme.match(action)) {
-        localStorage.setItem('colorScheme', action.payload)
+        updates.colorScheme = action.payload
       }
 
       if (
@@ -36,10 +44,23 @@ export const localStorageMiddleware: Middleware =
         removeFromFavorites.match(action) ||
         clearFavorites.match(action)
       ) {
-        localStorage.setItem(
-          'favorites',
-          JSON.stringify(state.preferences.favorites)
-        )
+        updates.favorites = JSON.stringify(state.preferences.favorites)
+      }
+
+      // If there are updates, debounce the actual localStorage writes
+      if (Object.keys(updates).length > 0) {
+        // Clear existing timer
+        if (storageTimer) {
+          clearTimeout(storageTimer)
+        }
+
+        // Batch the writes after a short delay
+        storageTimer = setTimeout(() => {
+          for (const [key, value] of Object.entries(updates)) {
+            localStorage.setItem(key, value)
+          }
+          storageTimer = null
+        }, STORAGE_DEBOUNCE_MS)
       }
     }
 

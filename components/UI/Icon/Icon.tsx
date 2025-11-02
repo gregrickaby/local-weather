@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import {memo} from 'react'
 
 interface IconProps {
   icon: string
@@ -7,10 +8,11 @@ interface IconProps {
 
 /**
  * Icon component with accessibility support.
+ * Memoized to prevent unnecessary re-renders when props haven't changed.
  * @param icon - The icon name (without extension)
  * @param alt - Alt text for accessibility. If empty string, image is decorative.
  */
-export default function Icon({icon, alt}: Readonly<IconProps>) {
+function Icon({icon, alt}: Readonly<IconProps>) {
   return (
     <Image
       alt={alt ?? `weather icon: ${icon}`}
@@ -20,3 +22,5 @@ export default function Icon({icon, alt}: Readonly<IconProps>) {
     />
   )
 }
+
+export default memo(Icon)

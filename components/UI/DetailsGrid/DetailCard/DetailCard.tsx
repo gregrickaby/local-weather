@@ -1,7 +1,7 @@
 'use client'
 
 import {Card, Transition} from '@mantine/core'
-import {ReactNode} from 'react'
+import {ReactNode, memo} from 'react'
 
 interface DetailCardProps {
   readonly children: ReactNode
@@ -10,11 +10,12 @@ interface DetailCardProps {
 
 /**
  * Shared detail card component with glassmorphic styling and animations.
+ * Memoized to prevent unnecessary re-renders when props haven't changed.
  *
  * @param children - Card content
  * @param delay - Animation delay in milliseconds
  */
-export default function DetailCard({children, delay = 0}: DetailCardProps) {
+function DetailCard({children, delay = 0}: DetailCardProps) {
   return (
     <Transition
       mounted
@@ -46,3 +47,5 @@ export default function DetailCard({children, delay = 0}: DetailCardProps) {
     </Transition>
   )
 }
+
+export default memo(DetailCard)
