@@ -1,6 +1,7 @@
 'use client'
 
 import classes from '@/app/Page.module.css'
+import skeletonClasses from '@/app/WeatherSkeleton.module.css'
 import Footer from '@/components/Layout/Footer/Footer'
 import Header from '@/components/Layout/Header/Header'
 import BackToTop from '@/components/UI/BackToTop/BackToTop'
@@ -11,18 +12,106 @@ import Radar from '@/components/UI/Radar/Radar'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
-import {Skeleton, Stack} from '@mantine/core'
+import {Card, Group, SimpleGrid, Skeleton, Stack, Text} from '@mantine/core'
 
 /**
- * Loading skeleton component.
+ * Loading skeleton component that matches the actual layout.
  */
 function WeatherSkeleton() {
+  // Generate 9 skeleton cards for the details grid
+  const detailCards = Array.from({length: 9}, (_, i) => (
+    <Card
+      key={i}
+      shadow="sm"
+      padding="lg"
+      radius="lg"
+      withBorder
+      style={{minHeight: '180px'}}
+    >
+      <Stack gap="xs">
+        <Skeleton height={12} width="60%" />
+        <Skeleton height={48} width="80%" mt="xs" />
+        <Skeleton height={16} width="90%" mt="xs" />
+      </Stack>
+    </Card>
+  ))
+
   return (
-    <Stack align="center" gap="lg">
-      <Skeleton height={40} width={200} />
-      <Skeleton height={120} width={150} />
-      <Skeleton height={300} width="100%" mt="xl" />
-      <Skeleton height={400} width="100%" />
+    <Stack gap="xl">
+      {/* CurrentConditions skeleton - hero section */}
+      <div className={skeletonClasses.hero}>
+        <Stack align="center" gap="xs">
+          <Group gap="xs" align="center">
+            <Skeleton height={48} width={48} circle />
+            <Skeleton height={32} width={150} />
+          </Group>
+          <Skeleton height={120} width={200} mt="xs" />
+          <Skeleton height={20} width={300} mt="xs" />
+          <Skeleton height={24} width={180} mt="xs" />
+        </Stack>
+      </div>
+
+      {/* DetailsGrid skeleton - 9 cards in responsive grid */}
+      <SimpleGrid
+        cols={{base: 2, sm: 2, md: 3, lg: 4}}
+        spacing="md"
+        verticalSpacing="md"
+      >
+        {detailCards}
+      </SimpleGrid>
+
+      {/* Radar skeleton */}
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Group justify="space-between" mb="md">
+          <div>
+            <Text size="lg" fw={600}>
+              Radar
+            </Text>
+            <Skeleton height={12} width={150} mt={4} />
+          </div>
+          <Group gap="xs">
+            <Skeleton height={34} width={34} circle />
+            <Skeleton height={34} width={34} circle />
+          </Group>
+        </Group>
+        <Skeleton height={300} width="100%" radius="md" />
+      </Card>
+
+      {/* Forecast skeleton */}
+      <Stack gap="md">
+        <Skeleton height={28} width={180} />
+        <Group gap="md" wrap="nowrap" style={{overflowX: 'auto'}}>
+          {Array.from({length: 8}, (_, i) => (
+            <Card
+              key={i}
+              shadow="none"
+              padding="md"
+              radius="md"
+              style={{minWidth: '100px', border: '1px solid var(--mantine-color-default-border)'}}
+            >
+              <Stack gap="xs" align="center">
+                <Skeleton height={16} width={60} />
+                <Skeleton height={48} width={48} circle />
+                <Skeleton height={24} width={50} />
+                <Skeleton height={12} width={70} />
+              </Stack>
+            </Card>
+          ))}
+        </Group>
+        <Skeleton height={28} width={180} mt="xl" />
+        <Card
+          shadow="none"
+          padding="md"
+          radius="md"
+          style={{border: '1px solid var(--mantine-color-default-border)'}}
+        >
+          <Stack gap="xs">
+            {Array.from({length: 10}, (_, i) => (
+              <Skeleton key={i} height={52} width="100%" />
+            ))}
+          </Stack>
+        </Card>
+      </Stack>
     </Stack>
   )
 }
