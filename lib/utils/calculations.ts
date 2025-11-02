@@ -190,7 +190,7 @@ function analyzeDayWeather(
 
     // Find the most common code
     let maxCount = 0
-    let mostCommon = 0
+    let mostCommon: number | null = null
     for (const [code, count] of codeCount) {
       if (count > maxCount) {
         maxCount = count
@@ -198,7 +198,7 @@ function analyzeDayWeather(
       }
     }
 
-    return mostCommon ? getSimpleWeather(mostCommon) : null
+    return mostCommon !== null ? getSimpleWeather(mostCommon) : null
   }
 
   return {

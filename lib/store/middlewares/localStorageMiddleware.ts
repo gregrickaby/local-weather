@@ -12,9 +12,13 @@ import {
 let storageTimer: NodeJS.Timeout | null = null
 const STORAGE_DEBOUNCE_MS = 100
 
+// Accumulate pending updates to ensure no writes are lost
+let pendingUpdates: Record<string, string> = {}
+
 /**
  * Middleware to sync preferences to localStorage.
  * Debounces writes to reduce localStorage I/O operations.
+ * Accumulates updates to ensure no writes are lost during rapid dispatches.
  */
 export const localStorageMiddleware: Middleware =
   (store) => (next) => (action) => {
@@ -24,19 +28,16 @@ export const localStorageMiddleware: Middleware =
     if (globalThis.window !== undefined) {
       const state = store.getState()
 
-      // Track which keys need to be updated
-      const updates: Record<string, string> = {}
-
       if (setLocation.match(action)) {
-        updates.location = JSON.stringify(action.payload)
+        pendingUpdates.location = JSON.stringify(action.payload)
       }
 
       if (setTempUnit.match(action)) {
-        updates.tempUnit = action.payload
+        pendingUpdates.tempUnit = action.payload
       }
 
       if (setColorScheme.match(action)) {
-        updates.colorScheme = action.payload
+        pendingUpdates.colorScheme = action.payload
       }
 
       if (
@@ -44,11 +45,11 @@ export const localStorageMiddleware: Middleware =
         removeFromFavorites.match(action) ||
         clearFavorites.match(action)
       ) {
-        updates.favorites = JSON.stringify(state.preferences.favorites)
+        pendingUpdates.favorites = JSON.stringify(state.preferences.favorites)
       }
 
-      // If there are updates, debounce the actual localStorage writes
-      if (Object.keys(updates).length > 0) {
+      // If there are pending updates, debounce the actual localStorage writes
+      if (Object.keys(pendingUpdates).length > 0) {
         // Clear existing timer
         if (storageTimer) {
           clearTimeout(storageTimer)
@@ -56,9 +57,11 @@ export const localStorageMiddleware: Middleware =
 
         // Batch the writes after a short delay
         storageTimer = setTimeout(() => {
-          for (const [key, value] of Object.entries(updates)) {
+          for (const [key, value] of Object.entries(pendingUpdates)) {
             localStorage.setItem(key, value)
           }
+          // Clear pending updates after writing
+          pendingUpdates = {}
           storageTimer = null
         }, STORAGE_DEBOUNCE_MS)
       }
