@@ -8,12 +8,7 @@ import {
   setTempUnit
 } from '../slices/preferencesSlice'
 
-// Debounce timer for batching localStorage writes
-let storageTimer: NodeJS.Timeout | null = null
 const STORAGE_DEBOUNCE_MS = 100
-
-// Accumulate pending updates to ensure no writes are lost
-let pendingUpdates: Record<string, string> = {}
 
 /**
  * Middleware to sync preferences to localStorage.
@@ -21,7 +16,11 @@ let pendingUpdates: Record<string, string> = {}
  * Accumulates updates to ensure no writes are lost during rapid dispatches.
  */
 export const localStorageMiddleware: Middleware =
-  (store) => (next) => (action) => {
+  (store) => {
+    // Debounce timer and pending updates are now per-store instance
+    let storageTimer: NodeJS.Timeout | null = null
+    let pendingUpdates: Record<string, string> = {}
+    return (next) => (action) => {
     const result = next(action)
 
     // Only run on client-side
