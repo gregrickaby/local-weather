@@ -257,11 +257,36 @@ npm run test:ui  // Opens browser interface
 
 ### Data Flow
 
-1. **User Input** → Search component queries `/api/places` for location autocomplete (Open-Meteo Geocoding API)
-2. **Location Selection** → Dispatched to Redux store, saved to localStorage via middleware
-3. **Weather Fetch** → RTK Query fetches from `/api/weather` (geocodes location via Open-Meteo Geocoding API, then fetches forecast from Open-Meteo Weather API)
+1. **User Input** → Search component queries geocoding API for location autocomplete (Open-Meteo Geocoding API)
+2. **Location Selection** → Navigation to city page URL, location dispatched to Redux store, saved to localStorage
+3. **Weather Fetch** → RTK Query fetches weather data using location coordinates from Redux state
 4. **State Management** → Redux Toolkit + RTK Query handle state and caching
 5. **Rendering** → Components consume data from Redux store via hooks
+
+### Routing Architecture
+
+**URL Structure:**
+- `/` - Home page (redirects to last viewed location or default)
+- `/{location-slug}` - City weather page (e.g., `/chicago-illinois-united-states`)
+
+**Dynamic Routes:**
+- `app/[location]/page.tsx` - Dynamic city route handler
+- Generates SEO metadata for each city (title, description, Open Graph tags)
+- Pre-renders popular cities at build time via `generateStaticParams`
+- Client-side location resolution for flexibility
+
+**Slug Generation:**
+- Slugs created from location display name (e.g., "Chicago, Illinois, United States" → "chicago-illinois-united-states")
+- Utility functions in `lib/utils/slug.ts`: `createLocationSlug()`, `parseLocationSlug()`
+- Known locations (popular cities + default) resolve instantly
+- Unknown locations use geocoding API client-side
+
+**Navigation Flow:**
+1. User searches for location
+2. On selection, app navigates to `/{location-slug}` using Next.js router
+3. City page resolves slug to coordinates (from cache or geocoding API)
+4. Weather data fetched and displayed
+5. URL updates and is shareable
 
 ### Key Patterns
 
@@ -284,7 +309,9 @@ npm run test:ui  // Opens browser interface
 **Component Structure**
 
 - `app/layout.tsx` - Root layout with Mantine provider and StoreProvider
-- `app/page.tsx` - Client component assembling all UI components
+- `app/page.tsx` - Home page that redirects to location page
+- `app/[location]/page.tsx` - Dynamic city page route
+- `components/Pages/CityPage.tsx` - City weather page component
 - `components/` - Presentational components (Header, Search, CurrentConditions, Forecast, DetailsGrid, etc.)
 - `components/Providers/StoreProvider.tsx` - Redux store provider
 - All components consume state via Redux hooks (`useAppSelector`, `useAppDispatch`)
