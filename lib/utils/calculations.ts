@@ -178,17 +178,27 @@ function analyzeDayWeather(
   const afternoonHours = hourlyData.filter((h) => h.hour >= 12 && h.hour < 17)
   const eveningHours = hourlyData.filter((h) => h.hour >= 17 && h.hour < 22)
 
-  // Get dominant weather for each period
+  // Get dominant weather for each period using a more efficient approach
   const getMostCommon = (hours: Array<{code: number}>) => {
     if (hours.length === 0) return null
-    const codes = hours.map((h) => h.code)
-    const sorted = codes.toSorted(
-      (a, b) =>
-        codes.filter((v) => v === a).length -
-        codes.filter((v) => v === b).length
-    )
-    const mode = sorted.pop()
-    return mode ? getSimpleWeather(mode) : null
+
+    // Count occurrences using a Map for better performance
+    const codeCount = new Map<number, number>()
+    for (const h of hours) {
+      codeCount.set(h.code, (codeCount.get(h.code) || 0) + 1)
+    }
+
+    // Find the most common code
+    let maxCount = 0
+    let mostCommon: number | null = null
+    for (const [code, count] of codeCount) {
+      if (count > maxCount) {
+        maxCount = count
+        mostCommon = code
+      }
+    }
+
+    return mostCommon !== null ? getSimpleWeather(mostCommon) : null
   }
 
   return {
