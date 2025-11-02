@@ -1,72 +1,20 @@
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
-import {parseLocationSlug} from '@/lib/utils/slug'
-import {POPULAR_CITIES} from '@/lib/constants'
+import {createLocationSlug} from '@/lib/utils/slug'
+import {POPULAR_CITIES, DEFAULT_LOCATION} from '@/lib/constants'
 import CityPage from '@/components/Pages/CityPage'
-import type {Location} from '@/lib/types'
 
 interface Props {
   params: Promise<{location: string}>
 }
 
 /**
- * Resolve location from slug using geocoding API.
- */
-async function resolveLocation(slug: string): Promise<Location | null> {
-  const {searchTerm} = parseLocationSlug(slug)
-
-  try {
-    const params = new URLSearchParams({
-      name: searchTerm,
-      count: '1',
-      language: 'en',
-      format: 'json'
-    })
-
-    const url = `https://geocoding-api.open-meteo.com/v1/search?${params}`
-    const response = await fetch(url, {
-      next: {revalidate: 3600} // Cache for 1 hour
-    })
-
-    if (!response.ok) {
-      return null
-    }
-
-    const json = await response.json()
-
-    if (!json.results || json.results.length === 0) {
-      return null
-    }
-
-    const result = json.results[0]
-    return {
-      id: result.id,
-      name: result.name,
-      latitude: result.latitude,
-      longitude: result.longitude,
-      admin1: result.admin1,
-      country: result.country,
-      display: [result.name, result.admin1, result.country]
-        .filter(Boolean)
-        .join(', ')
-    }
-  } catch (error) {
-    console.error('[resolveLocation] Error:', error)
-    return null
-  }
-}
-
-/**
  * Generate static params for popular cities at build time.
  */
 export async function generateStaticParams() {
-  return POPULAR_CITIES.map((city) => ({
-    location: city.display
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, '')
+  const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
+  return allLocations.map((city) => ({
+    location: createLocationSlug(city)
   }))
 }
 
@@ -75,16 +23,36 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {location} = await params
-  const locationData = await resolveLocation(location)
+  
+  // Try to find matching city from popular cities + default
+  const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
+  const matchingCity = allLocations.find(
+    (city) => createLocationSlug(city) === location
+  )
 
-  if (!locationData) {
+  if (matchingCity) {
+    const title = `${matchingCity.display} Weather`
+    const description = `Current weather conditions and forecast for ${matchingCity.display}. View temperature, precipitation, wind, humidity, and more.`
+
     return {
-      title: 'Location Not Found'
+      title,
+      description,
+      openGraph: {
+        title,
+        description,
+        type: 'website'
+      }
     }
   }
 
-  const title = `${locationData.display} Weather`
-  const description = `Current weather conditions and forecast for ${locationData.display}. View temperature, precipitation, wind, humidity, and more.`
+  // For dynamic locations, use a generic title
+  const formattedLocation = location
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
+  const title = `${formattedLocation} Weather`
+  const description = `Current weather conditions and forecast for ${formattedLocation}. View temperature, precipitation, wind, humidity, and more.`
 
   return {
     title,
@@ -101,12 +69,12 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
  * City weather page component.
  */
 export default async function LocationPage({params}: Props) {
-  const {location} = await params
-  const locationData = await resolveLocation(location)
+  const {location: slug} = await params
 
-  if (!locationData) {
+  // Validate slug format (basic check)
+  if (!slug || slug.length < 2 || !/^[a-z0-9-]+$/.test(slug)) {
     notFound()
   }
 
-  return <CityPage location={locationData} />
+  return <CityPage slug={slug} />
 }
