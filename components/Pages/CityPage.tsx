@@ -67,6 +67,12 @@ export default function CityPage({slug}: CityPageProps) {
 
   const {data: weather, isLoading: isWeatherLoading} = useWeatherData()
 
+  // Reset location resolution when slug changes
+  useEffect(() => {
+    setLocationResolved(false)
+    setLocationError(false)
+  }, [slug])
+
   // Update Redux state with the resolved location
   useEffect(() => {
     let locationToSet: Location | null = null
@@ -88,7 +94,12 @@ export default function CityPage({slug}: CityPageProps) {
       if (correctSlug !== slug) {
         router.replace(`/${correctSlug}`)
       }
-    } else if (!knownLocation && !isSearching && !locations && !locationResolved) {
+    } else if (
+      !knownLocation &&
+      !isSearching &&
+      (!locations || locations.length === 0) &&
+      !locationResolved
+    ) {
       // Location could not be resolved
       setLocationError(true)
     }

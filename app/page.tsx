@@ -17,15 +17,13 @@ export default function HomePage() {
     // Get stored location from localStorage or use default
     let targetLocation = DEFAULT_LOCATION
     
-    if (typeof window !== 'undefined') {
-      try {
-        const storedLocation = localStorage.getItem('location')
-        if (storedLocation) {
-          targetLocation = JSON.parse(storedLocation)
-        }
-      } catch (error) {
-        console.error('Failed to parse stored location:', error)
+    try {
+      const storedLocation = localStorage.getItem('location')
+      if (storedLocation) {
+        targetLocation = JSON.parse(storedLocation)
       }
+    } catch (error) {
+      console.error('Failed to parse stored location:', error)
     }
 
     // Navigate to the location's page

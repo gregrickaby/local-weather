@@ -59,35 +59,10 @@ export function parseLocationSlug(slug: string): {
   const normalized = slug.replace(/-/g, ' ').trim()
   // Remove common country names from search to improve geocoding accuracy
   const searchTerm = normalized
-    .replace(/\bunited states\b/i, '')
-    .replace(/\busa\b/i, '')
-    .replace(/\bunited kingdom\b/i, '')
-    .replace(/\buk\b/i, '')
-    .replace(/\bcanada\b/i, '')
-    .replace(/\baustralia\b/i, '')
-    .replace(/\bnew zealand\b/i, '')
-    .replace(/\bireland\b/i, '')
-    .replace(/\bfrance\b/i, '')
-    .replace(/\bgermany\b/i, '')
-    .replace(/\bitaly\b/i, '')
-    .replace(/\bspain\b/i, '')
-    .replace(/\bnetherlands\b/i, '')
-    .replace(/\bbelgium\b/i, '')
-    .replace(/\bswitzerland\b/i, '')
-    .replace(/\baustria\b/i, '')
-    .replace(/\bdenmark\b/i, '')
-    .replace(/\bsweden\b/i, '')
-    .replace(/\bnorway\b/i, '')
-    .replace(/\bfinland\b/i, '')
-    .replace(/\bpoland\b/i, '')
-    .replace(/\bbrazil\b/i, '')
-    .replace(/\bmexico\b/i, '')
-    .replace(/\bargentina\b/i, '')
-    .replace(/\bjapan\b/i, '')
-    .replace(/\bchina\b/i, '')
-    .replace(/\bindia\b/i, '')
-    .replace(/\bsouth korea\b/i, '')
-    .replace(/\bkorea\b/i, '')
+    .replace(
+      /\b(united states|usa|united kingdom|uk|canada|australia|new zealand|ireland|france|germany|italy|spain|netherlands|belgium|switzerland|austria|denmark|sweden|norway|finland|poland|brazil|mexico|argentina|japan|china|india|south korea|korea)\b/gi,
+      ''
+    )
     .trim()
 
   return {
