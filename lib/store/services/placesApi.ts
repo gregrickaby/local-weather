@@ -21,38 +21,55 @@ export const placesApi = createApi({
         }
 
         try {
-          const params = new URLSearchParams({
-            name: location,
-            count: '10',
-            language: 'en',
-            format: 'json'
-          })
+          // Try progressively simpler search terms if initial search returns no results
+          const searchTerms = [
+            location,
+            // Remove extra words from the end (usually admin/country)
+            location.split(' ').slice(0, -1).join(' '),
+            // Keep only first 2-3 words (city name, maybe multi-word)
+            location.split(' ').slice(0, 2).join(' '),
+            // Keep only first word (city)
+            location.split(' ')[0]
+          ].filter((term) => term.length >= 2)
 
-          const url = `https://geocoding-api.open-meteo.com/v1/search?${params}`
-          const response = await fetch(url)
+          // Remove duplicates
+          const uniqueSearchTerms = [...new Set(searchTerms)]
 
-          if (!response.ok) {
-            throw new Error(`Geocoding API error: ${response.statusText}`)
+          let locations: Location[] = []
+
+          for (const searchTerm of uniqueSearchTerms) {
+            const params = new URLSearchParams({
+              name: searchTerm,
+              count: '10',
+              language: 'en',
+              format: 'json'
+            })
+
+            const url = `https://geocoding-api.open-meteo.com/v1/search?${params}`
+            const response = await fetch(url)
+
+            if (!response.ok) {
+              throw new Error(`Geocoding API error: ${response.statusText}`)
+            }
+
+            const json: OpenMeteoGeocodeResponse = await response.json()
+
+            if (json.results && json.results.length > 0) {
+              // Transform to our Location type
+              locations = json.results.map((result) => ({
+                id: result.id,
+                name: result.name,
+                latitude: result.latitude,
+                longitude: result.longitude,
+                admin1: result.admin1,
+                country: result.country,
+                display: [result.name, result.admin1, result.country]
+                  .filter(Boolean)
+                  .join(', ')
+              }))
+              break // Success - use these results
+            }
           }
-
-          const json: OpenMeteoGeocodeResponse = await response.json()
-
-          if (!json.results || json.results.length === 0) {
-            return {data: []}
-          }
-
-          // Transform to our Location type
-          const locations: Location[] = json.results.map((result) => ({
-            id: result.id,
-            name: result.name,
-            latitude: result.latitude,
-            longitude: result.longitude,
-            admin1: result.admin1,
-            country: result.country,
-            display: [result.name, result.admin1, result.country]
-              .filter(Boolean)
-              .join(', ')
-          }))
 
           return {data: locations}
         } catch (error) {

@@ -39,34 +39,220 @@ export function createLocationSlug(location: Location): string {
   return createSlug(parts.join(' '))
 }
 
+// Common country names that might appear in slugs
+const KNOWN_COUNTRIES = [
+  'united states',
+  'united kingdom',
+  'new zealand',
+  'south korea',
+  'costa rica',
+  'el salvador',
+  'saudi arabia',
+  'united arab emirates',
+  'south africa',
+  'sri lanka',
+  'hong kong',
+  'czech republic',
+  'dominican republic',
+  // Single word countries
+  'usa',
+  'uk',
+  'canada',
+  'mexico',
+  'brazil',
+  'australia',
+  'france',
+  'germany',
+  'italy',
+  'spain',
+  'japan',
+  'china',
+  'india',
+  'ireland',
+  'netherlands',
+  'belgium',
+  'switzerland',
+  'austria',
+  'denmark',
+  'sweden',
+  'norway',
+  'finland',
+  'poland',
+  'argentina',
+  'chile',
+  'colombia',
+  'peru',
+  'venezuela',
+  'ecuador',
+  'paraguay',
+  'uruguay',
+  'panama',
+  'guatemala',
+  'honduras',
+  'nicaragua',
+  'belize',
+  'jamaica',
+  'bahamas',
+  'cuba',
+  'haiti',
+  'dominica',
+  'grenada',
+  'barbados',
+  'trinidad',
+  'tobago',
+  'iceland',
+  'portugal',
+  'greece',
+  'turkey',
+  'russia',
+  'ukraine',
+  'romania',
+  'bulgaria',
+  'serbia',
+  'croatia',
+  'bosnia',
+  'slovenia',
+  'hungary',
+  'czech',
+  'slovakia',
+  'latvia',
+  'estonia',
+  'lithuania',
+  'malta',
+  'cyprus',
+  'egypt',
+  'libya',
+  'algeria',
+  'morocco',
+  'tunisia',
+  'sudan',
+  'ethiopia',
+  'kenya',
+  'tanzania',
+  'uganda',
+  'rwanda',
+  'cameroon',
+  'nigeria',
+  'ghana',
+  'ivory',
+  'senegal',
+  'namibia',
+  'botswana',
+  'zimbabwe',
+  'zambia',
+  'malawi',
+  'mozambique',
+  'madagascar',
+  'mauritius',
+  'seychelles',
+  'djibouti',
+  'somalia',
+  'oman',
+  'yemen',
+  'bahrain',
+  'qatar',
+  'kuwait',
+  'iraq',
+  'iran',
+  'afghanistan',
+  'pakistan',
+  'nepal',
+  'bhutan',
+  'bangladesh',
+  'myanmar',
+  'thailand',
+  'cambodia',
+  'laos',
+  'vietnam',
+  'malaysia',
+  'singapore',
+  'indonesia',
+  'philippines',
+  'timor',
+  'papua',
+  'fiji',
+  'samoa',
+  'tonga',
+  'vanuatu',
+  'kiribati',
+  'nauru',
+  'palau',
+  'marshall',
+  'micronesia',
+  'guam',
+  'brunei',
+  'mongolia',
+  'kazakhstan',
+  'uzbekistan',
+  'turkmenistan',
+  'tajikistan',
+  'kyrgyzstan',
+  'azerbaijan',
+  'armenia',
+  'georgia',
+  'israel',
+  'palestine',
+  'lebanon',
+  'syria',
+  'jordan',
+  'palestine',
+  'albania',
+  'macedonia',
+  'kosovo',
+  'montenegro'
+].sort((a, b) => b.length - a.length) // Sort by length descending for accurate matching
+
 /**
  * Parse a location slug to extract potential location components.
  *
  * This is a best-effort parsing - actual location resolution should
- * use the geocoding API.
+ * use the geocoding API. Open-Meteo works best when we exclude the
+ * country from the search term.
+ *
+ * URL Slug Format: {city}-{admin}-{country}
+ * Search Strategy: Remove known country patterns and search with remainder
  *
  * @param slug - URL slug to parse
  * @returns Object with parsed components
  *
  * @example
- * parseLocationSlug('new-york-ny-united-states')
- * // Returns: { slug: 'new-york-ny-united-states', searchTerm: 'new york ny' }
+ * parseLocationSlug('london-england-united-kingdom')
+ * // Returns: { slug: 'london-england-united-kingdom', searchTerm: 'london england' }
+ * 
+ * parseLocationSlug('new-york-new-york-united-states')
+ * // Returns: { slug: 'new-york-new-york-united-states', searchTerm: 'new york new york' }
+ * 
+ * parseLocationSlug('paris-france')
+ * // Returns: { slug: 'paris-france', searchTerm: 'paris' }
  */
 export function parseLocationSlug(slug: string): {
   slug: string
   searchTerm: string
 } {
-  const normalized = slug.replace(/-/g, ' ').trim()
-  // Remove common country names from search to improve geocoding accuracy
-  const searchTerm = normalized
-    .replace(
-      /\b(united states|usa|united kingdom|uk|canada|australia|new zealand|ireland|france|germany|italy|spain|netherlands|belgium|switzerland|austria|denmark|sweden|norway|finland|poland|brazil|mexico|argentina|japan|china|india|south korea|korea)\b/gi,
-      ''
-    )
-    .trim()
+  const normalized = slug.replaceAll('-', ' ').trim()
 
+  // Try to remove a known country from the end of the search term
+  for (const country of KNOWN_COUNTRIES) {
+    if (normalized.toLowerCase().endsWith(country)) {
+      const searchTerm = normalized
+        .slice(0, -country.length)
+        .trim()
+      if (searchTerm.length > 0) {
+        return {slug, searchTerm}
+      }
+    }
+  }
+
+  // If no country found, remove the last word (fallback)
+  const parts = normalized.split(' ')
+  if (parts.length > 1) {
+    const searchTerm = parts.slice(0, -1).join(' ')
+    return {slug, searchTerm}
+  }
+
+  // Single word slug - use as-is
   return {
     slug,
-    searchTerm: searchTerm || normalized
+    searchTerm: normalized
   }
 }

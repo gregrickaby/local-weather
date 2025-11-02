@@ -87,50 +87,55 @@ describe('createLocationSlug', () => {
 })
 
 describe('parseLocationSlug', () => {
-  it('should parse slug and create search term', () => {
+  it('should extract city and admin, remove country', () => {
     const result = parseLocationSlug('new-york-new-york-united-states')
     expect(result.slug).toBe('new-york-new-york-united-states')
     expect(result.searchTerm).toBe('new york new york')
   })
 
-  it('should remove USA from search term', () => {
+  it('should extract city and admin, remove country', () => {
     const result = parseLocationSlug('chicago-illinois-usa')
     expect(result.searchTerm).toBe('chicago illinois')
   })
 
-  it('should remove United Kingdom from search term', () => {
+  it('should extract city and admin, remove country for London', () => {
     const result = parseLocationSlug('london-england-united-kingdom')
     expect(result.searchTerm).toBe('london england')
   })
 
-  it('should remove France from search term', () => {
+  it('should extract city only when no admin', () => {
     const result = parseLocationSlug('paris-france')
     expect(result.searchTerm).toBe('paris')
   })
 
-  it('should remove Canada from search term', () => {
+  it('should extract city and admin, remove country', () => {
     const result = parseLocationSlug('toronto-ontario-canada')
     expect(result.searchTerm).toBe('toronto ontario')
   })
 
-  it('should remove Germany from search term', () => {
+  it('should extract city only when no admin', () => {
     const result = parseLocationSlug('berlin-germany')
     expect(result.searchTerm).toBe('berlin')
   })
 
-  it('should handle slug without country', () => {
+  it('should extract city only when no admin', () => {
     const result = parseLocationSlug('london-england')
     expect(result.slug).toBe('london-england')
-    expect(result.searchTerm).toBe('london england')
+    expect(result.searchTerm).toBe('london')
   })
 
-  it('should handle simple slug', () => {
+  it('should extract city only when single with country', () => {
     const result = parseLocationSlug('sydney-australia')
     expect(result.searchTerm).toBe('sydney')
   })
 
-  it('should normalize hyphens to spaces', () => {
+  it('should handle multi-word city name', () => {
     const result = parseLocationSlug('los-angeles-california')
-    expect(result.searchTerm).toBe('los angeles california')
+    expect(result.searchTerm).toBe('los angeles')
+  })
+
+  it('should handle single word slug', () => {
+    const result = parseLocationSlug('paris')
+    expect(result.searchTerm).toBe('paris')
   })
 })
