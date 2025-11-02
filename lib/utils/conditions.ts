@@ -6,6 +6,76 @@
  */
 
 /**
+ * Static weather code descriptions (shared for day and night).
+ * Stored outside function to avoid recreation on each call.
+ */
+const WEATHER_CODE_DESCRIPTIONS: Record<number, string> = {
+  0: 'Clear sky',
+  1: 'Mainly clear',
+  2: 'Partly cloudy',
+  3: 'Overcast',
+  45: 'Foggy',
+  48: 'Depositing rime fog',
+  51: 'Light drizzle',
+  53: 'Moderate drizzle',
+  55: 'Dense drizzle',
+  56: 'Light freezing drizzle',
+  57: 'Dense freezing drizzle',
+  61: 'Slight rain',
+  63: 'Moderate rain',
+  65: 'Heavy rain',
+  66: 'Light freezing rain',
+  67: 'Heavy freezing rain',
+  71: 'Slight snow fall',
+  73: 'Moderate snow fall',
+  75: 'Heavy snow fall',
+  77: 'Snow grains',
+  80: 'Slight rain showers',
+  81: 'Moderate rain showers',
+  82: 'Violent rain showers',
+  85: 'Slight snow showers',
+  86: 'Heavy snow showers',
+  95: 'Thunderstorm',
+  96: 'Thunderstorm with slight hail',
+  99: 'Thunderstorm with heavy hail'
+}
+
+/**
+ * Static weather code icon prefixes (without day/night suffix).
+ * Stored outside function to avoid recreation on each call.
+ */
+const WEATHER_CODE_ICON_PREFIXES: Record<number, string> = {
+  0: '01',
+  1: '01',
+  2: '02',
+  3: '03',
+  45: '50',
+  48: '50',
+  51: '09',
+  53: '09',
+  55: '09',
+  56: '09',
+  57: '09',
+  61: '10',
+  63: '10',
+  65: '10',
+  66: '13',
+  67: '13',
+  71: '13',
+  73: '13',
+  75: '13',
+  77: '13',
+  80: '09',
+  81: '09',
+  82: '09',
+  85: '13',
+  86: '13',
+  95: '11',
+  96: '11',
+  99: '11'
+}
+
+/**
  * Map WMO weather codes to descriptions and icon codes.
  * Automatically determines day (d) vs night (n) icon variant based on time.
  *
@@ -38,38 +108,13 @@ export function getWeatherInfo(
 
   const dayNight = isDaytime ? 'd' : 'n'
 
-  const weatherCodes: Record<number, {description: string; icon: string}> = {
-    0: {description: 'Clear sky', icon: `01${dayNight}`},
-    1: {description: 'Mainly clear', icon: `01${dayNight}`},
-    2: {description: 'Partly cloudy', icon: `02${dayNight}`},
-    3: {description: 'Overcast', icon: `03${dayNight}`},
-    45: {description: 'Foggy', icon: `50${dayNight}`},
-    48: {description: 'Depositing rime fog', icon: `50${dayNight}`},
-    51: {description: 'Light drizzle', icon: `09${dayNight}`},
-    53: {description: 'Moderate drizzle', icon: `09${dayNight}`},
-    55: {description: 'Dense drizzle', icon: `09${dayNight}`},
-    56: {description: 'Light freezing drizzle', icon: `09${dayNight}`},
-    57: {description: 'Dense freezing drizzle', icon: `09${dayNight}`},
-    61: {description: 'Slight rain', icon: `10${dayNight}`},
-    63: {description: 'Moderate rain', icon: `10${dayNight}`},
-    65: {description: 'Heavy rain', icon: `10${dayNight}`},
-    66: {description: 'Light freezing rain', icon: `13${dayNight}`},
-    67: {description: 'Heavy freezing rain', icon: `13${dayNight}`},
-    71: {description: 'Slight snow fall', icon: `13${dayNight}`},
-    73: {description: 'Moderate snow fall', icon: `13${dayNight}`},
-    75: {description: 'Heavy snow fall', icon: `13${dayNight}`},
-    77: {description: 'Snow grains', icon: `13${dayNight}`},
-    80: {description: 'Slight rain showers', icon: `09${dayNight}`},
-    81: {description: 'Moderate rain showers', icon: `09${dayNight}`},
-    82: {description: 'Violent rain showers', icon: `09${dayNight}`},
-    85: {description: 'Slight snow showers', icon: `13${dayNight}`},
-    86: {description: 'Heavy snow showers', icon: `13${dayNight}`},
-    95: {description: 'Thunderstorm', icon: `11${dayNight}`},
-    96: {description: 'Thunderstorm with slight hail', icon: `11${dayNight}`},
-    99: {description: 'Thunderstorm with heavy hail', icon: `11${dayNight}`}
-  }
+  const description = WEATHER_CODE_DESCRIPTIONS[code] || 'Unknown'
+  const iconPrefix = WEATHER_CODE_ICON_PREFIXES[code] || '01'
 
-  return weatherCodes[code] || {description: 'Unknown', icon: `01${dayNight}`}
+  return {
+    description,
+    icon: `${iconPrefix}${dayNight}`
+  }
 }
 
 /**

@@ -92,27 +92,29 @@ export function formatTimeWithMinutes(isoTime: string): string {
  * @returns Day label (e.g., "Tod", "Tom", "Mon", "Tue")
  */
 export function formatDay(isoDate: string, currentDate: string): string {
-  // Parse the ISO date (YYYY-MM-DD format)
+  // Get date part from ISO strings
   const datePart = isoDate.split('T')[0]
-  const [year, month, day] = datePart.split('-').map(Number)
-  const date = new Date(year, month - 1, day)
-
-  // Get today's date string
   const todayString = currentDate.split('T')[0]
 
-  // Get tomorrow's date string - parse from currentDate, not isoDate
+  // Fast path: check for today
+  if (datePart === todayString) {
+    return 'Tod'
+  }
+
+  // Calculate tomorrow's date string only if needed
   const [todayYear, todayMonth, todayDay] = todayString.split('-').map(Number)
   const todayDate = new Date(todayYear, todayMonth - 1, todayDay)
   todayDate.setDate(todayDate.getDate() + 1)
   const tomorrowString = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`
 
-  if (datePart === todayString) {
-    return 'Tod'
-  }
-
+  // Fast path: check for tomorrow
   if (datePart === tomorrowString) {
     return 'Tom'
   }
+
+  // Parse the ISO date only if we need to format the day of the week
+  const [year, month, day] = datePart.split('-').map(Number)
+  const date = new Date(year, month - 1, day)
 
   // Format the day of the week from the ISO date (short = 3 characters)
   return new Intl.DateTimeFormat('en-US', {weekday: 'short'}).format(date)
