@@ -23,7 +23,7 @@ export async function generateStaticParams() {
  */
 export async function generateMetadata({params}: Props): Promise<Metadata> {
   const {location} = await params
-  
+
   // Try to find matching city from popular cities + default
   const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
   const matchingCity = allLocations.find(

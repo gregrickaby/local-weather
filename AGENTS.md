@@ -266,22 +266,26 @@ npm run test:ui  // Opens browser interface
 ### Routing Architecture
 
 **URL Structure:**
+
 - `/` - Home page (redirects to last viewed location or default)
 - `/{location-slug}` - City weather page (e.g., `/chicago-illinois-united-states`)
 
 **Dynamic Routes:**
+
 - `app/[location]/page.tsx` - Dynamic city route handler
 - Generates SEO metadata for each city (title, description, Open Graph tags)
 - Pre-renders popular cities at build time via `generateStaticParams`
 - Client-side location resolution for flexibility
 
 **Slug Generation:**
+
 - Slugs created from location display name (e.g., "Chicago, Illinois, United States" → "chicago-illinois-united-states")
 - Utility functions in `lib/utils/slug.ts`: `createLocationSlug()`, `parseLocationSlug()`
 - Known locations (popular cities + default) resolve instantly
 - Unknown locations use geocoding API client-side
 
 **Navigation Flow:**
+
 1. User searches for location
 2. On selection, app navigates to `/{location-slug}` using Next.js router
 3. City page resolves slug to coordinates (from cache or geocoding API)

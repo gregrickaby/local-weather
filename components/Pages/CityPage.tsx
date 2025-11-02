@@ -103,7 +103,15 @@ export default function CityPage({slug}: CityPageProps) {
       // Location could not be resolved
       setLocationError(true)
     }
-  }, [knownLocation, locations, isSearching, locationResolved, dispatch, slug, router])
+  }, [
+    knownLocation,
+    locations,
+    isSearching,
+    locationResolved,
+    dispatch,
+    slug,
+    router
+  ])
 
   // Show error state if location couldn't be resolved
   if (locationError) {

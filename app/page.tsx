@@ -16,7 +16,7 @@ export default function HomePage() {
   useEffect(() => {
     // Get stored location from localStorage or use default
     let targetLocation = DEFAULT_LOCATION
-    
+
     try {
       const storedLocation = localStorage.getItem('location')
       if (storedLocation) {

@@ -1,6 +1,6 @@
-import {describe, it, expect} from 'vitest'
-import {createSlug, createLocationSlug, parseLocationSlug} from './slug'
 import type {Location} from '@/lib/types'
+import {describe, expect, it} from 'vitest'
+import {createLocationSlug, createSlug, parseLocationSlug} from './slug'
 
 describe('createSlug', () => {
   it('should convert text to lowercase', () => {

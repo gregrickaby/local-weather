@@ -218,10 +218,10 @@ const KNOWN_COUNTRIES = [
  * @example
  * parseLocationSlug('london-england-united-kingdom')
  * // Returns: { slug: 'london-england-united-kingdom', searchTerm: 'london england' }
- * 
+ *
  * parseLocationSlug('new-york-new-york-united-states')
  * // Returns: { slug: 'new-york-new-york-united-states', searchTerm: 'new york new york' }
- * 
+ *
  * parseLocationSlug('paris-france')
  * // Returns: { slug: 'paris-france', searchTerm: 'paris' }
  */
@@ -234,9 +234,7 @@ export function parseLocationSlug(slug: string): {
   // Try to remove a known country from the end of the search term
   for (const country of KNOWN_COUNTRIES) {
     if (normalized.toLowerCase().endsWith(country)) {
-      const searchTerm = normalized
-        .slice(0, -country.length)
-        .trim()
+      const searchTerm = normalized.slice(0, -country.length).trim()
       if (searchTerm.length > 0) {
         return {slug, searchTerm}
       }
