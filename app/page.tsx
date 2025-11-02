@@ -15,10 +15,9 @@ import {useWeatherData} from '@/lib/hooks/useWeatherData'
 import {Card, Group, SimpleGrid, Skeleton, Stack} from '@mantine/core'
 
 /**
- * Loading skeleton component that matches the actual layout.
+ * Loading skeleton component.
  */
 function WeatherSkeleton() {
-  // Generate 9 skeleton cards for the details grid
   const detailCards = Array.from({length: 9}, (_, i) => (
     <Card
       key={i}
