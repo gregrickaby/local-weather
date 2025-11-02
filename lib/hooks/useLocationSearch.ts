@@ -1,3 +1,4 @@
+import {createLocationSlug} from '@/lib/utils/slug'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
 import {
@@ -8,6 +9,7 @@ import {
 import type {Location} from '@/lib/types'
 import type {ComboboxItem} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
+import {useRouter} from 'next/navigation'
 import {useEffect, useState} from 'react'
 
 // Default locations with coordinates
@@ -49,6 +51,7 @@ const DEFAULT_PLACES: Location[] = [
  */
 export function useLocationSearch() {
   const dispatch = useAppDispatch()
+  const router = useRouter()
   const location = useAppSelector((state) => state.preferences.location)
   const favorites = useAppSelector((state) => state.preferences.favorites)
 
@@ -109,6 +112,9 @@ export function useLocationSearch() {
     if (selectedLocation) {
       dispatch(setLocation(selectedLocation))
       setSearchTerm(selectedLocation.display)
+      // Navigate to the city page
+      const slug = createLocationSlug(selectedLocation)
+      router.push(`/${slug}`)
     }
     setDropdownOpened(false)
     setIsTyping(false)
