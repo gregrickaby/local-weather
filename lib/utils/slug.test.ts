@@ -98,6 +98,26 @@ describe('parseLocationSlug', () => {
     expect(result.searchTerm).toBe('chicago illinois')
   })
 
+  it('should remove United Kingdom from search term', () => {
+    const result = parseLocationSlug('london-england-united-kingdom')
+    expect(result.searchTerm).toBe('london england')
+  })
+
+  it('should remove France from search term', () => {
+    const result = parseLocationSlug('paris-france')
+    expect(result.searchTerm).toBe('paris')
+  })
+
+  it('should remove Canada from search term', () => {
+    const result = parseLocationSlug('toronto-ontario-canada')
+    expect(result.searchTerm).toBe('toronto ontario')
+  })
+
+  it('should remove Germany from search term', () => {
+    const result = parseLocationSlug('berlin-germany')
+    expect(result.searchTerm).toBe('berlin')
+  })
+
   it('should handle slug without country', () => {
     const result = parseLocationSlug('london-england')
     expect(result.slug).toBe('london-england')
@@ -105,9 +125,8 @@ describe('parseLocationSlug', () => {
   })
 
   it('should handle simple slug', () => {
-    const result = parseLocationSlug('paris-france')
-    expect(result.slug).toBe('paris-france')
-    expect(result.searchTerm).toBe('paris france')
+    const result = parseLocationSlug('sydney-australia')
+    expect(result.searchTerm).toBe('sydney')
   })
 
   it('should normalize hyphens to spaces', () => {
