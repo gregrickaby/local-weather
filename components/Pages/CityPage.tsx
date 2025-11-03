@@ -10,16 +10,10 @@ import Forecast from '@/components/UI/Forecast/Forecast'
 import Radar from '@/components/UI/Radar/Radar'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
-import {POPULAR_CITIES, DEFAULT_LOCATION} from '@/lib/constants'
+import {useCityPageLocation} from '@/lib/hooks/useCityPageLocation'
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
-import {useAppDispatch} from '@/lib/store/hooks'
-import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
-import {setLocation} from '@/lib/store/slices/preferencesSlice'
-import type {Location} from '@/lib/types'
-import {createLocationSlug, parseLocationSlug} from '@/lib/utils/slug'
+import {parseLocationSlug} from '@/lib/utils/slug'
 import {Alert, Skeleton, Stack} from '@mantine/core'
-import {useRouter} from 'next/navigation'
-import {useEffect, useState} from 'react'
 
 interface CityPageProps {
   slug: string
@@ -44,74 +38,12 @@ function WeatherSkeleton() {
  *
  * Displays weather information for a specific city/location.
  */
-export default function CityPage({slug}: CityPageProps) {
-  const dispatch = useAppDispatch()
-  const router = useRouter()
-  const [locationResolved, setLocationResolved] = useState(false)
-  const [locationError, setLocationError] = useState(false)
-
-  // Try to find location in popular cities first
-  const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
-  const knownLocation = allLocations.find(
-    (city) => createLocationSlug(city) === slug
-  )
-
-  // If not in popular cities, try to resolve via geocoding
-  const {searchTerm} = parseLocationSlug(slug)
-  const {data: locations, isLoading: isSearching} = useGetPlacesQuery(
-    searchTerm,
-    {
-      skip: !!knownLocation // Skip query if we already have the location
-    }
-  )
-
+export default function CityPage({slug}: Readonly<CityPageProps>) {
+  const {locationResolved, locationError} = useCityPageLocation({
+    slug
+  })
   const {data: weather, isLoading: isWeatherLoading} = useWeatherData()
-
-  // Reset location resolution when slug changes
-  useEffect(() => {
-    setLocationResolved(false)
-    setLocationError(false)
-  }, [slug])
-
-  // Update Redux state with the resolved location
-  useEffect(() => {
-    let locationToSet: Location | null = null
-
-    if (knownLocation) {
-      locationToSet = knownLocation
-    } else if (locations && locations.length > 0) {
-      // Use the first result from geocoding
-      locationToSet = locations[0]
-    }
-
-    if (locationToSet && !locationResolved) {
-      dispatch(setLocation(locationToSet))
-      setLocationResolved(true)
-      setLocationError(false)
-
-      // If the resolved location has a different slug, redirect to correct URL
-      const correctSlug = createLocationSlug(locationToSet)
-      if (correctSlug !== slug) {
-        router.replace(`/${correctSlug}`)
-      }
-    } else if (
-      !knownLocation &&
-      !isSearching &&
-      (!locations || locations.length === 0) &&
-      !locationResolved
-    ) {
-      // Location could not be resolved
-      setLocationError(true)
-    }
-  }, [
-    knownLocation,
-    locations,
-    isSearching,
-    locationResolved,
-    dispatch,
-    slug,
-    router
-  ])
+  const {searchTerm} = parseLocationSlug(slug)
 
   // Show error state if location couldn't be resolved
   if (locationError) {
