@@ -2,9 +2,58 @@
 
 This file provides guidance to agents when working with code in this repository.
 
+## Expert React Frontend Engineer
+
+You are in expert frontend engineer. Your task is to provide senior React and TypeScript frontend engineering guidance using both Separation of Concerns (SoC) and Test-Driven Design patterns and best practices as if you were a leader in the field.
+
+## Key Philosophy
+
+**Keep components "dumb" and focused on presentation.** Move all logic to testable, reusable hooks and helpers. This makes the codebase maintainable, testable, and follows React best practices for 2025 and beyond.
+
+## Quick Reference
+
+### File Organization
+
+- `components/` - Presentational components only (render UI + handle user interactions)
+- `lib/hooks/` - Business logic, state management, data transformations (prefix with `use`)
+- `lib/utils/` - Pure functions (calculations, formatting, conditions)
+- Tests co-located with implementation files (e.g., `useWindData.ts` + `useWindData.test.ts`)
+
+### Decision Tree: Where Does This Code Go?
+
+**Is it a pure calculation/formatting function with no state?**
+
+- ✅ Extract to `lib/utils/` (e.g., `getWindDirection()`, `formatTemperature()`)
+- File: `calculations.ts`, `formatting.ts`, `conditions.ts`
+
+**Does it need React hooks, state, or effects?**
+
+- ✅ Extract to `lib/hooks/` (e.g., `useWindData()`, `useCityPageLocation()`)
+- Return processed data ready for components to render
+
+**Is it just rendering data or handling UI events?**
+
+- ✅ Keep in component
+- Call hooks to get data, render with Mantine components
+
+### Current Utility Files
+
+- `lib/utils/calculations.ts` - Math, sun position, moon phase calculations
+- `lib/utils/formatting.ts` - Date/time formatting, temperature conversion
+- `lib/utils/conditions.ts` - Weather conditions, AQI levels, UV index info
+- `lib/utils/slug.ts` - URL slug creation and parsing
+
+### Example Hooks in Codebase
+
+- `useWeatherData()` - Centralized weather API calls
+- `useCityPageLocation()` - Location resolution from URL slug
+- `useWindData()` - Wind speed, direction, gusts calculations
+- `useCurrentConditions()` - Current weather with sunrise/sunset
+- `useLocationSearch()` - Search bar logic and favorites
+
 ## Project Overview
 
-A weather application built with Next.js 16 (App Router), Mantine 8, Redux Toolkit 2, and integrates with Open-Meteo and Google Maps APIs. The app is deployed to Coolify (using Nixpacks) at <https://weather.gregrickaby.com>.
+A weather application built with Next.js 16 (App Router, React 19 Compiler), Mantine 8, Redux Toolkit 2, and integrates with Open-Meteo APIs. The app is deployed to Coolify (using Nixpacks) at <https://weather.gregrickaby.com>.
 
 ## Common Commands
 
@@ -14,7 +63,6 @@ A weather application built with Next.js 16 (App Router), Mantine 8, Redux Toolk
 npm run dev          # Start dev server (cleans .next directory first)
 npm run build        # Build for production
 npm run start        # Start production server
-npm run format       # Format code with Prettier
 ```
 
 ### Validation
@@ -22,12 +70,11 @@ npm run format       # Format code with Prettier
 Run these before committing or creating PRs. Both commands must pass without errors.
 
 ```bash
-npm run lint         # Run ESLint
-npm run typecheck    # Run TypeScript type checking
+npm run validate     # Run format, lint, typecheck, and tests.
 npm run sonar        # Run SonarQube code quality analysis (runs tests + scanner)
 ```
 
-If visual changes, you must verify using Playwright MCP at http://localhost:3000 (assume the dev server is already running)
+If visual changes, you must verify using Microsoft Playwright MCP at http://localhost:3000 (assume the dev server is already running)
 
 ### Code Quality
 
@@ -335,36 +382,42 @@ This codebase follows a strict separation between **presentational components** 
 **Business Logic** (`lib/hooks/` and `lib/utils/`):
 
 - **Custom Hooks** (`lib/hooks/`): Encapsulate stateful logic, data transformations, and complex calculations
-  - Named with `use` prefix (e.g., `useHourlyForecast`, `useLocationSearch`)
+  - Named with `use` prefix (e.g., `useCityPageLocation`, `useLocationSearch`, `useWindData`)
   - Return processed data and action functions
   - Handle all data manipulation before passing to components
-  - Co-located with tests (e.g., `useHourlyForecast.test.ts`)
-- **Helper Functions** (`lib/utils/`): Pure functions for calculations, formatting, and data transformation
-  - `helpers.ts`: General utilities (date formatting, temperature conversion, etc.)
-  - `weather-helpers.ts`: Weather-specific utilities (AQI levels, wind direction, UV info, etc.)
-  - Co-located with tests (e.g., `helpers.test.ts`)
+  - Co-located with tests (e.g., `useCityPageLocation.test.ts`)
+- **Utility Functions** (`lib/utils/`): Pure functions for calculations, formatting, and data transformation
+  - `calculations.ts`: Math utilities (sun position, moon phase, etc.)
+  - `formatting.ts`: Date/time formatting, temperature conversion
+  - `conditions.ts`: Weather conditions, AQI levels, UV index, wind direction
+  - `slug.ts`: URL slug creation and parsing
+  - Co-located with tests (e.g., `calculations.test.ts`)
 
 **Migration Guidelines:**
 
 When adding new features or refactoring existing code:
 
-1. **Extract Helper Functions:**
+1. **Extract Utility Functions:**
    - Move pure calculation/formatting functions to `lib/utils/`
-   - Examples: `getWindDirection()`, `getUVInfo()`, `calculateSunPosition()`
+   - Examples from codebase: `getWindDirection()` (conditions.ts), `getUVIndexInfo()` (conditions.ts), `calculateSunPosition()` (calculations.ts)
    - These should be pure functions with no side effects
+   - Test thoroughly with various inputs/edge cases
 
 2. **Create Custom Hooks:**
    - Extract stateful logic and data transformations to `lib/hooks/`
-   - Hooks should handle: API data transformation, complex calculations, derived state
-   - Example: Instead of calculating hourly forecast in the component, use `useHourlyForecast()`
+   - Hooks should handle: Redux state selection, RTK Query calls, data transformation, derived state
+   - Examples from codebase: `useCityPageLocation()` (location resolution), `useWindData()` (wind calculations), `useLocationSearch()` (search logic)
+   - Return only what components need to render
 
 3. **Simplify Components:**
    - Components should call hooks to get processed data
-   - Render using Mantine primitives
+   - Render using Mantine primitives (Stack, Text, Group, etc.)
    - Pass hook action functions to event handlers
-   - Avoid: calculations, data transformations, complex conditionals
+   - Avoid: calculations, data transformations, complex conditionals, direct Redux/API calls
 
-**Example Pattern:**
+**Real-World Examples from Codebase:**
+
+**Example 1: Wind Component (Simple)**
 
 ```typescript
 // ❌ BAD: Business logic in component
@@ -373,19 +426,16 @@ export default function Wind() {
   const windSpeed = Math.round(weather?.current?.wind_speed_10m || 0)
   const windDirection = weather?.current?.wind_direction_10m || 0
 
-  // Helper function defined in component
   function getWindDirection(degrees: number): string {
     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
-    const index = Math.round(degrees / 45) % 8
-    return directions[index]
+    return directions[Math.round(degrees / 45) % 8]
   }
 
-  const directionLabel = getWindDirection(windDirection)
-  // ... render logic
+  return <DetailCard>{windSpeed} mph, {getWindDirection(windDirection)}</DetailCard>
 }
 
-// ✅ GOOD: Business logic in hook and helpers
-// lib/utils/weather-helpers.ts
+// ✅ GOOD: Separation of concerns
+// lib/utils/conditions.ts
 export function getWindDirection(degrees: number): string {
   const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
   const index = Math.round(degrees / 45) % 8
@@ -396,12 +446,7 @@ export function getWindDirection(degrees: number): string {
 export function useWindData() {
   const location = useAppSelector((state) => state.preferences.location)
   const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
-
-  const {data: weather} = useGetWeatherQuery(
-    {latitude: location.latitude, longitude: location.longitude, tempUnit},
-    {skip: !mounted || !location}
-  )
+  const {data: weather} = useWeatherData() // Centralized hook
 
   const windSpeed = Math.round(weather?.current?.wind_speed_10m || 0)
   const windGusts = Math.round(weather?.current?.wind_gusts_10m || 0)
@@ -409,20 +454,68 @@ export function useWindData() {
   const directionLabel = getWindDirection(windDirection)
   const speedUnit = tempUnit === 'c' ? 'km/h' : 'mph'
 
-  return {windSpeed, windGusts, windDirection, directionLabel, speedUnit}
+  return {windSpeed, windGusts, directionLabel, speedUnit}
 }
 
 // components/UI/DetailsGrid/Wind/Wind.tsx
 export default function Wind() {
-  const {windSpeed, windGusts, windDirection, directionLabel, speedUnit} = useWindData()
+  const {windSpeed, windGusts, directionLabel, speedUnit} = useWindData()
 
   return (
     <DetailCard delay={0}>
-      {/* Simple rendering - no calculations */}
       <Text>{windSpeed} {speedUnit}</Text>
       <Text>Gusts {windGusts} {speedUnit}</Text>
       <Text>{directionLabel}</Text>
     </DetailCard>
+  )
+}
+```
+
+**Example 2: CityPage Component (Complex)**
+
+```typescript
+// ❌ BAD: Business logic mixed with presentation (106 lines)
+export default function CityPage({slug}) {
+  const dispatch = useAppDispatch()
+  const router = useRouter()
+  const [locationResolved, setLocationResolved] = useState(false)
+  const [locationError, setLocationError] = useState(false)
+
+  // Complex location resolution logic
+  const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
+  const knownLocation = allLocations.find(city => createLocationSlug(city) === slug)
+  const {searchTerm} = parseLocationSlug(slug)
+  const {data: locations} = useGetPlacesQuery(searchTerm, {skip: !!knownLocation})
+
+  // Multiple useEffects for state management
+  useEffect(() => { /* reset logic */ }, [slug])
+  useEffect(() => { /* resolution logic */ }, [knownLocation, locations, ...])
+
+  // Render logic...
+}
+
+// ✅ GOOD: Business logic extracted to hook (88 lines component, 95 lines hook)
+// lib/hooks/useCityPageLocation.ts
+export function useCityPageLocation({slug}) {
+  // All location resolution logic here
+  // Returns: {locationResolved, locationError, isSearching}
+}
+
+// components/Pages/CityPage.tsx
+export default function CityPage({slug}) {
+  const {locationResolved, locationError} = useCityPageLocation({slug})
+  const {data: weather, isLoading} = useWeatherData()
+
+  if (locationError) return <ErrorAlert />
+  if (!locationResolved || isLoading) return <WeatherSkeleton />
+
+  return (
+    <Stack>
+      <CurrentConditions />
+      <DetailsGrid />
+      <Radar />
+      <Forecast />
+    </Stack>
   )
 }
 ```
@@ -445,17 +538,15 @@ This pattern keeps components focused on presentation, makes business logic reus
 ### Styling
 
 - Mantine UI components with custom theme (`lib/theme.ts`)
-- CSS Modules for component-specific styles (e.g., `Page.module.css`)
-- PostCSS with Mantine preset and simple-vars plugin
+- Use Mantine primitives as much as possible
+- CSS Modules for component-specific styles (e.g., `Page.module.css`) when Mantine privities aren't enough
 - Auto color scheme support (light/dark mode) persisted via Redux
 
 ## Git Workflow
 
 - PRs must be made against `main` branch
 - Must pass before submitting:
-  - `npm run lint` - ESLint validation
-  - `npm run typecheck` - TypeScript type checking
-  - `npm run build && npm start` - Build verification
+  - `npm run validate`
   - Verify visual changes with Playwright MCP against http://localhost:3000
   - Peer review
 - Uses Lefthook for git hooks (see `lefthook.yml` if present)
@@ -470,5 +561,5 @@ This pattern keeps components focused on presentation, makes business logic reus
 
 - **Open-Meteo Weather API**: Free weather API, no key required. Returns current conditions, hourly forecasts (up to 16 days), and daily forecasts. Uses WMO weather codes for conditions.
 - **Open-Meteo Geocoding API**: Free geocoding and location search API, no key required. Returns lat/lng coordinates and location details including city name, admin regions, and country.
-- Weather icons mapped from WMO codes to existing icon set via `getWeatherInfo()` helper in `lib/helpers.ts`
+- Weather conditions mapped from WMO codes via `getWeatherCondition()` in `lib/utils/conditions.ts`
 - Location search results formatted as: `"{name}, {admin1}, {country}"` (e.g., "Enterprise, Alabama, United States")

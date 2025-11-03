@@ -11,7 +11,7 @@ export default defineConfig({
     css: true,
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      reporter: ['html', 'lcov'],
       exclude: [
         'node_modules/',
         'vitest.setup.ts',
