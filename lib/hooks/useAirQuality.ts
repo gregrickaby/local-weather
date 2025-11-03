@@ -1,4 +1,5 @@
 import {useAppSelector} from '@/lib/store/hooks'
+import {selectLocation} from '@/lib/store/selectors'
 import {useGetAirQualityQuery} from '@/lib/store/services/airQualityApi'
 import {getAQIDescription, getAQILevel} from '@/lib/utils/conditions'
 
@@ -9,7 +10,7 @@ import {getAQIDescription, getAQILevel} from '@/lib/utils/conditions'
  * Returns ready-to-display air quality information.
  */
 export function useAirQuality() {
-  const location = useAppSelector((state) => state.preferences.location)
+  const location = useAppSelector(selectLocation)
   const {data} = useGetAirQualityQuery(location, {
     skip: !location
   })

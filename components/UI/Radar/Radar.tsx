@@ -2,6 +2,7 @@
 
 import {useRadarMap} from '@/lib/hooks/useRadarMap'
 import {useAppSelector} from '@/lib/store/hooks'
+import {selectLocation, selectMounted} from '@/lib/store/selectors'
 import {useGetRadarFramesQuery} from '@/lib/store/services/radarApi'
 import {ActionIcon, Card, Group, Loader, Overlay, Text} from '@mantine/core'
 import {
@@ -20,8 +21,8 @@ import classes from './Radar.module.css'
  * Free service, no API key required.
  */
 export default function Radar() {
-  const location = useAppSelector((state) => state.preferences.location)
-  const mounted = useAppSelector((state) => state.preferences.mounted)
+  const location = useAppSelector(selectLocation)
+  const mounted = useAppSelector(selectMounted)
   const [isExpanded, setIsExpanded] = useState(false)
 
   // Fetch radar frames using RTK Query

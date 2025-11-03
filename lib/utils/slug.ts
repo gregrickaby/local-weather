@@ -14,10 +14,11 @@ export function createSlug(text: string): string {
   return text
     .toLowerCase()
     .trim() // Trim whitespace first
-    .replace(/[^\w\s-]/g, '') // Remove special characters except hyphens
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-    .replace(/^-+|-+$/g, '') // Remove leading/trailing hyphens
+    .replaceAll(/[^\w\s-]/g, '') // Remove special characters except hyphens
+    .replaceAll(/\s+/g, '-') // Replace spaces with hyphens
+    .replaceAll(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/^-/, '') // Remove leading hyphen
+    .replace(/-$/, '') // Remove trailing hyphen
 }
 
 /**

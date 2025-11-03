@@ -198,7 +198,7 @@ function analyzeDayWeather(
       }
     }
 
-    return mostCommon !== null ? getSimpleWeather(mostCommon) : null
+    return mostCommon === null ? null : getSimpleWeather(mostCommon)
   }
 
   return {

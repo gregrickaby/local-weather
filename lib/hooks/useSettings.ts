@@ -1,4 +1,5 @@
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
+import {selectFavorites, selectTempUnit} from '@/lib/store/selectors'
 import {
   clearFavorites,
   removeFromFavorites,
@@ -21,8 +22,8 @@ export function useSettings() {
     setColorScheme: setMantineColorScheme
   } = useMantineColorScheme()
   const dispatch = useAppDispatch()
-  const favorites = useAppSelector((state) => state.preferences.favorites)
-  const tempUnit = useAppSelector((state) => state.preferences.tempUnit)
+  const favorites = useAppSelector(selectFavorites)
+  const tempUnit = useAppSelector(selectTempUnit)
 
   const toggleColorScheme = () => {
     const newScheme = mantineColorScheme === 'dark' ? 'light' : 'dark'

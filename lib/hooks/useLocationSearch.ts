@@ -1,5 +1,5 @@
-import {createLocationSlug} from '@/lib/utils/slug'
 import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
+import {selectFavorites, selectLocation} from '@/lib/store/selectors'
 import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
 import {
   addToFavorites,
@@ -7,6 +7,7 @@ import {
   setLocation
 } from '@/lib/store/slices/preferencesSlice'
 import type {Location} from '@/lib/types'
+import {createLocationSlug} from '@/lib/utils/slug'
 import type {ComboboxItem} from '@mantine/core'
 import {useDebouncedValue} from '@mantine/hooks'
 import {useRouter} from 'next/navigation'
@@ -52,8 +53,8 @@ const DEFAULT_PLACES: Location[] = [
 export function useLocationSearch() {
   const dispatch = useAppDispatch()
   const router = useRouter()
-  const location = useAppSelector((state) => state.preferences.location)
-  const favorites = useAppSelector((state) => state.preferences.favorites)
+  const location = useAppSelector(selectLocation)
+  const favorites = useAppSelector(selectFavorites)
 
   const [searchTerm, setSearchTerm] = useState(location.display)
   const [dropdownOpened, setDropdownOpened] = useState(false)

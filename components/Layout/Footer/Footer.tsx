@@ -44,7 +44,7 @@ export default function Footer() {
           >
             GitHub
           </a>
-          .
+          {/* */}.
         </p>
       </div>
     </footer>

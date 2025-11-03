@@ -1,8 +1,8 @@
+import CityPage from '@/components/Pages/CityPage'
+import {DEFAULT_LOCATION, POPULAR_CITIES} from '@/lib/constants'
+import {createLocationSlug} from '@/lib/utils/slug'
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
-import {createLocationSlug} from '@/lib/utils/slug'
-import {POPULAR_CITIES, DEFAULT_LOCATION} from '@/lib/constants'
-import CityPage from '@/components/Pages/CityPage'
 
 interface Props {
   params: Promise<{location: string}>
@@ -68,7 +68,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 /**
  * City weather page component.
  */
-export default async function LocationPage({params}: Props) {
+export default async function LocationPage({params}: Readonly<Props>) {
   const {location: slug} = await params
 
   // Validate slug format (basic check)
