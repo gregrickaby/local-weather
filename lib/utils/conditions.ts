@@ -243,23 +243,22 @@ export function getVisibilityDescription(
 ): string {
   const ranges = isMetric
     ? [
-        {max: 2, result: 'Poor visibility'},
-        {max: 5, result: 'Moderate visibility'},
-        {max: 10, result: 'Good visibility'},
-        {max: 16, result: 'Very good visibility'},
-        {max: Infinity, result: 'Excellent visibility'}
+        {min: 16, result: 'Excellent visibility'},
+        {min: 10, result: 'Very good visibility'},
+        {min: 5, result: 'Good visibility'},
+        {min: 2, result: 'Moderate visibility'}
       ]
     : [
-        {max: 1, result: 'Poor visibility'},
-        {max: 3, result: 'Moderate visibility'},
-        {max: 6, result: 'Good visibility'},
-        {max: 10, result: 'Very good visibility'},
-        {max: Infinity, result: 'Excellent visibility'}
+        {min: 10, result: 'Excellent visibility'},
+        {min: 6, result: 'Very good visibility'},
+        {min: 3, result: 'Good visibility'},
+        {min: 1, result: 'Moderate visibility'}
       ]
-  // Reverse the ranges to check from highest to lowest (since we use >= logic)
-  for (let i = ranges.length - 1; i >= 0; i--) {
-    if (distance >= ranges[i].max) {
-      return ranges[i].result
+
+  // Check from highest to lowest threshold
+  for (const range of ranges) {
+    if (distance >= range.min) {
+      return range.result
     }
   }
   return 'Poor visibility'
