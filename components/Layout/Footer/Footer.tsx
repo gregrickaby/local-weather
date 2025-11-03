@@ -8,8 +8,8 @@ import classes from './Footer.module.css'
 export default function Footer() {
   return (
     <footer className={classes.footer}>
-      <Text>
-        &copy; {new Date().getFullYear()} {config.siteName} by{' '}
+      <Text size="sm">
+        &copy; 2021-{new Date().getFullYear()} {config.siteName} by{' '}
         <a
           aria-label={`visit ${config.siteAuthor} website`}
           href={config.authorUrl}
@@ -18,7 +18,7 @@ export default function Footer() {
           {config.siteAuthor}
         </a>
       </Text>
-      <Text>
+      <Text size="sm">
         {' '}
         Data from{' '}
         <a
@@ -31,14 +31,25 @@ export default function Footer() {
         </a>{' '}
         and{' '}
         <a
-          aria-label="visit RainViewer website"
+          aria-label="visit Rain Viewer website"
           href="https://www.rainviewer.com/"
           rel="noopener noreferrer"
           target="_blank"
         >
-          RainViewer
+          Rain Viewer
+        </a>{' '}
+        | Icons by{' '}
+        <a
+          aria-label="visit Meteocons website"
+          href="https://meteocons.com/"
+          rel="noopener norefer noreferrer"
+          target="_blank"
+        >
+          Basmilius
         </a>
-        . View source code on{' '}
+      </Text>
+      <Text size="sm">
+        View source code on{' '}
         <a
           aria-label="view source code on github"
           href={config.githubUrl}
@@ -47,7 +58,6 @@ export default function Footer() {
         >
           GitHub
         </a>
-        {/* */}.
       </Text>
     </footer>
   )
