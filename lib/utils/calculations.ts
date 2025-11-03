@@ -173,7 +173,6 @@ function analyzeDayWeather(
   afternoon: string | null
   evening: string | null
 } {
-  // Define time periods (using location's time, not browser time)
   const morningHours = hourlyData.filter((h) => h.hour >= 6 && h.hour < 12)
   const afternoonHours = hourlyData.filter((h) => h.hour >= 12 && h.hour < 17)
   const eveningHours = hourlyData.filter((h) => h.hour >= 17 && h.hour < 22)
@@ -182,13 +181,11 @@ function analyzeDayWeather(
   const getMostCommon = (hours: Array<{code: number}>) => {
     if (hours.length === 0) return null
 
-    // Count occurrences using a Map for better performance
     const codeCount = new Map<number, number>()
     for (const h of hours) {
       codeCount.set(h.code, (codeCount.get(h.code) || 0) + 1)
     }
 
-    // Find the most common code
     let maxCount = 0
     let mostCommon: number | null = null
     for (const [code, count] of codeCount) {
@@ -226,7 +223,6 @@ function getTomorrowTrend(
   const tempDiff = tomorrowMax - todayMax
   const isEarlyMorning = currentHour < 6
 
-  // Check temperature change
   if (Math.abs(tempDiff) >= 5) {
     const warmer = tempDiff > 0
     if (isEarlyMorning) {
@@ -235,7 +231,6 @@ function getTomorrowTrend(
     return warmer ? 'warmer tomorrow' : 'cooler tomorrow'
   }
 
-  // Check precipitation tomorrow
   if (tomorrowCode >= 51 && tomorrowCode <= 67) return 'rain tomorrow'
   if (tomorrowCode >= 71 && tomorrowCode <= 77) return 'snow tomorrow'
 
@@ -251,11 +246,10 @@ function getEveningForecastParts(
   tomorrowMax: number
 ): string[] {
   const parts: string[] = []
-  parts.push(getTonightCondition(0)) // Will be replaced with actual code
+  parts.push(getTonightCondition(0))
   const tomorrowCondition = getSimpleWeather(tomorrowCode)
   parts.push(`${tomorrowCondition} tomorrow`)
   const tempDiff = tomorrowMax - todayMax
-  // Determine temperature trend
   let trend = 'similar temperatures'
   if (Math.abs(tempDiff) >= 3) {
     trend = tempDiff > 0 ? 'warming up' : 'cooling down'
@@ -358,17 +352,13 @@ export function generateForecastStatement(weather: {
     sunset: string[]
   }
 }): string {
-  // Extract hour from location's time (not browser time!)
   const currentHour = getHourFromISO(weather.current.time)
   const currentDateString = getDateFromISO(weather.current.time).dateString
 
-  // Get today's and tomorrow's data
   const todayMax = weather.daily.temperature_2m_max[0]
   const tomorrowMax = weather.daily.temperature_2m_max[1]
   const tomorrowCode = weather.daily.weather_code[1]
 
-  // Prepare hourly data for analysis (next 24 hours)
-  // Filter hours that are in the future relative to location's time
   const hourlyDataToday = weather.hourly.time
     .map((time, index) => {
       const hourData = {
@@ -385,15 +375,10 @@ export function generateForecastStatement(weather: {
       const isFuture = hour.time > weather.current.time
       return isToday && isFuture
     })
-    .slice(0, 18) // Next ~18 hours
+    .slice(0, 18)
 
-  // Analyze different time periods today
   const periods = analyzeDayWeather(currentHour, hourlyDataToday)
-
-  // Current condition
   const currentCondition = getSimpleWeather(weather.current.weather_code)
-
-  // Build forecast parts
   const parts = buildForecastParts(
     currentHour,
     currentCondition,
@@ -403,12 +388,10 @@ export function generateForecastStatement(weather: {
     tomorrowMax
   )
 
-  // Fix evening forecast to use actual condition
   if (currentHour >= 17) {
     parts[0] = getTonightCondition(weather.current.weather_code)
   }
 
-  // Add more tomorrow info if needed
   if (parts.length < 3 && currentHour < 17) {
     const tomorrowTrend = getTomorrowTrend(
       todayMax,
@@ -419,12 +402,10 @@ export function generateForecastStatement(weather: {
     if (tomorrowTrend) parts.push(tomorrowTrend)
   }
 
-  // Fallback if no parts
   if (parts.length === 0) {
     return 'Conditions expected to remain steady'
   }
 
-  // Join parts with proper capitalization
   const statement = parts.join(', ')
   return statement.charAt(0).toUpperCase() + statement.slice(1)
 }

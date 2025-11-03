@@ -23,20 +23,17 @@ export default function Search() {
     toggleFavorite
   } = useLocationSearch()
 
-  // Convert places array to Map for O(1) lookups instead of O(n) find()
   const placesMap = useMemo(
     () => new Map(places.map((p) => [p.id.toString(), p])),
     [places]
   )
 
-  // Memoize renderOption to prevent recreation on every render
   const renderOption = useCallback(
     (item: {option: {value: string}}) => {
       const {value} = item.option
       const loc = placesMap.get(value)
       const favorited = isFavorited(value)
 
-      // Safety check: if location not found, just show the option value
       if (!loc) {
         return <span>{value}</span>
       }

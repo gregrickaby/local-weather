@@ -19,7 +19,7 @@ export default function Visibility() {
           Visibility
         </Text>
 
-        <Text size="xl" fw={600}>
+        <Text size="48px" fw={600}>
           {visibilityValue} {visibilityUnit}
         </Text>
 

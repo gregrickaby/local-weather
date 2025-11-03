@@ -32,7 +32,6 @@ export function formatTemperature(tempUnit: string, temp: number): string {
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/DateTimeFormat
  */
 export function formatTime(isoTime: string): string {
-  // Extract hour from ISO string (format: "2025-01-15T14:30:00...")
   const timePart = isoTime.split('T')[1]
   const hour = Number.parseInt(timePart.split(':')[0], 10)
 
@@ -67,7 +66,6 @@ export function formatTimeWithMinutes(isoTime: string): string {
   const minute = Number.parseInt(timePart.split(':')[1], 10)
   const minuteStr = minute.toString().padStart(2, '0')
 
-  // Convert 24-hour format to 12-hour format
   if (hour === 0) {
     return `12:${minuteStr} AM`
   }
@@ -92,31 +90,25 @@ export function formatTimeWithMinutes(isoTime: string): string {
  * @returns Day label (e.g., "Tod", "Tom", "Mon", "Tue")
  */
 export function formatDay(isoDate: string, currentDate: string): string {
-  // Get date part from ISO strings
   const datePart = isoDate.split('T')[0]
   const todayString = currentDate.split('T')[0]
 
-  // Fast path: check for today
   if (datePart === todayString) {
     return 'Tod'
   }
 
-  // Calculate tomorrow's date string only if needed
   const [todayYear, todayMonth, todayDay] = todayString.split('-').map(Number)
   const todayDate = new Date(todayYear, todayMonth - 1, todayDay)
   todayDate.setDate(todayDate.getDate() + 1)
   const tomorrowString = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`
 
-  // Fast path: check for tomorrow
   if (datePart === tomorrowString) {
     return 'Tom'
   }
 
-  // Parse the ISO date only if we need to format the day of the week
   const [year, month, day] = datePart.split('-').map(Number)
   const date = new Date(year, month - 1, day)
 
-  // Format the day of the week from the ISO date (short = 3 characters)
   return new Intl.DateTimeFormat('en-US', {weekday: 'short'}).format(date)
 }
 
@@ -138,8 +130,6 @@ export function formatPressure(
   pressureHpa: number
 ): {value: string; unit: string} {
   if (tempUnit === 'f') {
-    // Convert to inches of mercury for US/Imperial
-    // Conversion: 1 hPa = 0.02953 inHg
     const inHg = pressureHpa * 0.02953
     return {
       value: inHg.toFixed(2),
@@ -147,7 +137,6 @@ export function formatPressure(
     }
   }
 
-  // Return hPa for metric
   return {
     value: Math.round(pressureHpa).toString(),
     unit: 'hPa'

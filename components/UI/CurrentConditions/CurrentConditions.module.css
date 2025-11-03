@@ -31,44 +31,44 @@
 }
 
 .description {
-  color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-0));
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
   font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: 600;
   line-height: 1.2;
   margin: 0;
   text-align: center;
-  text-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  text-shadow: light-dark(none, 0 2px 8px rgb(0 0 0 / 20%));
 }
 
 .bigtemp {
-  color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-gray-0));
+  color: light-dark(var(--mantine-color-gray-9), var(--mantine-color-gray-0));
   font-size: clamp(5rem, 15vw, 9rem);
   font-weight: 700;
   line-height: 1;
   margin: 0;
   text-align: center;
-  text-shadow: 0 4px 16px rgb(0 0 0 / 30%);
+  text-shadow: light-dark(none, 0 4px 16px rgb(0 0 0 / 30%));
 }
 
 .forecastStatement {
-  color: light-dark(var(--mantine-color-gray-1), var(--mantine-color-gray-2));
+  color: light-dark(var(--mantine-color-gray-8), var(--mantine-color-gray-2));
   font-size: clamp(0.9rem, 2vw, 1.1rem);
   font-weight: 400;
   line-height: 1.4;
   margin-top: 8px;
   max-width: 600px;
   opacity: 0.95;
-  text-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+  text-shadow: light-dark(none, 0 1px 4px rgb(0 0 0 / 15%));
 }
 
 .feelslike {
   color: light-dark(
-    var(--mantine-color-yellow-4),
+    var(--mantine-color-orange-7),
     var(--mantine-color-yellow-3)
   );
   font-size: clamp(1rem, 2.5vw, 1.3rem);
   font-weight: 600;
   line-height: 1.2;
   margin-top: 12px;
-  text-shadow: 0 1px 4px rgb(0 0 0 / 15%);
+  text-shadow: light-dark(none, 0 1px 4px rgb(0 0 0 / 15%));
 }

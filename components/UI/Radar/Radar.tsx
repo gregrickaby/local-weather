@@ -117,7 +117,7 @@ export default function Radar() {
         <div
           ref={mapRef}
           className={classes.map}
-          style={{height: isExpanded ? '600px' : '300px'}}
+          style={{height: isExpanded ? '700px' : '400px'}}
           aria-label="weather radar map"
         >
           {isLoadingData && (

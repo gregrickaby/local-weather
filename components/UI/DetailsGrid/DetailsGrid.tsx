@@ -61,14 +61,14 @@ export default function DetailsGrid() {
         </>
       ) : (
         <>
+          <FeelsLike />
           <Wind />
           <UVIndex />
-          <SunriseSunset />
           <Humidity />
+          <Pressure />
           <AirQuality />
           <Visibility />
-          <Pressure />
-          <FeelsLike />
+          <SunriseSunset />
           <MoonPhase />
         </>
       )}

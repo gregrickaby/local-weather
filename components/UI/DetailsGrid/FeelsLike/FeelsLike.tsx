@@ -20,7 +20,7 @@ export default function FeelsLike() {
           Feels Like
         </Text>
 
-        <Text size="xl" fw={600}>
+        <Text size="48px" fw={600}>
           {formatTemperature(unit, feelsLike)}
         </Text>
 
