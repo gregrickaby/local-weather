@@ -20,7 +20,12 @@ export const mockWeatherResponse = {
     uv_index: 5,
     visibility: 10000,
     pressure_msl: 1013.25,
-    dew_point_2m: 60
+    dew_point_2m: 60,
+    cloud_cover: 25,
+    rain: 0,
+    showers: 0,
+    snowfall: 0,
+    snow_depth: 0
   },
   hourly: {
     time: Array.from({length: 24}, (_, i) => {

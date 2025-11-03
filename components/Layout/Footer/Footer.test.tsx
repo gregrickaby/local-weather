@@ -24,7 +24,7 @@ describe('Footer', () => {
   it('should display RainViewer attribution', () => {
     render(<Footer />)
     const rainViewerLink = screen.getByRole('link', {
-      name: 'visit RainViewer website'
+      name: 'visit Rain Viewer website'
     })
     expect(rainViewerLink).toBeInTheDocument()
     expect(rainViewerLink).toHaveAttribute(

@@ -7,7 +7,7 @@ vi.mock('@/lib/hooks/useMoonPhase', () => ({
   useMoonPhase: vi.fn()
 }))
 
-import {useMoonPhase} from '@/lib/hooks/useMoonPhase'
+import {useMoonPhase, type MoonPhaseData} from '@/lib/hooks/useMoonPhase'
 
 describe('MoonPhase', () => {
   beforeEach(() => {
@@ -17,39 +17,39 @@ describe('MoonPhase', () => {
   it('should render moon phase name', () => {
     vi.mocked(useMoonPhase).mockReturnValue({
       phaseName: 'Waxing Crescent',
-      phaseEmoji: '🌒',
+      phaseIcon: 'moon-waxing-crescent',
       illumination: '23%',
       fraction: 0.23,
       phase: 0.1
-    })
+    } as MoonPhaseData)
 
     render(<MoonPhase />)
 
     expect(screen.getByText('Waxing Crescent')).toBeInTheDocument()
   })
 
-  it('should render moon phase emoji', () => {
+  it('should render moon phase icon', () => {
     vi.mocked(useMoonPhase).mockReturnValue({
       phaseName: 'Full Moon',
-      phaseEmoji: '🌕',
+      phaseIcon: 'moon-full',
       illumination: '100%',
-      fraction: 1.0,
+      fraction: 1,
       phase: 0.5
-    })
+    } as MoonPhaseData)
 
     render(<MoonPhase />)
 
-    expect(screen.getByText('🌕')).toBeInTheDocument()
+    expect(screen.getByAltText(/moon-full/)).toBeInTheDocument()
   })
 
   it('should render illumination percentage', () => {
     vi.mocked(useMoonPhase).mockReturnValue({
       phaseName: 'First Quarter',
-      phaseEmoji: '🌓',
+      phaseIcon: 'moon-first-quarter',
       illumination: '50%',
       fraction: 0.5,
       phase: 0.25
-    })
+    } as MoonPhaseData)
 
     render(<MoonPhase />)
 
@@ -59,11 +59,11 @@ describe('MoonPhase', () => {
   it('should render "Moon Phase" heading', () => {
     vi.mocked(useMoonPhase).mockReturnValue({
       phaseName: 'New Moon',
-      phaseEmoji: '🌑',
+      phaseIcon: 'moon-new',
       illumination: '0%',
-      fraction: 0.0,
-      phase: 0.0
-    })
+      fraction: 0,
+      phase: 0
+    } as MoonPhaseData)
 
     render(<MoonPhase />)
 
@@ -71,41 +71,43 @@ describe('MoonPhase', () => {
   })
 
   it('should display different moon phases correctly', () => {
-    const testCases = [
+    const testCases: MoonPhaseData[] = [
       {
         phaseName: 'New Moon',
-        phaseEmoji: '🌑',
+        phaseIcon: 'moon-new',
         illumination: '0%',
-        fraction: 0.0,
-        phase: 0.0
-      },
+        fraction: 0,
+        phase: 0
+      } as MoonPhaseData,
       {
         phaseName: 'Waxing Gibbous',
-        phaseEmoji: '🌔',
+        phaseIcon: 'moon-waxing-gibbous',
         illumination: '75%',
         fraction: 0.75,
         phase: 0.35
-      },
+      } as MoonPhaseData,
       {
         phaseName: 'Last Quarter',
-        phaseEmoji: '🌗',
+        phaseIcon: 'moon-last-quarter',
         illumination: '50%',
         fraction: 0.5,
         phase: 0.75
-      }
+      } as MoonPhaseData
     ]
 
-    testCases.forEach((testCase) => {
+    for (const testCase of testCases) {
       vi.mocked(useMoonPhase).mockReturnValue(testCase)
       const {rerender} = render(<MoonPhase />)
 
       expect(screen.getByText(testCase.phaseName)).toBeInTheDocument()
-      expect(screen.getByText(testCase.phaseEmoji)).toBeInTheDocument()
+      expect(
+        screen.getByAltText(new RegExp(testCase.phaseIcon))
+      ).toBeInTheDocument()
       expect(
         screen.getByText(`${testCase.illumination} illuminated`)
       ).toBeInTheDocument()
 
       rerender(<MoonPhase />)
-    })
+    }
   })
 })

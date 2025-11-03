@@ -1,7 +1,7 @@
 'use client'
 
 import {useHumidity} from '@/lib/hooks/useHumidity'
-import {Center, RingProgress, Stack, Text} from '@mantine/core'
+import {Center, RingProgress, Stack, Text, Title} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
 /**
@@ -26,9 +26,9 @@ export default function Humidity() {
             sections={[{value: humidity, color: 'blue'}]}
             label={
               <Center>
-                <Text size="xl" fw={600}>
+                <Title order={2} size="xl">
                   {humidity}%
-                </Text>
+                </Title>
               </Center>
             }
           />

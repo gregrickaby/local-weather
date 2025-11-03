@@ -1,7 +1,7 @@
 'use client'
 
 import {useAirQuality} from '@/lib/hooks/useAirQuality'
-import {Badge, Center, RingProgress, Stack, Text} from '@mantine/core'
+import {Badge, Center, RingProgress, Stack, Text, Title} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
 /**
@@ -27,9 +27,9 @@ export default function AirQuality() {
             label={
               <Center>
                 <Stack gap={0} align="center">
-                  <Text size="xl" fw={600}>
+                  <Title order={2} size="xl">
                     {Math.round(aqi)}
-                  </Text>
+                  </Title>
                   <Text size="xs" c="dimmed">
                     AQI
                   </Text>

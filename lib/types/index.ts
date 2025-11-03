@@ -30,6 +30,11 @@ export interface OpenMeteoResponse {
     visibility: number
     pressure_msl: number
     dew_point_2m: number
+    cloud_cover: number
+    rain: number
+    showers: number
+    snowfall: number
+    snow_depth: number
   }
   hourly: {
     time: string[]

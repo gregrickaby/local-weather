@@ -1,7 +1,7 @@
 'use client'
 
 import {useUVIndex} from '@/lib/hooks/useUVIndex'
-import {Box, Stack, Text} from '@mantine/core'
+import {Box, Stack, Text, Title} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
 /**
@@ -21,9 +21,9 @@ export default function UVIndex() {
 
         {/* Large UV number and level */}
         <Box>
-          <Text size="48px" fw={700} lh={1}>
+          <Title order={1} size="48px" fw={700} lh={1}>
             {currentUV}
-          </Text>
+          </Title>
           <Text size="lg" fw={500}>
             {level}
           </Text>

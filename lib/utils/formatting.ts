@@ -152,3 +152,35 @@ export function formatPressure(
 export function getMoonIlluminationPercentage(fraction: number): string {
   return `${Math.round(fraction * 100)}%`
 }
+
+/**
+ * Format precipitation amount based on unit preference.
+ * Open-Meteo returns precipitation in inches or mm based on API request.
+ *
+ * @param tempUnit - Temperature unit ('c' or 'f')
+ * @param amount - Precipitation amount in inches (for imperial) or mm (for metric)
+ * @returns Formatted precipitation string (e.g., "0.12 in" or "3 mm")
+ */
+export function formatPrecipitation(tempUnit: string, amount: number): string {
+  if (tempUnit === 'f') {
+    return `${amount.toFixed(2)} in`
+  }
+  return `${Math.round(amount)} mm`
+}
+
+/**
+ * Format snow depth based on unit preference.
+ * Open-Meteo returns snow depth in meters.
+ *
+ * @param tempUnit - Temperature unit ('c' or 'f')
+ * @param meters - Snow depth in meters
+ * @returns Formatted snow depth string (e.g., "5 in" or "12 cm")
+ */
+export function formatSnowDepth(tempUnit: string, meters: number): string {
+  if (tempUnit === 'f') {
+    const inches = meters * 39.3701
+    return `${Math.round(inches)} in`
+  }
+  const cm = meters * 100
+  return `${Math.round(cm)} cm`
+}

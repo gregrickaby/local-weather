@@ -11,7 +11,8 @@ import {
   SegmentedControl,
   Stack,
   Switch,
-  Text
+  Text,
+  Title
 } from '@mantine/core'
 import {useDisclosure} from '@mantine/hooks'
 import {IconHeart, IconSettings, IconTrash} from '@tabler/icons-react'
@@ -60,9 +61,9 @@ export default function Settings() {
       >
         <Stack gap="lg">
           <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Text size="sm" fw={500} mb="sm">
+            <Title order={4} size="sm" mb="sm">
               Temperature Unit
-            </Text>
+            </Title>
             <SegmentedControl
               value={tempUnit}
               onChange={handleTempUnitChange}
@@ -76,9 +77,9 @@ export default function Settings() {
           </Card>
 
           <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Text size="sm" fw={500} mb="sm">
+            <Title order={4} size="sm" mb="sm">
               Appearance
-            </Text>
+            </Title>
             <Switch
               aria-label="Toggle between light and dark theme."
               label="Dark Mode"
@@ -91,9 +92,9 @@ export default function Settings() {
           {favorites.length > 0 && (
             <Card shadow="sm" padding="lg" radius="md" withBorder>
               <Group justify="space-between" mb="sm">
-                <Text size="sm" fw={500}>
+                <Title order={4} size="sm">
                   Favorites
-                </Text>
+                </Title>
                 <Button
                   leftSection={<IconTrash size={16} />}
                   variant="subtle"

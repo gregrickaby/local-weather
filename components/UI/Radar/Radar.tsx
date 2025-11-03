@@ -4,7 +4,15 @@ import {useRadarMap} from '@/lib/hooks/useRadarMap'
 import {useAppSelector} from '@/lib/store/hooks'
 import {selectLocation, selectMounted} from '@/lib/store/selectors'
 import {useGetRadarFramesQuery} from '@/lib/store/services/radarApi'
-import {ActionIcon, Card, Group, Loader, Overlay, Text} from '@mantine/core'
+import {
+  ActionIcon,
+  Card,
+  Group,
+  Loader,
+  Overlay,
+  Text,
+  Title
+} from '@mantine/core'
 import {
   IconMaximize,
   IconMinimize,
@@ -74,9 +82,9 @@ export default function Radar() {
       <Card className={`${classes.card} ${isExpanded ? classes.expanded : ''}`}>
         <Group justify="space-between" mb="md">
           <div>
-            <Text size="lg" fw={600}>
+            <Title order={2} size="lg">
               Radar
-            </Text>
+            </Title>
             <Text size="xs" c="dimmed">
               {statusMessage}
             </Text>

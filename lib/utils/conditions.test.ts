@@ -2,9 +2,10 @@ import {describe, expect, it} from 'vitest'
 import {
   getAQIDescription,
   getAQILevel,
+  getCloudCoverDescription,
   getFeelsLikeDescription,
   getHumidityDescription,
-  getMoonPhaseEmoji,
+  getMoonPhaseIcon,
   getMoonPhaseName,
   getPressureDescription,
   getUVInfo,
@@ -22,7 +23,7 @@ describe('getWeatherInfo', () => {
       '2025-01-15T18:00:00'
     )
     expect(result.description).toBe('Clear sky')
-    expect(result.icon).toBe('01d')
+    expect(result.icon).toBe('clear-day')
   })
 
   it('should return correct info for clear sky (night)', () => {
@@ -33,25 +34,25 @@ describe('getWeatherInfo', () => {
       '2025-01-15T18:00:00'
     )
     expect(result.description).toBe('Clear sky')
-    expect(result.icon).toBe('01n')
+    expect(result.icon).toBe('clear-night')
   })
 
   it('should return correct info for rain', () => {
     const result = getWeatherInfo(61)
     expect(result.description).toBe('Slight rain')
-    expect(result.icon).toBe('10d') // defaults to day
+    expect(result.icon).toBe('rain') // defaults to day
   })
 
   it('should return correct info for thunderstorm', () => {
     const result = getWeatherInfo(95)
     expect(result.description).toBe('Thunderstorm')
-    expect(result.icon).toBe('11d')
+    expect(result.icon).toBe('thunderstorms-day')
   })
 
   it('should handle unknown codes', () => {
     const result = getWeatherInfo(999)
     expect(result.description).toBe('Unknown')
-    expect(result.icon).toBe('01d')
+    expect(result.icon).toBe('clear-day')
   })
 })
 
@@ -317,36 +318,63 @@ describe('getMoonPhaseName', () => {
   })
 })
 
-describe('getMoonPhaseEmoji', () => {
-  it('should return correct emoji for New Moon', () => {
-    expect(getMoonPhaseEmoji(0)).toBe('🌑')
+describe('getMoonPhaseIcon', () => {
+  it('should return correct icon for New Moon', () => {
+    expect(getMoonPhaseIcon(0)).toBe('moon-new')
   })
 
-  it('should return correct emoji for Waxing Crescent', () => {
-    expect(getMoonPhaseEmoji(0.1)).toBe('🌒')
+  it('should return correct icon for Waxing Crescent', () => {
+    expect(getMoonPhaseIcon(0.1)).toBe('moon-waxing-crescent')
   })
 
-  it('should return correct emoji for First Quarter', () => {
-    expect(getMoonPhaseEmoji(0.25)).toBe('🌓')
+  it('should return correct icon for First Quarter', () => {
+    expect(getMoonPhaseIcon(0.25)).toBe('moon-first-quarter')
   })
 
-  it('should return correct emoji for Waxing Gibbous', () => {
-    expect(getMoonPhaseEmoji(0.35)).toBe('🌔')
+  it('should return correct icon for Waxing Gibbous', () => {
+    expect(getMoonPhaseIcon(0.35)).toBe('moon-waxing-gibbous')
   })
 
-  it('should return correct emoji for Full Moon', () => {
-    expect(getMoonPhaseEmoji(0.5)).toBe('🌕')
+  it('should return correct icon for Full Moon', () => {
+    expect(getMoonPhaseIcon(0.5)).toBe('moon-full')
   })
 
-  it('should return correct emoji for Waning Gibbous', () => {
-    expect(getMoonPhaseEmoji(0.6)).toBe('🌖')
+  it('should return correct icon for Waning Gibbous', () => {
+    expect(getMoonPhaseIcon(0.6)).toBe('moon-waning-gibbous')
   })
 
-  it('should return correct emoji for Last Quarter', () => {
-    expect(getMoonPhaseEmoji(0.75)).toBe('🌗')
+  it('should return correct icon for Last Quarter', () => {
+    expect(getMoonPhaseIcon(0.75)).toBe('moon-last-quarter')
   })
 
-  it('should return correct emoji for Waning Crescent', () => {
-    expect(getMoonPhaseEmoji(0.85)).toBe('🌘')
+  it('should return correct icon for Waning Crescent', () => {
+    expect(getMoonPhaseIcon(0.85)).toBe('moon-waning-crescent')
+  })
+})
+
+describe('getCloudCoverDescription', () => {
+  it('should return "Clear sky" for low cloud cover', () => {
+    expect(getCloudCoverDescription(5)).toBe('Clear sky')
+    expect(getCloudCoverDescription(10)).toBe('Clear sky')
+  })
+
+  it('should return "Mostly clear" for minimal clouds', () => {
+    expect(getCloudCoverDescription(15)).toBe('Mostly clear')
+    expect(getCloudCoverDescription(25)).toBe('Mostly clear')
+  })
+
+  it('should return "Partly cloudy" for moderate clouds', () => {
+    expect(getCloudCoverDescription(30)).toBe('Partly cloudy')
+    expect(getCloudCoverDescription(50)).toBe('Partly cloudy')
+  })
+
+  it('should return "Mostly cloudy" for significant clouds', () => {
+    expect(getCloudCoverDescription(60)).toBe('Mostly cloudy')
+    expect(getCloudCoverDescription(75)).toBe('Mostly cloudy')
+  })
+
+  it('should return "Overcast" for heavy cloud cover', () => {
+    expect(getCloudCoverDescription(80)).toBe('Overcast')
+    expect(getCloudCoverDescription(100)).toBe('Overcast')
   })
 })

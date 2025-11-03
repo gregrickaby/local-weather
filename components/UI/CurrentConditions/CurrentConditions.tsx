@@ -3,7 +3,7 @@
 import Icon from '@/components/UI/Icon/Icon'
 import {useCurrentConditions} from '@/lib/hooks/useCurrentConditions'
 import {formatTemperature} from '@/lib/utils/formatting'
-import {Stack, Text} from '@mantine/core'
+import {Stack, Text, Title} from '@mantine/core'
 import classes from './CurrentConditions.module.css'
 
 /**
@@ -32,13 +32,13 @@ export default function CurrentConditions() {
       <Stack align="center" gap="xs">
         <div className={classes.descriptionContainer}>
           <Icon icon={icon} alt="" />
-          <Text className={classes.description} component="p">
+          <Title order={2} className={classes.description}>
             {description}
-          </Text>
+          </Title>
         </div>
-        <Text className={classes.bigtemp} component="p">
+        <Title order={1} className={classes.bigtemp}>
           {formatTemperature(tempUnit, temperature)}
-        </Text>
+        </Title>
         <Text className={classes.forecastStatement} ta="center">
           {forecastStatement}
         </Text>

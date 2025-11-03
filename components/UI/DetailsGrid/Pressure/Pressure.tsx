@@ -1,7 +1,7 @@
 'use client'
 
 import {usePressure} from '@/lib/hooks/usePressure'
-import {Box, Flex, Progress, Stack, Text} from '@mantine/core'
+import {Box, Flex, Progress, Stack, Text, Title} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
 /**
@@ -23,12 +23,12 @@ export default function Pressure() {
 
         <Box px="md">
           <Stack gap="xs">
-            <Text size="xl" fw={600} ta="center">
+            <Title order={2} size="xl" ta="center">
               {pressureValue}
               <Text component="span" size="sm" c="dimmed" ml={4}>
                 {pressureUnit}
               </Text>
-            </Text>
+            </Title>
 
             <Progress
               value={normalizedValue}

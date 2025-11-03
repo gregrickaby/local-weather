@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import {mockLocation, render, screen, waitFor} from '@/test-utils'
+import {describe, expect, it} from 'vitest'
 import Visibility from './Visibility'
 
 describe('Visibility', () => {
@@ -36,7 +36,8 @@ describe('Visibility', () => {
 
     await waitFor(() => {
       // Mock data: visibility = 10000 meters = ~6 miles
-      expect(screen.getByText(/6 mi/i)).toBeInTheDocument()
+      expect(screen.getByText('6')).toBeInTheDocument()
+      expect(screen.getByText('mi')).toBeInTheDocument()
     })
   })
 
@@ -55,7 +56,8 @@ describe('Visibility', () => {
 
     await waitFor(() => {
       // Mock data: visibility = 10000 meters = 10 km
-      expect(screen.getByText(/10 km/i)).toBeInTheDocument()
+      expect(screen.getByText('10')).toBeInTheDocument()
+      expect(screen.getByText('km')).toBeInTheDocument()
     })
   })
 

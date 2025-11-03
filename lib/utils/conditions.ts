@@ -54,49 +54,56 @@ const WEATHER_CODE_DESCRIPTIONS: Record<number, string> = {
  * Static weather code icon prefixes (without day/night suffix).
  * Stored outside function to avoid recreation on each call.
  */
-const WEATHER_CODE_ICON_PREFIXES: Record<number, string> = {
-  0: '01',
-  1: '01',
-  2: '02',
-  3: '03',
-  45: '50',
-  48: '50',
-  51: '09',
-  53: '09',
-  55: '09',
-  56: '09',
-  57: '09',
-  61: '10',
-  63: '10',
-  65: '10',
-  66: '13',
-  67: '13',
-  71: '13',
-  73: '13',
-  75: '13',
-  77: '13',
-  80: '09',
-  81: '09',
-  82: '09',
-  85: '13',
-  86: '13',
-  95: '11',
-  96: '11',
-  99: '11'
+/**
+ * Map WMO weather codes to basmilius icon names.
+ * Icons are suffixed with -day or -night based on time of day.
+ *
+ * @see https://github.com/basmilius/weather-icons
+ */
+const WEATHER_CODE_TO_BASMILIUS_ICON: Record<number, string> = {
+  0: 'clear', // Clear sky
+  1: 'partly-cloudy', // Mainly clear
+  2: 'partly-cloudy', // Partly cloudy
+  3: 'overcast', // Overcast
+  45: 'fog', // Fog
+  48: 'fog', // Depositing rime fog
+  51: 'drizzle', // Light drizzle
+  53: 'drizzle', // Moderate drizzle
+  55: 'drizzle', // Dense drizzle
+  56: 'freezing-drizzle', // Light freezing drizzle (fallback to drizzle)
+  57: 'freezing-drizzle', // Dense freezing drizzle (fallback to drizzle)
+  61: 'rain', // Slight rain
+  63: 'rain', // Moderate rain
+  65: 'rain', // Heavy rain
+  66: 'sleet', // Slight freezing rain
+  67: 'sleet', // Heavy freezing rain
+  71: 'snow', // Slight snow
+  73: 'snow', // Moderate snow
+  75: 'snow', // Heavy snow
+  77: 'snow', // Snow grains
+  80: 'partly-cloudy-rain', // Slight rain showers
+  81: 'partly-cloudy-rain', // Moderate rain showers
+  82: 'partly-cloudy-rain', // Violent rain showers
+  85: 'partly-cloudy-snow', // Slight snow showers
+  86: 'partly-cloudy-snow', // Heavy snow showers
+  95: 'thunderstorms', // Thunderstorm
+  96: 'thunderstorms', // Thunderstorm with slight hail
+  99: 'thunderstorms' // Thunderstorm with heavy hail
 }
 
 /**
- * Map WMO weather codes to descriptions and icon codes.
+ * Map WMO weather codes to descriptions and basmilius icon names.
  * Automatically determines day (d) vs night (n) icon variant based on time.
  *
  * @param code - WMO weather code
  * @param time - Optional ISO timestamp to determine day/night. If not provided, uses current time.
  * @param sunrise - Optional sunrise time (ISO string)
  * @param sunset - Optional sunset time (ISO string)
- * @returns Object with description and icon code
+ * @returns Object with description and icon name
  *
  * @see https://open-meteo.com/en/docs
  * @see https://www.nodc.noaa.gov/archive/arc0021/0002199/1.1/data/0-data/HTML/WMO-CODE/WMO4677.HTM
+ * @see https://github.com/basmilius/weather-icons
  */
 export function getWeatherInfo(
   code: number,
@@ -105,7 +112,7 @@ export function getWeatherInfo(
   sunset?: string
 ): {
   description: string
-  icon: string
+  icon: import('@/components/UI/Icon/Icon').IconName
 } {
   // Determine if it's day or night
   let isDaytime = true // default to day
@@ -116,14 +123,20 @@ export function getWeatherInfo(
     isDaytime = timestamp >= sunriseTime && timestamp < sunsetTime
   }
 
-  const dayNight = isDaytime ? 'd' : 'n'
-
+  const dayNight = isDaytime ? 'day' : 'night'
   const description = WEATHER_CODE_DESCRIPTIONS[code] || 'Unknown'
-  const iconPrefix = WEATHER_CODE_ICON_PREFIXES[code] || '01'
+  const basmilusIcon = WEATHER_CODE_TO_BASMILIUS_ICON[code] || 'clear'
+
+  // Some icons don't have day/night variants, so we append conditionally
+  const iconsWithoutDayNight = new Set(['drizzle', 'rain', 'sleet', 'snow'])
+  const icon: import('@/components/UI/Icon/Icon').IconName =
+    iconsWithoutDayNight.has(basmilusIcon)
+      ? (basmilusIcon as import('@/components/UI/Icon/Icon').IconName)
+      : (`${basmilusIcon}-${dayNight}` as import('@/components/UI/Icon/Icon').IconName)
 
   return {
     description,
-    icon: `${iconPrefix}${dayNight}`
+    icon
   }
 }
 
@@ -304,21 +317,39 @@ export function getMoonPhaseName(phase: number): string {
 }
 
 /**
- * Get moon phase emoji icon.
+ * Get moon phase icon name from basmilius weather-icons.
  *
  * @param phase - Moon phase value from SunCalc (0.0 to 1.0)
- * @returns Moon phase emoji
+ * @returns Moon phase icon name (e.g., 'moon-new', 'moon-full')
  */
-export function getMoonPhaseEmoji(phase: number): string {
+export function getMoonPhaseIcon(
+  phase: number
+): import('@/components/UI/Icon/Icon').IconName {
   return getRangeBasedValue(phase, [
-    {max: 0.0625, result: '🌑'}, // New Moon
-    {max: 0.1875, result: '🌒'}, // Waxing Crescent
-    {max: 0.3125, result: '🌓'}, // First Quarter
-    {max: 0.4375, result: '🌔'}, // Waxing Gibbous
-    {max: 0.5625, result: '🌕'}, // Full Moon
-    {max: 0.6875, result: '🌖'}, // Waning Gibbous
-    {max: 0.8125, result: '🌗'}, // Last Quarter
-    {max: 0.9375, result: '🌘'}, // Waning Crescent
-    {max: Infinity, result: '🌑'} // New Moon
+    {max: 0.0625, result: 'moon-new'},
+    {max: 0.1875, result: 'moon-waxing-crescent'},
+    {max: 0.3125, result: 'moon-first-quarter'},
+    {max: 0.4375, result: 'moon-waxing-gibbous'},
+    {max: 0.5625, result: 'moon-full'},
+    {max: 0.6875, result: 'moon-waning-gibbous'},
+    {max: 0.8125, result: 'moon-last-quarter'},
+    {max: 0.9375, result: 'moon-waning-crescent'},
+    {max: Infinity, result: 'moon-new'}
+  ])
+}
+
+/**
+ * Get cloud cover description based on percentage.
+ *
+ * @param percentage - Cloud cover percentage (0-100)
+ * @returns Cloud cover description string
+ */
+export function getCloudCoverDescription(percentage: number): string {
+  return getRangeBasedValue(percentage, [
+    {max: 10, result: 'Clear sky'},
+    {max: 25, result: 'Mostly clear'},
+    {max: 50, result: 'Partly cloudy'},
+    {max: 75, result: 'Mostly cloudy'},
+    {max: Infinity, result: 'Overcast'}
   ])
 }

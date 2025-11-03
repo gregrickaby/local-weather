@@ -1,5 +1,6 @@
 'use client'
 
+import Icon from '@/components/UI/Icon/Icon'
 import {useSunriseSunset} from '@/lib/hooks/useSunriseSunset'
 import {Box, Group, Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
@@ -47,21 +48,44 @@ export default function SunriseSunset() {
               strokeDasharray={`${sunPosition * 2.2} 220`}
             />
 
-            {/* Sun indicator */}
-            <circle
-              cx={20 + sunPosition * 1.6}
-              cy={60 - Math.sin((sunPosition / 100) * Math.PI) * 50}
-              r="6"
-              fill="currentColor"
-              opacity="0.8"
-            />
-
             {/* Sunrise marker */}
             <circle cx="20" cy="60" r="3" fill="currentColor" opacity="0.4" />
 
             {/* Sunset marker */}
             <circle cx="180" cy="60" r="3" fill="currentColor" opacity="0.4" />
           </svg>
+
+          {/* Sun icon positioned on arc - using "sun-hot" from basmilius icons */}
+          <div
+            style={{
+              position: 'absolute',
+              left: `${10 + sunPosition * 0.8}%`,
+              top: `${60 - Math.sin((sunPosition / 100) * Math.PI) * 37}px`,
+              transform: 'translate(-50%, -50%)',
+              width: 20,
+              height: 20,
+              overflow: 'hidden'
+            }}
+          >
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <div
+                style={{
+                  transform: 'scale(0.133)',
+                  transformOrigin: 'center'
+                }}
+              >
+                <Icon icon="sun-hot" alt="sun" />
+              </div>
+            </div>
+          </div>
         </Box>
 
         <Group justify="space-between">

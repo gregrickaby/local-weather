@@ -2,7 +2,7 @@
 
 import {useFeelsLike} from '@/lib/hooks/useFeelsLike'
 import {formatTemperature} from '@/lib/utils/formatting'
-import {Stack, Text} from '@mantine/core'
+import {Stack, Text, Title} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
 /**
@@ -20,9 +20,9 @@ export default function FeelsLike() {
           Feels Like
         </Text>
 
-        <Text size="48px" fw={600}>
+        <Title order={1} size="48px">
           {formatTemperature(unit, feelsLike)}
-        </Text>
+        </Title>
 
         <Text size="sm" c="dimmed">
           {description}

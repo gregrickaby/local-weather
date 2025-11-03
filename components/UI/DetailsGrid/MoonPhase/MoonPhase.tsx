@@ -1,16 +1,12 @@
 'use client'
 
+import Icon from '@/components/UI/Icon/Icon'
 import {useMoonPhase} from '@/lib/hooks/useMoonPhase'
 import {Stack, Text} from '@mantine/core'
 import DetailCard from '../DetailCard/DetailCard'
 
-/**
- * Moon phase detail card component.
- *
- * Displays current moon phase name, emoji icon, and illumination percentage.
- */
 export default function MoonPhase() {
-  const {phaseName, phaseEmoji, illumination} = useMoonPhase()
+  const {phaseName, phaseIcon, illumination} = useMoonPhase()
 
   return (
     <DetailCard delay={0.6}>
@@ -19,9 +15,7 @@ export default function MoonPhase() {
           Moon Phase
         </Text>
 
-        <Text size="4rem" style={{lineHeight: 1}}>
-          {phaseEmoji}
-        </Text>
+        <Icon icon={phaseIcon} />
 
         <Text size="lg" fw={600}>
           {phaseName}

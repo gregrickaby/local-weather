@@ -18,7 +18,12 @@ const createCurrentVariables = (index: number) => {
     mockWeatherResponse.current.uv_index,
     mockWeatherResponse.current.visibility,
     mockWeatherResponse.current.pressure_msl,
-    mockWeatherResponse.current.dew_point_2m
+    mockWeatherResponse.current.dew_point_2m,
+    mockWeatherResponse.current.cloud_cover,
+    mockWeatherResponse.current.rain,
+    mockWeatherResponse.current.showers,
+    mockWeatherResponse.current.snowfall,
+    mockWeatherResponse.current.snow_depth
   ]
   return {value: () => values[index]}
 }

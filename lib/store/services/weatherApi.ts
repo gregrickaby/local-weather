@@ -40,7 +40,12 @@ export const weatherApi = createApi({
               'uv_index',
               'visibility',
               'pressure_msl',
-              'dew_point_2m'
+              'dew_point_2m',
+              'cloud_cover',
+              'rain',
+              'showers',
+              'snowfall',
+              'snow_depth'
             ],
             hourly: [
               'temperature_2m',
@@ -120,7 +125,12 @@ export const weatherApi = createApi({
               uv_index: current.variables(8)?.value() ?? 0,
               visibility: current.variables(9)?.value() ?? 0,
               pressure_msl: current.variables(10)?.value() ?? 0,
-              dew_point_2m: current.variables(11)?.value() ?? 0
+              dew_point_2m: current.variables(11)?.value() ?? 0,
+              cloud_cover: current.variables(12)?.value() ?? 0,
+              rain: current.variables(13)?.value() ?? 0,
+              showers: current.variables(14)?.value() ?? 0,
+              snowfall: current.variables(15)?.value() ?? 0,
+              snow_depth: current.variables(16)?.value() ?? 0
             },
             hourly: {
               time: range(

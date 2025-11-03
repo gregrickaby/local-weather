@@ -44,9 +44,9 @@ export default function Forecast() {
                 {formatTime(forecast.time)}
               </Text>
               <Icon icon={icon} />
-              <Text size="xl" fw={700}>
+              <Title order={3} size="xl">
                 {formatTemperature(tempUnit, forecast.temp)}
-              </Text>
+              </Title>
               <Text size="xs" c="dimmed">
                 {description}
               </Text>

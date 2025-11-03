@@ -3,10 +3,13 @@
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
 import {Card, SimpleGrid, Skeleton, Stack} from '@mantine/core'
 import AirQuality from './AirQuality/AirQuality'
+import CloudCover from './CloudCover/CloudCover'
 import FeelsLike from './FeelsLike/FeelsLike'
 import Humidity from './Humidity/Humidity'
 import MoonPhase from './MoonPhase/MoonPhase'
+import Precipitation from './Precipitation/Precipitation'
 import Pressure from './Pressure/Pressure'
+import SnowDepth from './SnowDepth/SnowDepth'
 import SunriseSunset from './SunriseSunset/SunriseSunset'
 import UVIndex from './UVIndex/UVIndex'
 import Visibility from './Visibility/Visibility'
@@ -37,14 +40,17 @@ export default function DetailsGrid() {
 
   const skeletonCards = [
     'wind',
+    'precipitation',
     'uv',
     'sunrise',
     'humidity',
+    'cloud',
     'air',
     'visibility',
     'pressure',
     'feels',
-    'moon'
+    'moon',
+    'snow'
   ]
 
   return (
@@ -63,13 +69,16 @@ export default function DetailsGrid() {
         <>
           <FeelsLike />
           <Wind />
+          <Precipitation />
           <UVIndex />
-          <Humidity />
           <Pressure />
+          <Humidity />
+          <CloudCover />
           <AirQuality />
           <Visibility />
           <SunriseSunset />
           <MoonPhase />
+          <SnowDepth />
         </>
       )}
     </SimpleGrid>

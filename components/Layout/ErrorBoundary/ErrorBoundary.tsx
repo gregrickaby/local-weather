@@ -61,9 +61,9 @@ export default class ErrorBoundary extends Component<Props, State> {
             </Text>
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <Paper p="md" mb="lg" bg="red.0" c="red.9" radius="sm">
-                <Text size="sm" fw={600} mb="xs">
+                <Title order={3} size="sm" mb="xs">
                   Error Details (Development Only):
-                </Text>
+                </Title>
                 <Text size="xs" ff="monospace">
                   {this.state.error.message}
                 </Text>

@@ -1,7 +1,9 @@
 import {describe, expect, it} from 'vitest'
 import {
   formatDay,
+  formatPrecipitation,
   formatPressure,
+  formatSnowDepth,
   formatTemperature,
   formatTime,
   formatTimeWithMinutes,
@@ -140,5 +142,39 @@ describe('getMoonIlluminationPercentage', () => {
 
   it('should round 0.237 to "24%"', () => {
     expect(getMoonIlluminationPercentage(0.237)).toBe('24%')
+  })
+})
+
+describe('formatPrecipitation', () => {
+  it('should format imperial precipitation in inches', () => {
+    expect(formatPrecipitation('f', 0.12)).toBe('0.12 in')
+    expect(formatPrecipitation('f', 1.5)).toBe('1.50 in')
+  })
+
+  it('should format metric precipitation in millimeters', () => {
+    expect(formatPrecipitation('c', 3.2)).toBe('3 mm')
+    expect(formatPrecipitation('c', 12.7)).toBe('13 mm')
+  })
+
+  it('should handle zero precipitation', () => {
+    expect(formatPrecipitation('f', 0)).toBe('0.00 in')
+    expect(formatPrecipitation('c', 0)).toBe('0 mm')
+  })
+})
+
+describe('formatSnowDepth', () => {
+  it('should convert meters to inches for imperial', () => {
+    expect(formatSnowDepth('f', 0.1)).toBe('4 in') // 0.1m ≈ 3.94 inches
+    expect(formatSnowDepth('f', 0.5)).toBe('20 in') // 0.5m ≈ 19.69 inches
+  })
+
+  it('should convert meters to centimeters for metric', () => {
+    expect(formatSnowDepth('c', 0.1)).toBe('10 cm')
+    expect(formatSnowDepth('c', 0.5)).toBe('50 cm')
+  })
+
+  it('should handle zero snow depth', () => {
+    expect(formatSnowDepth('f', 0)).toBe('0 in')
+    expect(formatSnowDepth('c', 0)).toBe('0 cm')
   })
 })

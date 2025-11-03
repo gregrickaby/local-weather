@@ -6,12 +6,12 @@
  */
 
 import {getMoonIllumination} from '@/lib/utils/calculations'
-import {getMoonPhaseEmoji, getMoonPhaseName} from '@/lib/utils/conditions'
+import {getMoonPhaseIcon, getMoonPhaseName} from '@/lib/utils/conditions'
 import {getMoonIlluminationPercentage} from '@/lib/utils/formatting'
 
 export interface MoonPhaseData {
   phaseName: string
-  phaseEmoji: string
+  phaseIcon: import('@/components/UI/Icon/Icon').IconName
   illumination: string
   fraction: number
   phase: number
@@ -27,7 +27,7 @@ export function useMoonPhase(): MoonPhaseData {
 
   return {
     phaseName: getMoonPhaseName(moonData.phase),
-    phaseEmoji: getMoonPhaseEmoji(moonData.phase),
+    phaseIcon: getMoonPhaseIcon(moonData.phase),
     illumination: getMoonIlluminationPercentage(moonData.fraction),
     fraction: moonData.fraction,
     phase: moonData.phase

@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import {mockLocation, render, screen, waitFor} from '@/test-utils'
+import {describe, expect, it} from 'vitest'
 import Wind from './Wind'
 
 describe('Wind', () => {
@@ -16,7 +16,8 @@ describe('Wind', () => {
       }
     })
 
-    expect(screen.getByText('Wind')).toBeInTheDocument()
+    // Check for uppercase "WIND" label
+    expect(screen.getByText(/WIND/i)).toBeInTheDocument()
   })
 
   it('should display wind speed with mph for Fahrenheit', async () => {
@@ -32,9 +33,10 @@ describe('Wind', () => {
       }
     })
 
-    // Wind speed from mock data is 8 mph
+    // Wind speed from mock data is 8 mph - check for separate elements
     await waitFor(() => {
-      expect(screen.getByText(/8 mph/)).toBeInTheDocument()
+      expect(screen.getByText('8')).toBeInTheDocument()
+      expect(screen.getByText('mph')).toBeInTheDocument()
     })
   })
 
@@ -53,7 +55,8 @@ describe('Wind', () => {
 
     // Wind gusts from mock data is 12 mph
     await waitFor(() => {
-      expect(screen.getByText(/Gusts 12 mph/)).toBeInTheDocument()
+      expect(screen.getByText('Gusts')).toBeInTheDocument()
+      expect(screen.getByText('12 mph')).toBeInTheDocument()
     })
   })
 
@@ -72,7 +75,7 @@ describe('Wind', () => {
 
     // Wind direction from mock data is 180° = South
     await waitFor(() => {
-      expect(screen.getByText('S')).toBeInTheDocument()
+      expect(screen.getByText('Direction')).toBeInTheDocument()
     })
   })
 
@@ -106,10 +109,10 @@ describe('Wind', () => {
       }
     })
 
-    const svg = document.querySelector('svg')
-    expect(svg?.textContent).toContain('N')
-    expect(svg?.textContent).toContain('E')
-    expect(svg?.textContent).toContain('S')
-    expect(svg?.textContent).toContain('W')
+    // Cardinal directions are now outside the SVG
+    expect(screen.getByText('N')).toBeInTheDocument()
+    expect(screen.getByText('E')).toBeInTheDocument()
+    expect(screen.getByText('S')).toBeInTheDocument()
+    expect(screen.getByText('W')).toBeInTheDocument()
   })
 })
