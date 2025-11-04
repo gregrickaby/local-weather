@@ -1,31 +1,29 @@
 import {DEFAULT_LOCATION, POPULAR_CITIES} from '@/lib/constants'
-import {useAppDispatch} from '@/lib/store/hooks'
-import {useGetPlacesQuery} from '@/lib/store/services/placesApi'
+import {useAppDispatch, useAppSelector} from '@/lib/store/hooks'
 import {setLocation} from '@/lib/store/slices/preferencesSlice'
 import type {Location} from '@/lib/types'
-import {createLocationSlug, parseLocationSlug} from '@/lib/utils/slug'
-import {useRouter} from 'next/navigation'
+import {parseLocationSlug} from '@/lib/utils/slug'
 import {useEffect, useState} from 'react'
 
 interface UseCityPageLocationParams {
-  slug: string
+  slug: string | string[]
 }
 
 interface UseCityPageLocationResult {
   locationResolved: boolean
   locationError: boolean
-  isSearching: boolean
 }
 
 /**
  * Custom hook for managing city page location resolution.
  *
- * Handles the complex logic of:
- * - Resolving location from slug (checking popular cities first)
- * - Fetching location data via geocoding API if not found locally
- * - Updating Redux state with resolved location
- * - Redirecting to correct URL if slug doesn't match
- * - Managing loading and error states
+ * Simplified approach using coordinate-based URLs:
+ * 1. Extract coordinates from slug (format: {name}-{admin}-{country}-{lat}-{lon})
+ * 2. Look up location in known locations by matching coordinates (within tolerance)
+ * 3. If found, update Redux with full location data
+ * 4. If not found, create a basic location object from coordinates and set it
+ *
+ * This works because Open-Meteo weather API uses coordinates directly!
  *
  * @param params - Object containing the location slug
  * @returns Object containing location resolution state
@@ -34,74 +32,67 @@ export function useCityPageLocation({
   slug
 }: UseCityPageLocationParams): UseCityPageLocationResult {
   const dispatch = useAppDispatch()
-  const router = useRouter()
   const [locationResolved, setLocationResolved] = useState(false)
   const [locationError, setLocationError] = useState(false)
 
-  // Try to find location in popular cities first
-  const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
-  const knownLocation = allLocations.find(
-    (city) => createLocationSlug(city) === slug
-  )
+  // Get favorites from Redux (these include full location data from search results)
+  const favorites = useAppSelector((state) => state.preferences.favorites)
 
-  // If not in popular cities, try to resolve via geocoding
-  const {searchTerm} = parseLocationSlug(slug)
-  const {data: locations, isLoading: isSearching} = useGetPlacesQuery(
-    searchTerm,
-    {
-      skip: !!knownLocation // Skip query if we already have the location
-    }
-  )
+  // Extract coordinates from slug
+  const {latitude, longitude} = parseLocationSlug(slug)
 
-  // Reset location resolution when slug changes
+  // Build list of all known locations (popular cities, default, and favorites)
+  const allKnownLocations: Location[] = [
+    ...POPULAR_CITIES,
+    DEFAULT_LOCATION,
+    ...favorites
+  ]
+
   useEffect(() => {
+    // Reset state when slug changes
     setLocationResolved(false)
     setLocationError(false)
-  }, [slug])
 
-  // Update Redux state with the resolved location
-  useEffect(() => {
-    let locationToSet: Location | null = null
-
-    if (knownLocation) {
-      locationToSet = knownLocation
-    } else if (locations && locations.length > 0) {
-      // Use the first result from geocoding
-      locationToSet = locations[0]
+    if (latitude === null || longitude === null) {
+      // Invalid slug format - no valid coordinates found
+      setLocationError(true)
+      return
     }
 
-    if (locationToSet && !locationResolved) {
-      dispatch(setLocation(locationToSet))
+    // Try to find exact match in known locations (within 0.01 degree tolerance)
+    const TOLERANCE = 0.01
+    const location = allKnownLocations.find(
+      (loc) =>
+        Math.abs(loc.latitude - latitude) < TOLERANCE &&
+        Math.abs(loc.longitude - longitude) < TOLERANCE
+    )
+
+    if (location) {
+      // Found in known locations - use full location data
+      dispatch(setLocation(location))
       setLocationResolved(true)
       setLocationError(false)
-
-      // If the resolved location has a different slug, redirect to correct URL
-      const correctSlug = createLocationSlug(locationToSet)
-      if (correctSlug !== slug) {
-        router.replace(`/${correctSlug}`)
+    } else {
+      // Not in known locations - create basic location from coordinates
+      // The weather API will still work with just lat/lon
+      const basicLocation: Location = {
+        id: 0, // Temporary ID for unknown locations
+        name: 'Unknown Location',
+        latitude,
+        longitude,
+        admin1: 'Unknown',
+        country: 'Unknown',
+        display: `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`
       }
-    } else if (
-      !knownLocation &&
-      !isSearching &&
-      (!locations || locations.length === 0) &&
-      !locationResolved
-    ) {
-      // Location could not be resolved
-      setLocationError(true)
+
+      dispatch(setLocation(basicLocation))
+      setLocationResolved(true)
+      setLocationError(false)
     }
-  }, [
-    knownLocation,
-    locations,
-    isSearching,
-    locationResolved,
-    dispatch,
-    slug,
-    router
-  ])
+  }, [slug, latitude, longitude, dispatch])
 
   return {
     locationResolved,
-    locationError,
-    isSearching
+    locationError
   }
 }

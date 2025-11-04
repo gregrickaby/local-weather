@@ -1,25 +1,17 @@
 import {DEFAULT_LOCATION} from '@/lib/constants'
-import * as placesApi from '@/lib/store/services/placesApi'
 import type {Location} from '@/lib/types'
 import {renderHook, waitFor} from '@testing-library/react'
 import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {useCityPageLocation} from './useCityPageLocation'
 
-// Mock Next.js router
-const mockReplace = vi.fn()
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    replace: mockReplace
-  })
-}))
-
 // Mock Redux hooks
 const mockDispatch = vi.fn()
+const mockFavorites: Location[] = []
 const mockPreferencesState = {
   location: DEFAULT_LOCATION,
   tempUnit: 'f' as const,
   colorScheme: 'auto' as const,
-  favorites: [] as Location[],
+  favorites: mockFavorites,
   mounted: true
 }
 
@@ -31,30 +23,18 @@ vi.mock('@/lib/store/hooks', () => ({
     })
 }))
 
-// Mock RTK Query
-let mockPlacesQueryResult = {
-  data: undefined as Location[] | undefined,
-  isLoading: false
-}
-
-vi.mock('@/lib/store/services/placesApi', () => ({
-  useGetPlacesQuery: vi.fn(() => mockPlacesQueryResult)
-}))
-
 describe('useCityPageLocation', () => {
   beforeEach(() => {
     mockDispatch.mockClear()
-    mockReplace.mockClear()
-    mockPlacesQueryResult = {
-      data: undefined,
-      isLoading: false
-    }
+    mockFavorites.length = 0 // Clear favorites
   })
 
   describe('Known Locations (Popular Cities)', () => {
-    it('should resolve location from popular cities immediately', async () => {
+    it('should resolve location from popular cities by coordinates', async () => {
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'new-york-new-york-united-states'})
+        useCityPageLocation({
+          slug: 'new-york/new-york/united-states/40.71/-74.01'
+        })
       )
 
       await waitFor(() => {
@@ -62,22 +42,57 @@ describe('useCityPageLocation', () => {
       })
 
       expect(result.current.locationError).toBe(false)
-      expect(result.current.isSearching).toBe(false)
+      // Hook should dispatch the full known location object, not the rounded coordinates from URL
       expect(mockDispatch).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'preferences/setLocation',
           payload: expect.objectContaining({
+            id: 5128581,
             name: 'New York',
             admin1: 'New York',
-            country: 'United States'
+            country: 'United States',
+            display: 'New York, New York, United States',
+            latitude: 40.71427,
+            longitude: -74.00597
           })
         })
       )
     })
 
-    it('should resolve default location', async () => {
+    it('should resolve default location by coordinates', async () => {
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'enterprise-alabama-united-states'})
+        useCityPageLocation({
+          slug: 'enterprise/alabama/united-states/31.32/-85.86'
+        })
+      )
+
+      await waitFor(() => {
+        expect(result.current.locationResolved).toBe(true)
+      })
+
+      expect(result.current.locationError).toBe(false)
+      // Hook should dispatch the full known location object, not the rounded coordinates from URL
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'preferences/setLocation',
+          payload: expect.objectContaining({
+            id: 4060791,
+            name: 'Enterprise',
+            admin1: 'Alabama',
+            country: 'United States',
+            display: 'Enterprise, Alabama, United States',
+            latitude: 31.31517,
+            longitude: -85.85522
+          })
+        })
+      )
+    })
+
+    it('should resolve Chicago by coordinates', async () => {
+      const {result} = renderHook(() =>
+        useCityPageLocation({
+          slug: 'chicago/illinois/united-states/41.88/-87.63'
+        })
       )
 
       await waitFor(() => {
@@ -87,52 +102,33 @@ describe('useCityPageLocation', () => {
       expect(result.current.locationError).toBe(false)
       expect(mockDispatch).toHaveBeenCalledWith(
         expect.objectContaining({
-          type: 'preferences/setLocation',
           payload: expect.objectContaining({
-            name: 'Enterprise',
-            admin1: 'Alabama',
-            country: 'United States'
+            latitude: 41.88,
+            longitude: -87.63
           })
         })
-      )
-    })
-
-    it('should not call geocoding API for known locations', () => {
-      const mockedUseGetPlacesQuery = vi.spyOn(placesApi, 'useGetPlacesQuery')
-
-      renderHook(() =>
-        useCityPageLocation({slug: 'chicago-illinois-united-states'})
-      )
-
-      // Should be called with skip: true
-      expect(mockedUseGetPlacesQuery).toHaveBeenCalledWith(
-        expect.any(String),
-        expect.objectContaining({skip: true})
       )
     })
   })
 
-  describe('Unknown Locations (Geocoding)', () => {
-    it('should search for location via geocoding API', async () => {
-      const mockSearchResults: Location[] = [
-        {
-          id: 999,
-          name: 'TestCity',
-          latitude: 40,
-          longitude: -80,
-          admin1: 'TestState',
-          country: 'TestCountry',
-          display: 'TestCity, TestState, TestCountry'
-        }
-      ]
-
-      mockPlacesQueryResult = {
-        data: mockSearchResults,
-        isLoading: false
+  describe('Favorites Locations', () => {
+    it('should resolve location from favorites by coordinates', async () => {
+      const testLocation: Location = {
+        id: 999888,
+        name: 'TestCity',
+        latitude: 40,
+        longitude: -80,
+        admin1: 'TestState',
+        country: 'TestCountry',
+        display: 'TestCity, TestState, TestCountry'
       }
 
+      mockFavorites.push(testLocation)
+
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'testcity-teststate-testcountry'})
+        useCityPageLocation({
+          slug: 'testcity/teststate/testcountry/40.00/-80.00'
+        })
       )
 
       await waitFor(() => {
@@ -143,34 +139,96 @@ describe('useCityPageLocation', () => {
       expect(mockDispatch).toHaveBeenCalledWith(
         expect.objectContaining({
           type: 'preferences/setLocation',
-          payload: mockSearchResults[0]
+          payload: testLocation
         })
       )
     })
 
-    it('should show loading state while searching', () => {
-      mockPlacesQueryResult = {
-        data: undefined,
-        isLoading: true
+    it('should match coordinates with tolerance', async () => {
+      const testLocation: Location = {
+        id: 123456,
+        name: 'ToleranceTest',
+        latitude: 45.123,
+        longitude: -75.456,
+        admin1: 'TestState',
+        country: 'TestCountry',
+        display: 'ToleranceTest, TestState, TestCountry'
       }
 
+      mockFavorites.push(testLocation)
+
+      // Slightly different coordinates (within 0.01 tolerance)
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'unknown-city-country'})
+        useCityPageLocation({
+          slug: 'tolerancetest/teststate/testcountry/45.13/-75.46'
+        })
       )
 
-      expect(result.current.isSearching).toBe(true)
-      expect(result.current.locationResolved).toBe(false)
+      await waitFor(() => {
+        expect(result.current.locationResolved).toBe(true)
+      })
+
       expect(result.current.locationError).toBe(false)
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: testLocation
+        })
+      )
+    })
+  })
+
+  describe('Unknown Coordinates (Fallback)', () => {
+    it('should create basic location for unknown coordinates', async () => {
+      const {result} = renderHook(() =>
+        useCityPageLocation({slug: 'unknown-city/country/country/45.67/-89.12'})
+      )
+
+      await waitFor(() => {
+        expect(result.current.locationResolved).toBe(true)
+      })
+
+      expect(result.current.locationError).toBe(false)
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: 'preferences/setLocation',
+          payload: expect.objectContaining({
+            id: 0, // Fallback ID
+            latitude: 45.67,
+            longitude: -89.12,
+            name: 'Unknown Location',
+            country: 'Unknown',
+            display: '45.67, -89.12'
+          })
+        })
+      )
     })
 
-    it('should set error when location not found', async () => {
-      mockPlacesQueryResult = {
-        data: [],
-        isLoading: false
-      }
-
+    it('should handle negative coordinates correctly', async () => {
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'nonexistent-location-nowhere'})
+        useCityPageLocation({
+          slug: 'south-pole/antarctica/antarctica/-89.99/0.00'
+        })
+      )
+
+      await waitFor(() => {
+        expect(result.current.locationResolved).toBe(true)
+      })
+
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            latitude: -89.99,
+            longitude: 0
+          })
+        })
+      )
+    })
+  })
+
+  describe('Invalid Slugs', () => {
+    it('should set error for slug without coordinates', async () => {
+      const {result} = renderHook(() =>
+        useCityPageLocation({slug: 'new-york-new-york-united-states'})
       )
 
       await waitFor(() => {
@@ -181,58 +239,40 @@ describe('useCityPageLocation', () => {
       expect(mockDispatch).not.toHaveBeenCalled()
     })
 
-    it('should set error when geocoding returns undefined', async () => {
-      mockPlacesQueryResult = {
-        data: undefined,
-        isLoading: false
-      }
-
+    it('should set error for invalid coordinate format', async () => {
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'invalid-slug-format'})
+        useCityPageLocation({slug: 'city-name-abc-xyz'})
       )
 
       await waitFor(() => {
         expect(result.current.locationError).toBe(true)
       })
-    })
-  })
 
-  describe('URL Correction', () => {
-    it('should redirect to correct slug if different', async () => {
-      const mockSearchResults: Location[] = [
-        {
-          id: 888,
-          name: 'Correct Name',
-          latitude: 40,
-          longitude: -80,
-          admin1: 'State',
-          country: 'Country',
-          display: 'Correct Name, State, Country'
-        }
-      ]
-
-      mockPlacesQueryResult = {
-        data: mockSearchResults,
-        isLoading: false
-      }
-
-      renderHook(() => useCityPageLocation({slug: 'wrong-slug-name'}))
-
-      await waitFor(() => {
-        expect(mockReplace).toHaveBeenCalledWith('/correct-name-state-country')
-      })
+      expect(result.current.locationResolved).toBe(false)
     })
 
-    it('should not redirect if slug matches location', async () => {
+    it('should set error for out-of-range latitude', async () => {
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'new-york-new-york-united-states'})
+        useCityPageLocation({slug: 'invalid-location-100.00-50.00'})
       )
 
       await waitFor(() => {
-        expect(result.current.locationResolved).toBe(true)
+        expect(result.current.locationError).toBe(true)
       })
 
-      expect(mockReplace).not.toHaveBeenCalled()
+      expect(result.current.locationResolved).toBe(false)
+    })
+
+    it('should set error for out-of-range longitude', async () => {
+      const {result} = renderHook(() =>
+        useCityPageLocation({slug: 'invalid-location-45.00-200.00'})
+      )
+
+      await waitFor(() => {
+        expect(result.current.locationError).toBe(true)
+      })
+
+      expect(result.current.locationResolved).toBe(false)
     })
   })
 
@@ -241,7 +281,7 @@ describe('useCityPageLocation', () => {
       const {result, rerender} = renderHook(
         ({slug}) => useCityPageLocation({slug}),
         {
-          initialProps: {slug: 'new-york-new-york-united-states'}
+          initialProps: {slug: 'new-york/new-york/united-states/40.71/-74.01'}
         }
       )
 
@@ -249,66 +289,34 @@ describe('useCityPageLocation', () => {
         expect(result.current.locationResolved).toBe(true)
       })
 
-      // Change slug
-      rerender({slug: 'chicago-illinois-united-states'})
+      // Change slug to different location
+      rerender({slug: 'chicago/illinois/united-states/41.88/-87.63'})
 
       // Wait for the new location to resolve
       await waitFor(() => {
-        // The hook should have been called with the new slug and resolved
         expect(result.current.locationResolved).toBe(true)
       })
 
-      // Verify we got a new resolution (dispatch was called)
-      expect(mockDispatch).toHaveBeenCalled()
+      // Verify we got a new resolution
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            latitude: 41.88,
+            longitude: -87.63
+          })
+        })
+      )
     })
   })
 
   describe('Edge Cases', () => {
-    it('should handle multiple results from geocoding (uses first)', async () => {
-      const mockSearchResults: Location[] = [
-        {
-          id: 1,
-          name: 'City1',
-          latitude: 40,
-          longitude: -80,
-          admin1: 'State1',
-          country: 'Country1',
-          display: 'City1, State1, Country1'
-        },
-        {
-          id: 2,
-          name: 'City2',
-          latitude: 41,
-          longitude: -81,
-          admin1: 'State2',
-          country: 'Country2',
-          display: 'City2, State2, Country2'
-        }
-      ]
-
-      mockPlacesQueryResult = {
-        data: mockSearchResults,
-        isLoading: false
-      }
-
-      const {result} = renderHook(() => useCityPageLocation({slug: 'city'}))
-
-      await waitFor(() => {
-        expect(result.current.locationResolved).toBe(true)
-      })
-
-      expect(mockDispatch).toHaveBeenCalledWith(
-        expect.objectContaining({
-          payload: mockSearchResults[0] // First result
-        })
-      )
-    })
-
     it('should not dispatch multiple times for same location', async () => {
       mockDispatch.mockClear()
 
       const {result} = renderHook(() =>
-        useCityPageLocation({slug: 'new-york-new-york-united-states'})
+        useCityPageLocation({
+          slug: 'new-york/new-york/united-states/40.71/-74.01'
+        })
       )
 
       await waitFor(() => {
@@ -320,6 +328,44 @@ describe('useCityPageLocation', () => {
         (call) => call[0].type === 'preferences/setLocation'
       )
       expect(dispatchCalls).toHaveLength(1)
+    })
+
+    it('should handle equator crossing (lat=0)', async () => {
+      const {result} = renderHook(() =>
+        useCityPageLocation({slug: 'equator/location/location/0.00/10.00'})
+      )
+
+      await waitFor(() => {
+        expect(result.current.locationResolved).toBe(true)
+      })
+
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            latitude: 0,
+            longitude: 10
+          })
+        })
+      )
+    })
+
+    it('should handle prime meridian crossing (lon=0)', async () => {
+      const {result} = renderHook(() =>
+        useCityPageLocation({slug: 'greenwich/uk/uk/51.48/0.00'})
+      )
+
+      await waitFor(() => {
+        expect(result.current.locationResolved).toBe(true)
+      })
+
+      expect(mockDispatch).toHaveBeenCalledWith(
+        expect.objectContaining({
+          payload: expect.objectContaining({
+            latitude: 51.48,
+            longitude: 0
+          })
+        })
+      )
     })
   })
 })

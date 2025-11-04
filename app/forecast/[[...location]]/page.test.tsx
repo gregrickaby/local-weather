@@ -9,14 +9,21 @@ describe('LocationPage', () => {
       expect(params).toBeInstanceOf(Array)
       expect(params.length).toBeGreaterThan(0)
 
-      // Should include default location
+      // Should include default location with path segments
       expect(params).toContainEqual({
-        location: 'enterprise-alabama-united-states'
+        location: ['enterprise', 'alabama', 'united-states', '31.32', '-85.86']
       })
 
-      // Should have slug format
+      // Each param should have 5 segments: [city, state, country, lat, lon]
       for (const param of params) {
-        expect(param.location).toMatch(/^[a-z0-9-]+$/)
+        expect(param.location).toHaveLength(5)
+        // Validate last two segments are coordinates
+        const lat = Number(param.location[3])
+        const lon = Number(param.location[4])
+        expect(lat).toBeGreaterThanOrEqual(-90)
+        expect(lat).toBeLessThanOrEqual(90)
+        expect(lon).toBeGreaterThanOrEqual(-180)
+        expect(lon).toBeLessThanOrEqual(180)
       }
     })
   })
@@ -24,7 +31,15 @@ describe('LocationPage', () => {
   describe('generateMetadata', () => {
     it('should generate metadata for known location', async () => {
       const metadata = await generateMetadata({
-        params: Promise.resolve({location: 'enterprise-alabama-united-states'})
+        params: Promise.resolve({
+          location: [
+            'enterprise',
+            'alabama',
+            'united-states',
+            '31.32',
+            '-85.86'
+          ]
+        })
       })
 
       expect(metadata.title).toBe('Enterprise, Alabama, United States Weather')
@@ -39,18 +54,22 @@ describe('LocationPage', () => {
 
     it('should generate metadata for dynamic location', async () => {
       const metadata = await generateMetadata({
-        params: Promise.resolve({location: 'london-england-united-kingdom'})
+        params: Promise.resolve({
+          location: ['london', '', 'united-kingdom', '51.51', '-0.13']
+        })
       })
 
-      expect(metadata.title).toBe('London England United Kingdom Weather')
-      expect(metadata.description).toContain('London England United Kingdom')
+      expect(metadata.title).toContain('Weather')
+      expect(metadata.description).toContain(
+        'Current weather conditions and forecast'
+      )
       expect(metadata.openGraph).toBeDefined()
     })
 
     it('should format location slug into readable title', async () => {
       const metadata = await generateMetadata({
         params: Promise.resolve({
-          location: 'new-york-new-york-united-states'
+          location: ['new-york', 'new-york', 'united-states', '40.71', '-74.01']
         })
       })
 

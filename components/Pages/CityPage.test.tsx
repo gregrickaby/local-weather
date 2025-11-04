@@ -99,7 +99,7 @@ describe('CityPage', () => {
       isLoading: true
     })
 
-    const testSlug = 'new-york-new-york-united-states'
+    const testSlug = 'new-york/new-york/united-states/40.71/-74.01'
 
     render(<CityPage slug={testSlug} />, {
       preloadedState: {

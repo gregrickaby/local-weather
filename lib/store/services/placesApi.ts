@@ -83,8 +83,33 @@ export const placesApi = createApi({
       },
       providesTags: ['Places'],
       keepUnusedDataFor: 60 // 1 minute cache
+    }),
+    getLocationById: builder.query<Location, number>({
+      queryFn: async (_locationId) => {
+        try {
+          // Open-Meteo doesn't have a direct "get by ID" endpoint
+          // But we can use the search endpoint with specific coordinates
+          // or rely on cached data. For now, we'll fetch and find by ID.
+          // This is a limitation of the API - ideally we'd store locations locally.
+
+          // Note: This is a workaround. Open-Meteo geocoding doesn't support ID lookup.
+          // In production, you'd want to cache location data or use a different approach.
+          throw new Error(
+            'Open-Meteo API does not support direct ID lookup. Location must be resolved from search results.'
+          )
+        } catch (error) {
+          return {
+            error: {
+              status: 'CUSTOM_ERROR',
+              error: String(error)
+            }
+          }
+        }
+      },
+      providesTags: ['Places'],
+      keepUnusedDataFor: 3600 // 1 hour cache for location data
     })
   })
 })
 
-export const {useGetPlacesQuery} = placesApi
+export const {useGetPlacesQuery, useGetLocationByIdQuery} = placesApi

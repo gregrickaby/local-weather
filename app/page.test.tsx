@@ -21,7 +21,7 @@ describe('HomePage', () => {
 
     await waitFor(() => {
       expect(mockReplace).toHaveBeenCalledWith(
-        '/enterprise-alabama-united-states'
+        '/forecast/enterprise/alabama/united-states/31.32/-85.86'
       )
     })
   })
@@ -32,10 +32,8 @@ describe('HomePage', () => {
       name: 'New York',
       latitude: 40.7143,
       longitude: -74.006,
-      elevation: 10,
-      timezone: 'America/New_York',
-      country_code: 'US',
       admin1: 'New York',
+      country: 'United States',
       display: 'New York, New York, United States'
     }
 
@@ -44,7 +42,9 @@ describe('HomePage', () => {
     render(<HomePage />)
 
     await waitFor(() => {
-      expect(mockReplace).toHaveBeenCalledWith('/new-york-new-york')
+      expect(mockReplace).toHaveBeenCalledWith(
+        '/forecast/new-york/new-york/united-states/40.71/-74.01'
+      )
     })
   })
 
@@ -62,7 +62,7 @@ describe('HomePage', () => {
         expect.any(Error)
       )
       expect(mockReplace).toHaveBeenCalledWith(
-        '/enterprise-alabama-united-states'
+        '/forecast/enterprise/alabama/united-states/31.32/-85.86'
       )
     })
 

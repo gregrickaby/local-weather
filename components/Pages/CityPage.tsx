@@ -12,11 +12,10 @@ import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
 import {useCityPageLocation} from '@/lib/hooks/useCityPageLocation'
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
-import {parseLocationSlug} from '@/lib/utils/slug'
 import {Alert, Skeleton, Stack} from '@mantine/core'
 
 interface CityPageProps {
-  slug: string
+  slug: string | string[]
 }
 
 /**
@@ -43,7 +42,6 @@ export default function CityPage({slug}: Readonly<CityPageProps>) {
     slug
   })
   const {data: weather, isLoading: isWeatherLoading} = useWeatherData()
-  const {searchTerm} = parseLocationSlug(slug)
 
   // Show error state if location couldn't be resolved
   if (locationError) {
@@ -56,8 +54,8 @@ export default function CityPage({slug}: Readonly<CityPageProps>) {
             <Settings />
           </div>
           <Alert color="red" title="Location Not Found">
-            We couldn&apos;t find weather data for &quot;{searchTerm}&quot;.
-            Please try searching for a different location.
+            This location could not be found. Please search for a location using
+            the search bar above.
           </Alert>
         </main>
         <Footer />

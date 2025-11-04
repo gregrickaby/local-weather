@@ -3,10 +3,10 @@ export interface ChildrenProps {
 }
 
 export interface Location {
-  id: number
+  id: number // Open-Meteo location ID (for identifying search results)
   name: string
-  latitude: number
-  longitude: number
+  latitude: number // Used in URL generation for precise location lookup
+  longitude: number // Used in URL generation for precise location lookup
   admin1?: string
   country: string
   display: string // Formatted display string like "Enterprise, Alabama, United States"

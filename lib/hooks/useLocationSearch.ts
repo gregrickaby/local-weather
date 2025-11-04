@@ -115,7 +115,7 @@ export function useLocationSearch() {
       setSearchTerm(selectedLocation.display)
       // Navigate to the city page
       const slug = createLocationSlug(selectedLocation)
-      router.push(`/${slug}`)
+      router.push(`/forecast/${slug}`)
     }
     setDropdownOpened(false)
     setIsTyping(false)

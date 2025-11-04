@@ -315,29 +315,37 @@ npm run test:ui  // Opens browser interface
 **URL Structure:**
 
 - `/` - Home page (redirects to last viewed location or default)
-- `/{location-slug}` - City weather page (e.g., `/chicago-illinois-united-states`)
+- `/forecast/{city}/{state}/{country}/{lat}/{lon}` - City weather page with coordinate path segments
+  - Example: `/forecast/chicago/illinois/united-states/41.88/-87.63`
+  - Example: `/forecast/new-york/new-york/united-states/40.71/-74.01`
+  - Example: `/forecast/enterprise/alabama/united-states/31.32/-85.86`
+  - Coordinates rounded to 2 decimal places (~1km precision)
 
 **Dynamic Routes:**
 
-- `app/[location]/page.tsx` - Dynamic city route handler
+- `app/forecast/[[...location]]/page.tsx` - Catch-all route handler for path segments
+- Accepts optional array of path segments: `[city, state, country, lat, lon]`
 - Generates SEO metadata for each city (title, description, Open Graph tags)
 - Pre-renders popular cities at build time via `generateStaticParams`
-- Client-side location resolution for flexibility
+- Validates minimum 5 segments and coordinate ranges server-side
 
 **Slug Generation:**
 
-- Slugs created from location display name (e.g., "Chicago, Illinois, United States" → "chicago-illinois-united-states")
+- Slugs created as path segments: `{city}/{state}/{country}/{lat}/{lon}`
 - Utility functions in `lib/utils/slug.ts`: `createLocationSlug()`, `parseLocationSlug()`
-- Known locations (popular cities + default) resolve instantly
-- Unknown locations use geocoding API client-side
+- `createLocationSlug()` returns string like `"chicago/illinois/united-states/41.88/-87.63"`
+- `parseLocationSlug()` accepts string or string array, extracts coordinates from last 2 segments
+- Known locations (popular cities + default) matched by coordinate tolerance (0.01°)
+- Unknown locations create fallback Location object with coordinates
 
 **Navigation Flow:**
 
 1. User searches for location
-2. On selection, app navigates to `/{location-slug}` using Next.js router
-3. City page resolves slug to coordinates (from cache or geocoding API)
-4. Weather data fetched and displayed
-5. URL updates and is shareable
+2. On selection, app navigates to `/forecast/{city}/{state}/{country}/{lat}/{lon}` using Next.js router
+3. City page extracts coordinates from URL path segments
+4. Coordinates matched against known locations (within tolerance) or used directly
+5. Weather data fetched using coordinates
+6. URL is SEO-friendly and shareable
 
 ### Key Patterns
 

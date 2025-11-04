@@ -1,7 +1,7 @@
-import {renderHook, waitFor, act} from '@testing-library/react'
-import {describe, it, expect, vi} from 'vitest'
-import {useLocationSearch} from './useLocationSearch'
 import type {Location} from '@/lib/types'
+import {act, renderHook, waitFor} from '@testing-library/react'
+import {describe, expect, it, vi} from 'vitest'
+import {useLocationSearch} from './useLocationSearch'
 
 // Mock Next.js router
 const mockPush = vi.fn()
@@ -94,14 +94,16 @@ describe('useLocationSearch', () => {
 
     const {result} = renderHook(() => useLocationSearch())
 
-    // Select New York (first default place, id: 5128581)
+    // Select New York (first default place)
     act(() => {
       result.current.handleOptionSubmit('5128581')
     })
 
     await waitFor(() => {
       expect(mockDispatch).toHaveBeenCalled()
-      expect(mockPush).toHaveBeenCalledWith('/new-york-new-york-united-states')
+      expect(mockPush).toHaveBeenCalledWith(
+        '/forecast/new-york/new-york/united-states/40.71/-74.01'
+      )
     })
   })
 

@@ -6,7 +6,7 @@ A weather app using Next.js, Mantine, Redux Toolkit, and Open-Meteo API.
 
 ## Features
 
-- **Individual City Pages**: Each location has its own shareable URL (e.g., `/new-york-new-york-united-states`)
+- **Individual City Pages**: Each location has its own shareable URL with SEO-friendly path segments
 - **SEO Optimized**: Dynamic metadata for each city page with Open Graph support
 - **Fast Navigation**: Client-side routing with Next.js App Router
 - **Static Generation**: Popular cities are pre-rendered at build time
@@ -19,9 +19,12 @@ A weather app using Next.js, Mantine, Redux Toolkit, and Open-Meteo API.
 ## URL Structure
 
 - `/` - Home page (redirects to last viewed or default location)
-- `/{location-slug}` - City weather page
-  - Example: `/chicago-illinois-united-states`
-  - Example: `/new-york-new-york-united-states`
+- `/forecast/{city}/{state}/{country}/{lat}/{lon}` - City weather page with coordinate path segments
+  - Example: `/forecast/chicago/illinois/united-states/41.88/-87.63`
+  - Example: `/forecast/new-york/new-york/united-states/40.71/-74.01`
+  - Example: `/forecast/enterprise/alabama/united-states/31.32/-85.86`
+  - Coordinates are rounded to 2 decimal places for clean URLs (~1km precision)
+  - Each segment is URL-friendly (lowercase, hyphens instead of spaces)
 
 ---
 

@@ -22,236 +22,91 @@ export function createSlug(text: string): string {
 }
 
 /**
- * Generate a slug from location data.
+ * Generate a slug from location data with coordinates.
  *
- * Format: {name}-{admin1}-{country}
+ * Format: {city}/{state}/{country}/{lat}/{lon}
+ *
+ * Coordinates are rounded to 2 decimal places (~1km precision) for cleaner URLs
+ * while maintaining sufficient accuracy for weather queries.
  *
  * @param location - Location object
- * @returns URL-friendly slug
+ * @returns URL-friendly slug path with coordinates
  *
  * @example
- * createLocationSlug({ name: 'New York', admin1: 'New York', country: 'United States' })
- * // Returns: 'new-york-new-york-united-states'
+ * createLocationSlug({ name: 'Enterprise', admin1: 'Alabama', country: 'United States', latitude: 31.31517, longitude: -85.85522 })
+ * // Returns: 'enterprise/alabama/united-states/31.32/-85.86'
+ *
+ * createLocationSlug({ name: 'New York', admin1: 'New York', country: 'United States', latitude: 40.71427, longitude: -74.00597 })
+ * // Returns: 'new-york/new-york/united-states/40.71/-74.01'
  */
 export function createLocationSlug(location: Location): string {
-  const parts = [location.name, location.admin1, location.country].filter(
-    Boolean
-  )
-  return createSlug(parts.join(' '))
+  const citySlug = createSlug(location.name)
+  const stateSlug = location.admin1 ? createSlug(location.admin1) : ''
+  const countrySlug = createSlug(location.country)
+
+  // Round coordinates to 2 decimal places for cleaner URLs
+  const lat = location.latitude.toFixed(2)
+  const lon = location.longitude.toFixed(2)
+
+  // Build path segments
+  return `${citySlug}/${stateSlug}/${countrySlug}/${lat}/${lon}`
 }
 
-// Common country names that might appear in slugs
-const KNOWN_COUNTRIES = [
-  'united states',
-  'united kingdom',
-  'new zealand',
-  'south korea',
-  'costa rica',
-  'el salvador',
-  'saudi arabia',
-  'united arab emirates',
-  'south africa',
-  'sri lanka',
-  'hong kong',
-  'czech republic',
-  'dominican republic',
-  // Single word countries
-  'usa',
-  'uk',
-  'canada',
-  'mexico',
-  'brazil',
-  'australia',
-  'france',
-  'germany',
-  'italy',
-  'spain',
-  'japan',
-  'china',
-  'india',
-  'ireland',
-  'netherlands',
-  'belgium',
-  'switzerland',
-  'austria',
-  'denmark',
-  'sweden',
-  'norway',
-  'finland',
-  'poland',
-  'argentina',
-  'chile',
-  'colombia',
-  'peru',
-  'venezuela',
-  'ecuador',
-  'paraguay',
-  'uruguay',
-  'panama',
-  'guatemala',
-  'honduras',
-  'nicaragua',
-  'belize',
-  'jamaica',
-  'bahamas',
-  'cuba',
-  'haiti',
-  'dominica',
-  'grenada',
-  'barbados',
-  'trinidad',
-  'tobago',
-  'iceland',
-  'portugal',
-  'greece',
-  'turkey',
-  'russia',
-  'ukraine',
-  'romania',
-  'bulgaria',
-  'serbia',
-  'croatia',
-  'bosnia',
-  'slovenia',
-  'hungary',
-  'czech',
-  'slovakia',
-  'latvia',
-  'estonia',
-  'lithuania',
-  'malta',
-  'cyprus',
-  'egypt',
-  'libya',
-  'algeria',
-  'morocco',
-  'tunisia',
-  'sudan',
-  'ethiopia',
-  'kenya',
-  'tanzania',
-  'uganda',
-  'rwanda',
-  'cameroon',
-  'nigeria',
-  'ghana',
-  'ivory',
-  'senegal',
-  'namibia',
-  'botswana',
-  'zimbabwe',
-  'zambia',
-  'malawi',
-  'mozambique',
-  'madagascar',
-  'mauritius',
-  'seychelles',
-  'djibouti',
-  'somalia',
-  'oman',
-  'yemen',
-  'bahrain',
-  'qatar',
-  'kuwait',
-  'iraq',
-  'iran',
-  'afghanistan',
-  'pakistan',
-  'nepal',
-  'bhutan',
-  'bangladesh',
-  'myanmar',
-  'thailand',
-  'cambodia',
-  'laos',
-  'vietnam',
-  'malaysia',
-  'singapore',
-  'indonesia',
-  'philippines',
-  'timor',
-  'papua',
-  'fiji',
-  'samoa',
-  'tonga',
-  'vanuatu',
-  'kiribati',
-  'nauru',
-  'palau',
-  'marshall',
-  'micronesia',
-  'guam',
-  'brunei',
-  'mongolia',
-  'kazakhstan',
-  'uzbekistan',
-  'turkmenistan',
-  'tajikistan',
-  'kyrgyzstan',
-  'azerbaijan',
-  'armenia',
-  'georgia',
-  'israel',
-  'palestine',
-  'lebanon',
-  'syria',
-  'jordan',
-  'palestine',
-  'albania',
-  'macedonia',
-  'kosovo',
-  'montenegro'
-].sort((a, b) => b.length - a.length) // Sort by length descending for accurate matching
-
 /**
- * Parse a location slug to extract potential location components.
+ * Parse a location slug to extract coordinates.
  *
- * This is a best-effort parsing - actual location resolution should
- * use the geocoding API. Open-Meteo works best when we exclude the
- * country from the search term.
+ * URL Slug Format: {city}/{state}/{country}/{lat}/{lon}
  *
- * URL Slug Format: {city}-{admin}-{country}
- * Search Strategy: Remove known country patterns and search with remainder
- *
- * @param slug - URL slug to parse
- * @returns Object with parsed components
+ * @param slug - URL slug path to parse (or path segments array)
+ * @returns Object with slug and extracted coordinates
  *
  * @example
- * parseLocationSlug('london-england-united-kingdom')
- * // Returns: { slug: 'london-england-united-kingdom', searchTerm: 'london england' }
+ * parseLocationSlug('enterprise/alabama/united-states/31.32/-85.86')
+ * // Returns: { slug: '...', latitude: 31.32, longitude: -85.86 }
  *
- * parseLocationSlug('new-york-new-york-united-states')
- * // Returns: { slug: 'new-york-new-york-united-states', searchTerm: 'new york new york' }
+ * parseLocationSlug(['enterprise', 'alabama', 'united-states', '31.32', '-85.86'])
+ * // Returns: { slug: '...', latitude: 31.32, longitude: -85.86 }
  *
- * parseLocationSlug('paris-france')
- * // Returns: { slug: 'paris-france', searchTerm: 'paris' }
+ * parseLocationSlug('invalid-slug')
+ * // Returns: { slug: 'invalid-slug', latitude: null, longitude: null }
  */
-export function parseLocationSlug(slug: string): {
+export function parseLocationSlug(slug: string | string[]): {
   slug: string
-  searchTerm: string
+  latitude: number | null
+  longitude: number | null
 } {
-  const normalized = slug.replaceAll('-', ' ').trim()
+  // Convert to array if string
+  const segments = Array.isArray(slug) ? slug : slug.split('/')
+  const slugStr = Array.isArray(slug) ? slug.join('/') : slug
 
-  // Try to remove a known country from the end of the search term
-  for (const country of KNOWN_COUNTRIES) {
-    if (normalized.toLowerCase().endsWith(country)) {
-      const searchTerm = normalized.slice(0, -country.length).trim()
-      if (searchTerm.length > 0) {
-        return {slug, searchTerm}
-      }
+  // Expected format: [city, state, country, lat, lon]
+  if (segments.length < 5) {
+    return {slug: slugStr, latitude: null, longitude: null}
+  }
+
+  // Extract coordinates from last two segments
+  const latStr = segments.at(-2)!
+  const lonStr = segments.at(-1)!
+
+  const lat = Number(latStr)
+  const lon = Number(lonStr)
+
+  // Validate coordinates are valid numbers and in valid ranges
+  const isValidLat = !Number.isNaN(lat) && lat >= -90 && lat <= 90
+  const isValidLon = !Number.isNaN(lon) && lon >= -180 && lon <= 180
+
+  if (isValidLat && isValidLon) {
+    return {
+      slug: slugStr,
+      latitude: lat,
+      longitude: lon
     }
   }
 
-  // If no country found, remove the last word (fallback)
-  const parts = normalized.split(' ')
-  if (parts.length > 1) {
-    const searchTerm = parts.slice(0, -1).join(' ')
-    return {slug, searchTerm}
-  }
-
-  // Single word slug - use as-is
+  // Invalid format - no valid coordinates found
   return {
-    slug,
-    searchTerm: normalized
+    slug: slugStr,
+    latitude: null,
+    longitude: null
   }
 }

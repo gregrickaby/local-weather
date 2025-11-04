@@ -28,7 +28,7 @@ export default function HomePage() {
 
     // Navigate to the location's page
     const slug = createLocationSlug(targetLocation)
-    router.replace(`/${slug}`)
+    router.replace(`/forecast/${slug}`)
   }, [router])
 
   // Show nothing while redirecting
