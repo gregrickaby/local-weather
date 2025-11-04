@@ -70,8 +70,8 @@ const WEATHER_CODE_TO_BASMILIUS_ICON: Record<number, string> = {
   51: 'drizzle', // Light drizzle
   53: 'drizzle', // Moderate drizzle
   55: 'drizzle', // Dense drizzle
-  56: 'freezing-drizzle', // Light freezing drizzle (fallback to drizzle)
-  57: 'freezing-drizzle', // Dense freezing drizzle (fallback to drizzle)
+  56: 'drizzle', // Light freezing drizzle
+  57: 'drizzle', // Dense freezing drizzle
   61: 'rain', // Slight rain
   63: 'rain', // Moderate rain
   65: 'rain', // Heavy rain
@@ -81,11 +81,11 @@ const WEATHER_CODE_TO_BASMILIUS_ICON: Record<number, string> = {
   73: 'snow', // Moderate snow
   75: 'snow', // Heavy snow
   77: 'snow', // Snow grains
-  80: 'partly-cloudy-rain', // Slight rain showers
-  81: 'partly-cloudy-rain', // Moderate rain showers
-  82: 'partly-cloudy-rain', // Violent rain showers
-  85: 'partly-cloudy-snow', // Slight snow showers
-  86: 'partly-cloudy-snow', // Heavy snow showers
+  80: 'overcast-rain', // Slight rain showers
+  81: 'overcast-rain', // Moderate rain showers
+  82: 'overcast-rain', // Violent rain showers
+  85: 'overcast-snow', // Slight snow showers
+  86: 'overcast-snow', // Heavy snow showers
   95: 'thunderstorms', // Thunderstorm
   96: 'thunderstorms', // Thunderstorm with slight hail
   99: 'thunderstorms' // Thunderstorm with heavy hail
@@ -128,7 +128,14 @@ export function getWeatherInfo(
   const basmilusIcon = WEATHER_CODE_TO_BASMILIUS_ICON[code] || 'clear'
 
   // Some icons don't have day/night variants, so we append conditionally
-  const iconsWithoutDayNight = new Set(['drizzle', 'rain', 'sleet', 'snow'])
+  const iconsWithoutDayNight = new Set([
+    'drizzle',
+    'rain',
+    'sleet',
+    'snow',
+    'overcast-rain',
+    'overcast-snow'
+  ])
   const icon: import('@/components/UI/Icon/Icon').IconName =
     iconsWithoutDayNight.has(basmilusIcon)
       ? (basmilusIcon as import('@/components/UI/Icon/Icon').IconName)
