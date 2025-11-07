@@ -75,7 +75,7 @@ export default function CityPage({slug}: Readonly<CityPageProps>) {
           <WeatherSkeleton />
         ) : (
           <Stack gap="xl" className={classes.content}>
-            <CurrentConditions showFeelsLike />
+            <CurrentConditions />
             <DetailsGrid />
             <Radar />
             <Forecast />
