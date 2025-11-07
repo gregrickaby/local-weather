@@ -3,7 +3,7 @@
 import Icon from '@/components/UI/Icon/Icon'
 import {useCurrentConditions} from '@/lib/hooks/useCurrentConditions'
 import {formatTemperature} from '@/lib/utils/formatting'
-import {Stack, Text, Title} from '@mantine/core'
+import {Group, Stack, Text, Title} from '@mantine/core'
 import classes from './CurrentConditions.module.css'
 
 /**
@@ -17,36 +17,31 @@ export default function CurrentConditions() {
     return null
   }
 
-  const {
-    tempUnit,
-    temperature,
-    apparentTemperature,
-    description,
-    icon,
-    forecastStatement,
-    showFeelsLike
-  } = conditions
+  const {tempUnit, temperature, description, icon, forecastStatement} =
+    conditions
 
   return (
     <div className={classes.hero}>
       <Stack align="center" gap="xs">
-        <div className={classes.descriptionContainer}>
+        <Group gap="xs" justify="center" wrap="nowrap">
           <Icon icon={icon} alt="" />
-          <Title order={2} className={classes.description}>
+          <Title order={2} ta="center" className={classes.description}>
             {description}
           </Title>
-        </div>
-        <Title order={1} className={classes.bigtemp}>
+        </Group>
+
+        <Title order={1} ta="center" className={classes.bigtemp}>
           {formatTemperature(tempUnit, temperature)}
         </Title>
-        <Text className={classes.forecastStatement} ta="center">
+
+        <Text
+          ta="center"
+          maw={600}
+          mt="xs"
+          className={classes.forecastStatement}
+        >
           {forecastStatement}
         </Text>
-        {showFeelsLike && (
-          <Text className={classes.feelslike} component="p">
-            Feels Like: {formatTemperature(tempUnit, apparentTemperature)}
-          </Text>
-        )}
       </Stack>
     </div>
   )
