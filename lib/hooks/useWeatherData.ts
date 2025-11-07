@@ -24,7 +24,10 @@ export function useWeatherData() {
   return useGetWeatherQuery(
     {latitude, longitude, tempUnit},
     {
-      skip: !mounted || !location
+      skip: !mounted || !location,
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+      refetchOnMountOrArgChange: 300
     }
   )
 }

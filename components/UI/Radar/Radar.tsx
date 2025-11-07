@@ -34,7 +34,15 @@ export default function Radar() {
   const [isExpanded, setIsExpanded] = useState(false)
 
   // Fetch radar frames using RTK Query
-  const {data: radarFrames = [], isLoading, error} = useGetRadarFramesQuery()
+  const {
+    data: radarFrames = [],
+    isLoading,
+    error
+  } = useGetRadarFramesQuery(undefined, {
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: 300
+  })
 
   // Manage map and animation
   const {

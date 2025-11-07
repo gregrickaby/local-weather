@@ -1,4 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit'
+import {setupListeners} from '@reduxjs/toolkit/query'
 import {localStorageMiddleware} from './middlewares/localStorageMiddleware'
 import {airQualityApi} from './services/airQualityApi'
 import {placesApi} from './services/placesApi'
@@ -10,7 +11,7 @@ import preferencesReducer from './slices/preferencesSlice'
  * Create the Redux store.
  */
 export const makeStore = () => {
-  return configureStore({
+  const store = configureStore({
     reducer: {
       preferences: preferencesReducer,
       [weatherApi.reducerPath]: weatherApi.reducer,
@@ -26,6 +27,10 @@ export const makeStore = () => {
         .concat(radarApi.middleware)
         .concat(localStorageMiddleware)
   })
+
+  setupListeners(store.dispatch)
+
+  return store
 }
 
 export type AppStore = ReturnType<typeof makeStore>

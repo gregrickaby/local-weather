@@ -12,7 +12,10 @@ import {getAQIDescription, getAQILevel} from '@/lib/utils/conditions'
 export function useAirQuality() {
   const location = useAppSelector(selectLocation)
   const {data} = useGetAirQualityQuery(location, {
-    skip: !location
+    skip: !location,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: 300
   })
 
   const aqi = data?.current?.us_aqi || 0
