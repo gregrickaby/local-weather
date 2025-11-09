@@ -54,7 +54,7 @@ describe('Footer', () => {
     expect(jmaLink).toBeInTheDocument()
     expect(jmaLink).toHaveAttribute(
       'href',
-      'https://www.data.jma.go.jp/mscweb/en/himawari89/'
+      'https://www.jma.go.jp/jma/index.html'
     )
     expect(jmaLink).toHaveAttribute('target', '_blank')
     expect(jmaLink).toHaveAttribute('rel', 'noopener noreferrer')
