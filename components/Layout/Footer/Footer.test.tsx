@@ -35,6 +35,31 @@ describe('Footer', () => {
     expect(rainViewerLink).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
+  it('should display NOAA GOES satellite attribution', () => {
+    render(<Footer />)
+    const noaaLink = screen.getByRole('link', {
+      name: 'visit NOAA GOES website'
+    })
+    expect(noaaLink).toBeInTheDocument()
+    expect(noaaLink).toHaveAttribute('href', 'https://www.goes.noaa.gov/')
+    expect(noaaLink).toHaveAttribute('target', '_blank')
+    expect(noaaLink).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('should display JMA Himawari satellite attribution', () => {
+    render(<Footer />)
+    const jmaLink = screen.getByRole('link', {
+      name: 'visit JMA Himawari website'
+    })
+    expect(jmaLink).toBeInTheDocument()
+    expect(jmaLink).toHaveAttribute(
+      'href',
+      'https://www.data.jma.go.jp/mscweb/en/himawari89/'
+    )
+    expect(jmaLink).toHaveAttribute('target', '_blank')
+    expect(jmaLink).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
   it('should display author name with link', () => {
     render(<Footer />)
     const authorLink = screen.getByRole('link', {

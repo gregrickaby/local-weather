@@ -29,7 +29,7 @@ export default function Footer() {
         >
           Open-Meteo
         </a>{' '}
-        and{' '}
+        | Radar from{' '}
         <a
           aria-label="visit Rain Viewer website"
           href="https://www.rainviewer.com/"
@@ -37,6 +37,24 @@ export default function Footer() {
           target="_blank"
         >
           Rain Viewer
+        </a>{' '}
+        | Satellite from{' '}
+        <a
+          aria-label="visit NOAA GOES website"
+          href="https://www.goes.noaa.gov/"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          NOAA GOES
+        </a>{' '}
+        and{' '}
+        <a
+          aria-label="visit JMA Himawari website"
+          href="https://www.jma.go.jp/jma/index.html"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          JMA Himawari
         </a>{' '}
         | Icons by{' '}
         <a
