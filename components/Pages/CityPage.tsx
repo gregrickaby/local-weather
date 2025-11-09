@@ -8,11 +8,12 @@ import CurrentConditions from '@/components/UI/CurrentConditions/CurrentConditio
 import DetailsGrid from '@/components/UI/DetailsGrid/DetailsGrid'
 import Forecast from '@/components/UI/Forecast/Forecast'
 import Radar from '@/components/UI/Radar/Radar'
+import Satellite from '@/components/UI/Satellite/Satellite'
 import Search from '@/components/UI/Search/Search'
 import Settings from '@/components/UI/Settings/Settings'
 import {useCityPageLocation} from '@/lib/hooks/useCityPageLocation'
 import {useWeatherData} from '@/lib/hooks/useWeatherData'
-import {Alert, Skeleton, Stack} from '@mantine/core'
+import {Alert, Grid, Skeleton, Stack} from '@mantine/core'
 
 interface CityPageProps {
   slug: string | string[]
@@ -77,7 +78,14 @@ export default function CityPage({slug}: Readonly<CityPageProps>) {
           <Stack gap="xl" className={classes.content}>
             <CurrentConditions />
             <DetailsGrid />
-            <Radar />
+            <Grid gutter="xl">
+              <Grid.Col span={{base: 12, md: 6}}>
+                <Radar />
+              </Grid.Col>
+              <Grid.Col span={{base: 12, md: 6}}>
+                <Satellite />
+              </Grid.Col>
+            </Grid>
             <Forecast />
           </Stack>
         )}

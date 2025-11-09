@@ -83,27 +83,18 @@ export function formatTimeWithMinutes(isoTime: string): string {
 
 /**
  * Format ISO date string to day of week.
- * Uses the current date from API response (location's timezone) for "Today"/"Tomorrow".
+ * Uses the current date from API response (location's timezone) for "Today".
  *
  * @param isoDate - Date string in YYYY-MM-DD format from the API (location's timezone)
  * @param currentDate - Current date string from weather.current.time (location's timezone) - REQUIRED
- * @returns Day label (e.g., "Tod", "Tom", "Mon", "Tue")
+ * @returns Day label (e.g., "Today", "Mon", "Tue")
  */
 export function formatDay(isoDate: string, currentDate: string): string {
   const datePart = isoDate.split('T')[0]
   const todayString = currentDate.split('T')[0]
 
   if (datePart === todayString) {
-    return 'Tod'
-  }
-
-  const [todayYear, todayMonth, todayDay] = todayString.split('-').map(Number)
-  const todayDate = new Date(todayYear, todayMonth - 1, todayDay)
-  todayDate.setDate(todayDate.getDate() + 1)
-  const tomorrowString = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`
-
-  if (datePart === tomorrowString) {
-    return 'Tom'
+    return 'Today'
   }
 
   const [year, month, day] = datePart.split('-').map(Number)

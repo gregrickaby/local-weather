@@ -76,14 +76,15 @@ describe('formatTimeWithMinutes', () => {
 })
 
 describe('formatDay', () => {
-  it('should return "Tod" for today', () => {
+  it('should return "Today" for today', () => {
     const result = formatDay('2025-01-15', '2025-01-15T12:00:00')
-    expect(result).toBe('Tod')
+    expect(result).toBe('Today')
   })
 
-  it('should return "Tom" for tomorrow', () => {
+  it('should return day abbreviation for tomorrow', () => {
+    // January 16, 2025 is a Thursday
     const result = formatDay('2025-01-16', '2025-01-15T12:00:00')
-    expect(result).toBe('Tom')
+    expect(result).toBe('Thu')
   })
 
   it('should return day of week for other days', () => {

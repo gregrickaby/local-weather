@@ -66,4 +66,6 @@ export const COORDINATE_LIMITS = {
 } as const
 
 // Re-export config for convenience
-export {default as config} from './config'
+export * from './config'
+export * from './radar'
+export * from './satellite'
