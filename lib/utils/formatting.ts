@@ -184,3 +184,28 @@ export function formatSnowDepth(tempUnit: string, meters: number): string {
   const cm = meters * 100
   return `${Math.round(cm)} cm`
 }
+
+/**
+ * Format a relative time string from a millisecond difference.
+ *
+ * @param diffMs - Difference in milliseconds (e.g., Date.now() - timestamp)
+ * @returns Human-friendly relative label like "a few seconds ago", "3 mins ago", "2 hrs ago"
+ */
+export function formatRelativeFromMs(diffMs: number): string {
+  const safe = Math.max(0, diffMs)
+  const minute = 60_000
+  const hour = 60 * minute
+  const day = 24 * hour
+
+  if (safe < 45 * 1_000) return 'a few seconds ago'
+  if (safe < hour) {
+    const mins = Math.round(safe / minute)
+    return `${mins} min${mins === 1 ? '' : 's'} ago`
+  }
+  if (safe < day) {
+    const hrs = Math.round(safe / hour)
+    return `${hrs} hr${hrs === 1 ? '' : 's'} ago`
+  }
+  const days = Math.round(safe / day)
+  return `${days} day${days === 1 ? '' : 's'} ago`
+}

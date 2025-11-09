@@ -3,6 +3,7 @@ import {
   formatDay,
   formatPrecipitation,
   formatPressure,
+  formatRelativeFromMs,
   formatSnowDepth,
   formatTemperature,
   formatTime,
@@ -176,5 +177,31 @@ describe('formatSnowDepth', () => {
   it('should handle zero snow depth', () => {
     expect(formatSnowDepth('f', 0)).toBe('0 in')
     expect(formatSnowDepth('c', 0)).toBe('0 cm')
+  })
+})
+
+describe('formatRelativeFromMs', () => {
+  it('should render seconds threshold as "a few seconds ago"', () => {
+    expect(formatRelativeFromMs(10_000)).toBe('a few seconds ago')
+    expect(formatRelativeFromMs(44_000)).toBe('a few seconds ago')
+  })
+
+  it('should render minutes correctly', () => {
+    expect(formatRelativeFromMs(60_000)).toBe('1 min ago')
+    expect(formatRelativeFromMs(5 * 60_000)).toBe('5 mins ago')
+  })
+
+  it('should render hours correctly', () => {
+    expect(formatRelativeFromMs(60 * 60_000)).toBe('1 hr ago')
+    expect(formatRelativeFromMs(2.4 * 60 * 60_000)).toBe('2 hrs ago')
+  })
+
+  it('should render days correctly', () => {
+    expect(formatRelativeFromMs(24 * 60 * 60_000)).toBe('1 day ago')
+    expect(formatRelativeFromMs(3.2 * 24 * 60 * 60_000)).toBe('3 days ago')
+  })
+
+  it('should clamp negative values to zero', () => {
+    expect(formatRelativeFromMs(-5_000)).toBe('a few seconds ago')
   })
 })
