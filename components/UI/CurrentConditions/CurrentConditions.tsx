@@ -20,6 +20,7 @@ export default function CurrentConditions() {
   }
 
   const {
+    locationDisplay,
     tempUnit,
     temperature,
     apparentTemperature,
@@ -32,6 +33,9 @@ export default function CurrentConditions() {
   return (
     <div className={classes.hero}>
       <Stack align="center" gap="xs">
+        <Text size="lg" fw={500} ta="center">
+          {locationDisplay}
+        </Text>
         <Group gap="xs" justify="center" wrap="nowrap">
           <Icon icon={icon} alt="" />
           <Title order={2} ta="center" className={classes.description}>

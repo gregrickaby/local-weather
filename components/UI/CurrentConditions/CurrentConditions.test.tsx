@@ -1,5 +1,5 @@
-import {describe, it, expect} from 'vitest'
-import {render, screen, waitFor, mockLocation} from '@/test-utils'
+import {mockLocation, render, screen, waitFor} from '@/test-utils'
+import {describe, expect, it} from 'vitest'
 import CurrentConditions from './CurrentConditions'
 
 describe('CurrentConditions', () => {
@@ -18,6 +18,26 @@ describe('CurrentConditions', () => {
 
     // Component returns null, so weather description should not be present
     expect(screen.queryByText('Clear sky')).not.toBeInTheDocument()
+  })
+
+  it('should display location name', async () => {
+    render(<CurrentConditions />, {
+      preloadedState: {
+        preferences: {
+          location: mockLocation,
+          tempUnit: 'f',
+          colorScheme: 'light',
+          favorites: [],
+          mounted: true
+        }
+      }
+    })
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Enterprise, Alabama, United States')
+      ).toBeInTheDocument()
+    })
   })
 
   it('should display weather description', async () => {

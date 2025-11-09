@@ -1,5 +1,5 @@
 import {useAppSelector} from '@/lib/store/hooks'
-import {selectTempUnit} from '@/lib/store/selectors'
+import {selectLocation, selectTempUnit} from '@/lib/store/selectors'
 import {generateForecastStatement} from '@/lib/utils/calculations'
 import {getWeatherInfo} from '@/lib/utils/conditions'
 import {useWeatherData} from './useWeatherData'
@@ -11,6 +11,7 @@ import {useWeatherData} from './useWeatherData'
  * Returns ready-to-display current weather information.
  */
 export function useCurrentConditions() {
+  const location = useAppSelector(selectLocation)
   const tempUnit = useAppSelector(selectTempUnit)
   const {data: weather} = useWeatherData()
 
@@ -39,6 +40,7 @@ export function useCurrentConditions() {
   const showFeelsLike = apparent_temperature > temperature_2m
 
   return {
+    locationDisplay: location.display,
     tempUnit,
     temperature: temperature_2m,
     apparentTemperature: apparent_temperature,
