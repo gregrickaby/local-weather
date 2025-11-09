@@ -32,8 +32,8 @@
     "validate": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
-    "@mantine/core": "8.3.6",
-    "@mantine/hooks": "8.3.6",
+    "@mantine/core": "8.3.7",
+    "@mantine/hooks": "8.3.7",
     "@reduxjs/toolkit": "^2.10.1",
     "@tabler/icons-react": "^3.35.0",
     "@types/leaflet": "^1.9.21",
@@ -65,7 +65,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-testing-library": "^7.13.3",
     "jsdom": "^27.1.0",
-    "msw": "^2.12.0",
+    "msw": "^2.12.1",
     "postcss": "^8.5.6",
     "postcss-preset-mantine": "1.18.0",
     "postcss-simple-vars": "^7.0.1",
