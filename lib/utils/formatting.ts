@@ -188,7 +188,7 @@ export function formatRelativeFromMs(diffMs: number): string {
   const hour = 60 * minute
   const day = 24 * hour
 
-  if (safe < 45 * 1_000) return 'a few seconds ago'
+  if (safe < 45_000) return 'a few seconds ago'
   if (safe < hour) {
     const mins = Math.round(safe / minute)
     return `${mins} min${mins === 1 ? '' : 's'} ago`
