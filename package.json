@@ -32,7 +32,7 @@
     "validate": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
-    "@mantine/core": "8.3.8",
+    "@mantine/core": "8.3.9",
     "@mantine/hooks": "8.3.8",
     "@reduxjs/toolkit": "^2.10.1",
     "@tabler/icons-react": "^3.35.0",
