@@ -38,7 +38,7 @@
     "@tabler/icons-react": "^3.35.0",
     "@types/leaflet": "^1.9.21",
     "leaflet": "^1.9.4",
-    "next": "^16.0.3",
+    "next": "^16.0.4",
     "openmeteo": "^1.2.2",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -54,11 +54,11 @@
     "@types/react": "^19.2.7",
     "@types/suncalc": "^1.9.2",
     "@vitejs/plugin-react": "^5.1.1",
-    "@vitest/coverage-v8": "^4.0.13",
-    "@vitest/ui": "^4.0.13",
+    "@vitest/coverage-v8": "^4.0.14",
+    "@vitest/ui": "^4.0.14",
     "eslint": "^9.39.1",
     "eslint-config-mantine": "^4.0.3",
-    "eslint-config-next": "^16.0.3",
+    "eslint-config-next": "^16.0.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest-dom": "^5.5.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -72,6 +72,6 @@
     "prettier": "^3.6.2",
     "rimraf": "^6.1.2",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.13"
+    "vitest": "^4.0.14"
   }
 }
