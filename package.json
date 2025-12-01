@@ -39,7 +39,7 @@
     "@types/leaflet": "^1.9.21",
     "leaflet": "^1.9.4",
     "next": "^16.0.4",
-    "openmeteo": "^1.2.2",
+    "openmeteo": "^1.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",
