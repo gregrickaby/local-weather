@@ -32,8 +32,8 @@
     "validate": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
-    "@mantine/core": "8.3.10",
-    "@mantine/hooks": "8.3.10",
+    "@mantine/core": "8.3.12",
+    "@mantine/hooks": "8.3.12",
     "@reduxjs/toolkit": "^2.11.2",
     "@tabler/icons-react": "^3.36.1",
     "@types/leaflet": "^1.9.21",
@@ -46,16 +46,16 @@
     "suncalc": "^1.9.0"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^2.0.13",
+    "@evilmartians/lefthook": "^2.0.14",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^25.0.3",
-    "@types/react": "^19.2.7",
+    "@types/node": "^25.0.6",
+    "@types/react": "^19.2.8",
     "@types/suncalc": "^1.9.2",
     "@vitejs/plugin-react": "^5.1.2",
-    "@vitest/coverage-v8": "^4.0.16",
-    "@vitest/ui": "^4.0.16",
+    "@vitest/coverage-v8": "^4.0.17",
+    "@vitest/ui": "^4.0.17",
     "eslint": "^9.39.2",
     "eslint-config-mantine": "^4.0.3",
     "eslint-config-next": "^16.1.1",
@@ -72,6 +72,6 @@
     "prettier": "^3.7.4",
     "rimraf": "^6.1.2",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.16"
+    "vitest": "^4.0.17"
   }
 }
