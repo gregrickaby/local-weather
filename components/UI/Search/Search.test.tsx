@@ -17,7 +17,7 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByRole('textbox', {
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     expect(input).toBeInTheDocument()
@@ -36,7 +36,7 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByRole('textbox', {
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     expect(input).toHaveValue(mockLocation.display)
@@ -56,8 +56,8 @@ describe('Search', () => {
     })
 
     // Mantine Autocomplete creates multiple elements with the same aria-label
-    // Use getByRole to specifically target the input element (role="textbox")
-    const input = screen.getByRole('textbox', {
+    // Use getByRole to specifically target the input element (role="combobox" in Mantine 9)
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     expect(input).toBeInTheDocument()
@@ -78,7 +78,7 @@ describe('Search', () => {
 
     // IconMapPin renders an SVG - check for role or aria-label instead
     // Map pin icon is decorative, so just verify the input is present
-    const input = screen.getByRole('textbox', {
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     expect(input).toBeInTheDocument()
@@ -98,7 +98,7 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByRole('textbox', {
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     await user.clear(input)
@@ -123,7 +123,7 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByRole('textbox', {
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     expect(input).toHaveValue('')
@@ -153,7 +153,7 @@ describe('Search', () => {
       }
     })
 
-    const input = screen.getByRole('textbox', {
+    const input = screen.getByRole('combobox', {
       name: 'Enter the name of your location'
     })
     await user.clear(input)

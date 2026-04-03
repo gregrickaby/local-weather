@@ -78,7 +78,7 @@ export default function CityPage({slug}: Readonly<CityPageProps>) {
           <Stack gap="xl" className={classes.content}>
             <CurrentConditions />
             <DetailsGrid />
-            <Grid gutter="xl">
+            <Grid gap="xl">
               <Grid.Col span={{base: 12, md: 6}}>
                 <Radar />
               </Grid.Col>

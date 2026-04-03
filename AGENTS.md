@@ -53,7 +53,7 @@ You are in expert frontend engineer. Your task is to provide senior React and Ty
 
 ## Project Overview
 
-A weather application built with Next.js 16 (App Router, React 19 Compiler), Mantine 8, Redux Toolkit 2, and integrates with Open-Meteo APIs. The app is deployed to Coolify (using Nixpacks) at <https://weather.gregrickaby.com>.
+A weather application built with Next.js 16 (App Router, React 19 Compiler), Mantine 9, Redux Toolkit 2, and integrates with Open-Meteo APIs. The app is deployed to Coolify (using Nixpacks) at <https://weather.gregrickaby.com>.
 
 ## Common Commands
 
