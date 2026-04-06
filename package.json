@@ -32,8 +32,8 @@
     "validate": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
-    "@mantine/core": "9.0.0",
-    "@mantine/hooks": "9.0.0",
+    "@mantine/core": "9.0.1",
+    "@mantine/hooks": "9.0.1",
     "@reduxjs/toolkit": "^2.11.2",
     "@tabler/icons-react": "^3.41.1",
     "@types/leaflet": "^1.9.21",
@@ -46,7 +46,7 @@
     "suncalc": "^1.9.0"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^2.1.4",
+    "@evilmartians/lefthook": "^2.1.5",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -65,7 +65,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-testing-library": "^7.16.2",
     "jsdom": "^29.0.1",
-    "msw": "^2.12.14",
+    "msw": "^2.13.0",
     "postcss": "^8.5.8",
     "postcss-preset-mantine": "1.18.0",
     "postcss-simple-vars": "^7.0.1",
