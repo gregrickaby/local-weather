@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(config.siteUrl),
   icons: {
     icon: '/favicon.ico'
+  },
+  alternates: {
+    canonical: config.siteUrl
   }
 }
 

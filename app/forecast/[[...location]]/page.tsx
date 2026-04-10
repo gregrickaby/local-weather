@@ -1,5 +1,6 @@
 import CityPage from '@/components/Pages/CityPage'
 import {DEFAULT_LOCATION, POPULAR_CITIES} from '@/lib/constants'
+import config from '@/lib/constants/config'
 import {createLocationSlug} from '@/lib/utils/slug'
 import {Metadata} from 'next'
 import {notFound} from 'next/navigation'
@@ -32,6 +33,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   }
 
   const slug = location.join('/')
+  const canonicalUrl = `${config.siteUrl}forecast/${slug}`
 
   // Try to find matching city from popular cities + default
   const allLocations = [...POPULAR_CITIES, DEFAULT_LOCATION]
@@ -46,10 +48,14 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
     return {
       title,
       description,
+      alternates: {
+        canonical: canonicalUrl
+      },
       openGraph: {
         title,
         description,
-        type: 'website'
+        type: 'website',
+        url: canonicalUrl
       }
     }
   }
@@ -66,10 +72,14 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
   return {
     title,
     description,
+    alternates: {
+      canonical: canonicalUrl
+    },
     openGraph: {
       title,
       description,
-      type: 'website'
+      type: 'website',
+      url: canonicalUrl
     }
   }
 }
