@@ -32,13 +32,13 @@
     "validate": "npm run format && npm run lint && npm run typecheck && npm run test"
   },
   "dependencies": {
-    "@mantine/core": "9.0.1",
-    "@mantine/hooks": "9.0.1",
+    "@mantine/core": "9.1.0",
+    "@mantine/hooks": "9.1.0",
     "@reduxjs/toolkit": "^2.11.2",
     "@tabler/icons-react": "^3.41.1",
     "@types/leaflet": "^1.9.21",
     "leaflet": "^1.9.4",
-    "next": "^16.2.3",
+    "next": "^16.2.4",
     "openmeteo": "^1.2.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
@@ -46,7 +46,7 @@
     "suncalc": "^1.9.0"
   },
   "devDependencies": {
-    "@evilmartians/lefthook": "^2.1.5",
+    "@evilmartians/lefthook": "^2.1.6",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -54,24 +54,24 @@
     "@types/react": "^19.2.14",
     "@types/suncalc": "^1.9.2",
     "@vitejs/plugin-react-swc": "^4.3.0",
-    "@vitest/coverage-v8": "^4.1.4",
-    "@vitest/ui": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.5",
+    "@vitest/ui": "^4.1.5",
     "eslint": "^9.39.2",
     "eslint-config-mantine": "^4.0.3",
-    "eslint-config-next": "^16.2.3",
+    "eslint-config-next": "^16.2.4",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jest-dom": "^5.5.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-testing-library": "^7.16.2",
-    "jsdom": "^29.0.2",
-    "msw": "^2.13.2",
-    "postcss": "^8.5.9",
+    "jsdom": "^29.1.0",
+    "msw": "^2.13.6",
+    "postcss": "^8.5.12",
     "postcss-preset-mantine": "1.18.0",
     "postcss-simple-vars": "^7.0.1",
-    "prettier": "^3.8.2",
+    "prettier": "^3.8.3",
     "rimraf": "^6.1.3",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.4"
+    "vitest": "^4.1.5"
   }
 }
